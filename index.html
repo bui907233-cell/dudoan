@@ -30,10 +30,14 @@
         <div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div>
                 <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Chọn Đài Miền Trung:</label>
-                <select id="selectDai" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-indigo-500">
-                    <option value="kontum" selected>Kon Tum</option>
-                    <option value="phuyen">Phú Yên</option>
-                    <option value="danang">Đà Nẵng</option>
+                <select id="selectDai" onchange="capNhatNgayTheoDai()" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="phuyen" selected>Thứ 2 - Phú Yên</option>
+                    <option value="daklak">Thứ 3 - Đắk Lắk</option>
+                    <option value="khanhhoa">Thứ 4 - Khánh Hòa</option>
+                    <option value="binhdinh">Thứ 5 - Bình Định</option>
+                    <option value="gialai">Thứ 6 - Gia Lai</option>
+                    <option value="danang">Thứ 7 - Đà Nẵng</option>
+                    <option value="kontum">Chủ Nhật - Kon Tum</option>
                 </select>
             </div>
 
@@ -41,9 +45,13 @@
                 <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Lọc theo Thứ trong tuần:</label>
                 <select id="selectThu" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-indigo-500">
                     <option value="all">Tất cả các thứ</option>
-                    <option value="Chủ Nhật" selected>Chủ Nhật</option>
-                    <option value="Thứ Hai">Thứ Hai</option>
+                    <option value="Thứ Hai" selected>Thứ Hai</option>
+                    <option value="Thứ Ba">Thứ Ba</option>
                     <option value="Thứ Tư">Thứ Tư</option>
+                    <option value="Thứ Năm">Thứ Năm</option>
+                    <option value="Thứ Sáu">Thứ Sáu</option>
+                    <option value="Thứ Bảy">Thứ Bảy</option>
+                    <option value="Chủ Nhật">Chủ Nhật</option>
                 </select>
             </div>
 
@@ -145,6 +153,26 @@
             }
         }
 
+        // Tự động đồng bộ chọn "Thứ" phù hợp khi đổi đài
+        function capNhatNgayTheoDai() {
+            const dai = document.getElementById('selectDai').value;
+            const selectThu = document.getElementById('selectThu');
+            
+            const mapping = {
+                'phuyen': 'Thứ Hai',
+                'daklak': 'Thứ Ba',
+                'khanhhoa': 'Thứ Tư',
+                'binhdinh': 'Thứ Năm',
+                'gialai': 'Thứ Sáu',
+                'danang': 'Thứ Bảy',
+                'kontum': 'Chủ Nhật'
+            };
+
+            if (mapping[dai]) {
+                selectThu.value = mapping[dai];
+            }
+        }
+
         async function chayVaDanhGiaMoHinh() {
             const dai = document.getElementById('selectDai').value;
             const thuFilter = document.getElementById('selectThu').value;
@@ -153,7 +181,7 @@
 
             try {
                 const response = await fetch(jsonPath);
-                if (!response.ok) throw new Error(`Không tìm thấy file dữ liệu: data/${dai}.json`);
+                if (!response.ok) throw new Error(`Không tìm thấy file dữ liệu: data/${dai}.json (Hãy tạo file JSON tương ứng trong thư mục data/)`);
                 const allData = await response.json();
 
                 let filteredData = allData;
@@ -162,7 +190,7 @@
                 }
 
                 if (filteredData.length < 1) {
-                    alert("Không đủ dữ liệu cho bộ lọc này trong file JSON.");
+                    alert(`Không tìm thấy dữ liệu cho đài này với bộ lọc "${thuFilter}" trong file JSON.`);
                     return;
                 }
 
@@ -308,7 +336,7 @@
                 veBieuDoDanhGia(models);
 
             } catch (err) {
-                alert("Lỗi thực thi: " + err.message + "\n(Hãy đảm bảo bạn chạy qua Live Server và đã tạo file data/kontum.json).");
+                alert("Lỗi thực thi: " + err.message);
             }
         }
 
