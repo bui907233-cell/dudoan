@@ -18,8 +18,8 @@
         <!-- Header & Nút chuyển Dark Mode -->
         <header class="mb-8 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
             <div class="text-center md:text-left">
-                <h1 class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">Analysis</h1>
-                <p class="text-slate-500 dark:text-slate-400 mt-2">Phân tích...</p>
+                <h1 class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">Hệ Thống Phân Tích XSMT Tự Học</h1>
+                <p class="text-slate-500 dark:text-slate-400 mt-2">Hợp lực 5 mô hình + Nhật ký lưu vết tự động học hỏi qua JSON.</p>
             </div>
             <div class="flex items-center gap-3">
                 <button onclick="taiJsonCapNhat()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 px-4 rounded-xl transition-all shadow-sm flex items-center gap-2 text-sm">
@@ -153,9 +153,9 @@
         </div>
     </div>
 
-    <!-- Script xử lý tương thích cấu trúc JSON mới -->
+    <!-- Script xử lý -->
     <script>
-        let currentLoadedJson = null; // Lưu toàn bộ Object JSON (gồm lịch_su_quay và nhat_ky_tu_hoc)
+        let currentLoadedJson = null;
 
         function toggleDarkMode() {
             const html = document.documentElement;
@@ -203,8 +203,7 @@
                 if (!response.ok) throw new Error(`Không tìm thấy file dữ liệu: data/${dai}.json`);
                 currentLoadedJson = await response.json(); 
 
-                // Kiểm tra cấu trúc JSON mới
-                const lichSuQuay = currentLoadedJson.lich_su_quay || currentLoadedJson; // Hỗ trợ tương thích ngược nếu là mảng cũ
+                const lichSuQuay = currentLoadedJson.lich_su_quay || currentLoadedJson; 
                 if (!Array.isArray(lichSuQuay)) {
                     throw new Error("Cấu trúc file JSON không hợp lệ (thiếu mảng lich_su_quay).");
                 }
@@ -327,16 +326,14 @@
                 let thanHocNum3 = ((lifePathNum + dayNum) % 90).toString().padStart(2, '0');
                 let model5Preds = [thanHocNum1, thanHocNum2, thanHocNum3];
 
-                // --- XỬ LÝ NHẬT KÝ TỰ HỌC & CHẤM ĐIỂM ---
+                // --- XỬ LÝ NHẬT KÝ TỰ HỌC & CHẤM ĐIỂM (Đã sửa lỗi hiển thị ký tự) ---
                 let auditLogs = [];
                 let modelScoreTracker = { 'Tần Suất': 75, 'Lô Gan': 70, 'Markov': 72, 'Chạm Tổng': 78, 'Thần Học': 74 };
 
-                // Đảm bảo object JSON có mảng nhat_ky_tu_hoc
                 if (!currentLoadedJson.nhat_ky_tu_hoc) {
                     currentLoadedJson.nhat_ky_tu_hoc = [];
                 }
 
-                // Đối chiếu nhật ký cũ với kết quả thực tế trong lịch sử quay
                 currentLoadedJson.nhat_ky_tu_hoc.forEach(log => {
                     let matchingDraw = lichSuQuay.find(d => d.ngay === log.ngay_du_bao);
                     if (matchingDraw) {
@@ -347,10 +344,10 @@
                         log.trang_thai = isCorrect ? "trung" : "truot";
 
                         if (isCorrect) {
-                            auditLogs.push(`✅ Ngày ${log.ngay_du_bao}: Dự đoán [G8: ${log.g8_du_doan}, ĐB: ${log.db_du_doan}] $\rightarrow$ TRÚNG (Thực tế G8: ${actualG8}, ĐB: ${actualDB})`);
+                            auditLogs.push(`✅ Ngày ${log.ngay_du_bao}: Dự đoán [G8: ${log.g8_du_doan}, ĐB: ${log.db_du_doan}] → TRÚNG (Thực tế G8: ${actualG8}, ĐB: ${actualDB})`);
                             if(log.mo_hinh_giao_viec) modelScoreTracker[log.mo_hinh_giao_viec] = (modelScoreTracker[log.mo_hinh_giao_viec] || 75) + 4;
                         } else {
-                            auditLogs.push(`❌ Ngày ${log.ngay_du_bao}: Dự đoán [G8: ${log.g8_du_doan}, ĐB: ${log.db_du_doan}] $\rightarrow$ TRƯỢT (Thực tế G8: ${actualG8}, ĐB: ${actualDB})`);
+                            auditLogs.push(`❌ Ngày ${log.ngay_du_bao}: Dự đoán [G8: ${log.g8_du_doan}, ĐB: ${log.db_du_doan}] → TRƯỢT (Thực tế G8: ${actualG8}, ĐB: ${actualDB})`);
                             if(log.mo_hinh_giao_viec) modelScoreTracker[log.mo_hinh_giao_viec] = Math.max(50, (modelScoreTracker[log.mo_hinh_giao_viec] || 75) - 2);
                         }
                     } else {
@@ -390,7 +387,6 @@
                 document.getElementById('final3D').innerText = final3DNum;
 
                 // --- GHI NHẬN DỰ ĐOÁN MỚI VÀO MẢNG nhat_ky_tu_hoc ---
-                // Kiểm tra xem ngày dự báo này đã tồn tại trong nhật ký chưa, nếu chưa thì thêm mới
                 let existingLogIndex = currentLoadedJson.nhat_ky_tu_hoc.findIndex(l => l.ngay_du_bao === targetDateStr);
                 let newLogEntry = {
                     ngay_du_bao: targetDateStr,
@@ -401,9 +397,9 @@
                 };
 
                 if (existingLogIndex >= 0) {
-                    currentLoadedJson.nhat_ky_tu_hoc[existingLogIndex] = newLogEntry; // Cập nhật lại nếu bấm chạy lại
+                    currentLoadedJson.nhat_ky_tu_hoc[existingLogIndex] = newLogEntry; 
                 } else {
-                    currentLoadedJson.nhat_ky_tu_hoc.unshift(newLogEntry); // Thêm lên đầu danh sách
+                    currentLoadedJson.nhat_ky_tu_hoc.unshift(newLogEntry); 
                 }
 
                 // --- HIỂN THỊ BẢNG XẾP HẠNG ---
