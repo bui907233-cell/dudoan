@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis - Tự Học Đa Mô Hình</title>
+    <title>Analysis - Hệ Thống 6 Mô Hình Tự Học XSMT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -18,8 +18,8 @@
         <!-- Header & Nút chuyển Dark Mode -->
         <header class="mb-8 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
             <div class="text-center md:text-left">
-                <h1 class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">Analysis</h1>
-                <p class="text-slate-500 dark:text-slate-400 mt-2">Phân tích.</p>
+                <h1 class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">Hệ Thống Phân Tích XSMT Tự Học (6 Mô Hình)</h1>
+                <p class="text-slate-500 dark:text-slate-400 mt-2">Hợp lực đa mô hình + Lọc theo thứ + Nhật ký tự học qua JSON đa đài.</p>
             </div>
             <div class="flex items-center gap-3">
                 <button onclick="taiJsonCapNhat()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 px-4 rounded-xl transition-all shadow-sm flex items-center gap-2 text-sm">
@@ -37,12 +37,22 @@
                 <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Chọn Đài Miền Trung:</label>
                 <select id="selectDai" onchange="capNhatNgayTheoDai()" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-indigo-500">
                     <option value="phuyen" selected>Thứ 2 - Phú Yên</option>
+                    <option value="hue">Thứ 2 - Thừa Thiên Huế</option>
                     <option value="daklak">Thứ 3 - Đắk Lắk</option>
+                    <option value="quangnam">Thứ 3 - Quảng Nam</option>
                     <option value="khanhhoa">Thứ 4 - Khánh Hòa</option>
+                    <option value="danang_t4">Thứ 4 - Đà Nẵng</option>
                     <option value="binhdinh">Thứ 5 - Bình Định</option>
+                    <option value="quangtri">Thứ 5 - Quảng Trị</option>
+                    <option value="quangbinh">Thứ 5 - Quảng Bình</option>
                     <option value="gialai">Thứ 6 - Gia Lai</option>
+                    <option value="ninhthuan">Thứ 6 - Ninh Thuận</option>
                     <option value="danang">Thứ 7 - Đà Nẵng</option>
+                    <option value="quangngai">Thứ 7 - Quảng Ngãi</option>
+                    <option value="daknong">Thứ 7 - Đắk Nông</option>
                     <option value="kontum">Chủ Nhật - Kon Tum</option>
+                    <option value="khanhhoa_cn">Chủ Nhật - Khánh Hòa</option>
+                    <option value="hue_cn">Chủ Nhật - Thừa Thiên Huế</option>
                 </select>
             </div>
 
@@ -77,8 +87,8 @@
 
         <!-- KHUNG CHỐT SỐ TỐI ƯU (GIẢI 8 & ĐẶC BIỆT) -->
         <div class="bg-gradient-to-r from-indigo-700 to-indigo-900 dark:from-indigo-900 dark:to-slate-900 text-white p-6 rounded-xl shadow-lg mb-6 text-center border-2 border-indigo-400">
-            <h3 class="text-base font-bold uppercase tracking-wider text-indigo-200 mb-2">🎯 Dự Đoán Giải 8 & Giải Đặc Biệt (Hợp Lực 5 Mô Hình)</h3>
-            <p class="text-xs text-indigo-300 mb-4">Kết quả đồng thuận và tích lũy học tập từ dữ liệu lịch sử:</p>
+            <h3 class="text-base font-bold uppercase tracking-wider text-indigo-200 mb-2">🎯 Dự Đoán Giải 8 & Giải Đặc Biệt (Hợp Lực 6 Mô Hình)</h3>
+            <p class="text-xs text-indigo-300 mb-4">Kết quả đồng thuận và tích lũy học tập từ dữ liệu lịch sử đa đài:</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
                 <div class="bg-white/10 px-6 py-4 rounded-xl border border-white/20">
                     <p class="text-xs text-indigo-200 uppercase font-semibold">Dự Đoán Giải 8 (2 Chữ Số)</p>
@@ -107,9 +117,9 @@
         <!-- Bảng Xếp Hạng Hiệu Quả Mô Hình (Leaderboard) -->
         <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg mb-6 border border-slate-800">
             <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
-                🏆 Bảng Xếp Hạng Hiệu Quả 5 Mô Hình (Tự Học Trọng Số)
+                🏆 Bảng Xếp Hạng Hiệu Quả 6 Mô Hình (Tự Học Trọng Số)
             </h2>
-            <div id="modelLeaderboard" class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div id="modelLeaderboard" class="grid grid-cols-1 md:grid-cols-6 gap-3">
                 <div class="bg-white/10 p-4 rounded-lg border border-white/10">
                     <p class="text-xs text-slate-300 uppercase font-semibold">Trạng thái</p>
                     <p class="text-lg font-bold mt-1">Đang chờ bấm chạy...</p>
@@ -121,34 +131,38 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-6">
                 <div>
-                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">🔥 Mô hình 1: Tần Suất Đa Giải Cao (Hot Numbers)</h3>
+                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">🔥 Mô hình 1: Tần Suất Đa Giải Cao</h3>
                     <div id="resultHot" class="flex flex-wrap gap-2"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
                 </div>
                 <div>
-                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">🧊 Mô hình 2: Lô Gan Đa Giải (Cold Numbers)</h3>
+                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">🧊 Mô hình 2: Lô Gan Đa Giải</h3>
                     <div id="resultCold" class="flex flex-wrap gap-2"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
                 </div>
                 <div>
-                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">🔮 Mô hình 5: Thần Số Học & Ngũ Hành (Kỳ Tới)</h3>
+                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">🔮 Mô hình 5: Thần Số Học & Ngũ Hành</h3>
                     <div id="resultThanHoc" class="flex flex-wrap gap-2"><span class="text-slate-400 italic">Chưa có dữ liệu ngày</span></div>
                 </div>
             </div>
 
             <div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-6">
                 <div>
-                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">🔄 Mô hình 3: Chuỗi Markov (Xác suất chuyển tiếp)</h3>
+                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">🔄 Mô hình 3: Chuỗi Markov</h3>
                     <div id="resultMarkov" class="flex flex-wrap gap-2"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
                 </div>
                 <div>
-                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">⚡ Mô hình 4: Chạm & Tổng Đề Tiềm Năng</h3>
+                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">⚡ Mô hình 4: Chạm & Tổng Đề</h3>
                     <div id="resultCham" class="flex flex-wrap gap-2"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">🎯 Mô hình 6: Bạc Nhớ & Lọc Theo Thứ</h3>
+                    <div id="resultBacNho" class="flex flex-wrap gap-2"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
                 </div>
             </div>
         </div>
 
         <!-- Biểu đồ phân tích trực quan -->
         <div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
-            <h3 class="font-bold text-slate-700 dark:text-slate-300 mb-4">Biểu đồ đánh giá năng lực tự học của 5 mô hình</h3>
+            <h3 class="font-bold text-slate-700 dark:text-slate-300 mb-4">Biểu đồ đánh giá năng lực tự học của 6 mô hình</h3>
             <div id="evalChart" style="width: 100%; height: 300px;"></div>
         </div>
     </div>
@@ -178,13 +192,13 @@
             const selectThu = document.getElementById('selectThu');
             
             const mapping = {
-                'phuyen': 'Thứ Hai',
-                'daklak': 'Thứ Ba',
-                'khanhhoa': 'Thứ Tư',
-                'binhdinh': 'Thứ Năm',
-                'gialai': 'Thứ Sáu',
-                'danang': 'Thứ Bảy',
-                'kontum': 'Chủ Nhật'
+                'phuyen': 'Thứ Hai', 'hue': 'Thứ Hai',
+                'daklak': 'Thứ Ba', 'quangnam': 'Thứ Ba',
+                'khanhhoa': 'Thứ Tư', 'danang_t4': 'Thứ Tư',
+                'binhdinh': 'Thứ Năm', 'quangtri': 'Thứ Năm', 'quangbinh': 'Thứ Năm',
+                'gialai': 'Thứ Sáu', 'ninhthuan': 'Thứ Sáu',
+                'danang': 'Thứ Bảy', 'quangngai': 'Thứ Bảy', 'daknong': 'Thứ Bảy',
+                'kontum': 'Chủ Nhật', 'khanhhoa_cn': 'Chủ Nhật', 'hue_cn': 'Chủ Nhật'
             };
 
             if (mapping[dai]) {
@@ -300,7 +314,7 @@
                     }
                 }
 
-                // --- 5. THẦN SỐ HỌC & NGŨ HÀNH (Cộng 7 ngày cho kỳ tới) ---
+                // --- 5. THẦN SỐ HỌC & NGŨ HÀNH ---
                 let lastDateStr = subset[0].ngay;
                 let nextDate = new Date(lastDateStr);
                 nextDate.setDate(nextDate.getDate() + 7);
@@ -326,9 +340,21 @@
                 let thanHocNum3 = ((lifePathNum + dayNum) % 90).toString().padStart(2, '0');
                 let model5Preds = [thanHocNum1, thanHocNum2, thanHocNum3];
 
-                // --- XỬ LÝ NHẬT KÝ TỰ HỌC & CHẤM ĐIỂM (Đã sửa lỗi hiển thị ký tự) ---
+                // --- 6. MÔ HÌNH MỚI: BẠC NHỚ & LỌC THEO THỨ TRONG TUẦN ---
+                // Lọc toàn bộ lịch sử đúng theo thứ được chọn để tìm các con số đặc trưng xuất hiện nhiều nhất vào thứ đó
+                let sameDayHistory = lichSuQuay.filter(item => item.thu === selectThu.value);
+                let dayFreqMap = {};
+                sameDayHistory.forEach(item => {
+                    let dbVal = item.gdb ? item.gdb.toString().slice(-2) : "";
+                    if(dbVal.length === 2) dayFreqMap[dbVal] = (dayFreqMap[dbVal] || 0) + 1;
+                });
+                let sortedBacNho = Object.entries(dayFreqMap).sort((a, b) => b[1] - a[1]);
+                let model6Preds = sortedBacNho.slice(0, 5).map(([num]) => num);
+                if(model6Preds.length === 0) model6Preds = ["12", "38", "79", "86", "45"]; // fallback nếu ít dữ liệu
+
+                // --- XỬ LÝ NHẬT KÝ TỰ HỌC & CHẤM ĐIỂM (6 MÔ HÌNH) ---
                 let auditLogs = [];
-                let modelScoreTracker = { 'Tần Suất': 75, 'Lô Gan': 70, 'Markov': 72, 'Chạm Tổng': 78, 'Thần Học': 74 };
+                let modelScoreTracker = { 'Tần Suất': 75, 'Lô Gan': 70, 'Markov': 72, 'Chạm Tổng': 78, 'Thần Học': 74, 'Bạc Nhớ & Thứ': 76 };
 
                 if (!currentLoadedJson.nhat_ky_tu_hoc) {
                     currentLoadedJson.nhat_ky_tu_hoc = [];
@@ -343,12 +369,13 @@
                         let isCorrect = (log.g8_du_doan === actualG8 || log.db_du_doan === actualDB);
                         log.trang_thai = isCorrect ? "trung" : "truot";
 
+                        let activeModel = log.mo_hinh_giao_viec || 'Chạm Tổng';
                         if (isCorrect) {
-                            auditLogs.push(`✅ Ngày ${log.ngay_du_bao}: Dự đoán [G8: ${log.g8_du_doan}, ĐB: ${log.db_du_doan}] → TRÚNG (Thực tế G8: ${actualG8}, ĐB: ${actualDB})`);
-                            if(log.mo_hinh_giao_viec) modelScoreTracker[log.mo_hinh_giao_viec] = (modelScoreTracker[log.mo_hinh_giao_viec] || 75) + 4;
+                            auditLogs.push(`✅ Ngày ${log.ngay_du_bao}: Dự đoán [G8: ${log.g8_du_doan}, ĐB: ${log.db_du_doan}] -> TRÚNG (Thực tế G8: ${actualG8}, ĐB: ${actualDB})`);
+                            if(modelScoreTracker[activeModel] !== undefined) modelScoreTracker[activeModel] += 4;
                         } else {
-                            auditLogs.push(`❌ Ngày ${log.ngay_du_bao}: Dự đoán [G8: ${log.g8_du_doan}, ĐB: ${log.db_du_doan}] → TRƯỢT (Thực tế G8: ${actualG8}, ĐB: ${actualDB})`);
-                            if(log.mo_hinh_giao_viec) modelScoreTracker[log.mo_hinh_giao_viec] = Math.max(50, (modelScoreTracker[log.mo_hinh_giao_viec] || 75) - 2);
+                            auditLogs.push(`❌ Ngày ${log.ngay_du_bao}: Dự đoán [G8: ${log.g8_du_doan}, ĐB: ${log.db_du_doan}] -> TRƯỢT (Thực tế G8: ${actualG8}, ĐB: ${actualDB})`);
+                            if(modelScoreTracker[activeModel] !== undefined) modelScoreTracker[activeModel] = Math.max(50, modelScoreTracker[activeModel] - 2);
                         }
                     } else {
                         auditLogs.push(`⏳ Ngày ${log.ngay_du_bao}: Đang chờ kết quả kỳ quay thực tế...`);
@@ -357,7 +384,7 @@
 
                 document.getElementById('auditLogContainer').innerHTML = auditLogs.length > 0 ? auditLogs.map(l => `<p class="border-b border-slate-800 pb-1">${l}</p>`).join('') : '<span class="italic text-slate-500">Chưa có nhật ký ghi nhận.</span>';
 
-                // --- HỢP LỰC ĐIỂM ĐỒNG THUẬN ---
+                // --- HỢP LỰC ĐIỂM ĐỒNG THUẬN (6 MÔ HÌNH) ---
                 let scoreBoard = {};
                 for(let i=0; i<100; i++) {
                     let s = i < 10 ? '0' + i : '' + i;
@@ -369,6 +396,7 @@
                 markovPreds.slice(0, 5).forEach(([num], idx) => { scoreBoard[num] += (5 - idx) * 3; });
                 model4Preds.forEach(num => { scoreBoard[num] += 5; });
                 model5Preds.forEach(num => { if(scoreBoard[num] !== undefined) scoreBoard[num] += 6; });
+                model6Preds.forEach((num, idx) => { if(scoreBoard[num] !== undefined) scoreBoard[num] += (5 - idx) * 3; }); // Đóng góp mô hình mới
 
                 let sortedConsensus = Object.entries(scoreBoard).sort((a, b) => b[1] - a[1]);
                 let finalDBNum = sortedConsensus[0][0];
@@ -392,7 +420,7 @@
                     ngay_du_bao: targetDateStr,
                     g8_du_doan: finalG8Num,
                     db_du_doan: finalDBNum,
-                    mo_hinh_giao_viec: "Chạm Tổng",
+                    mo_hinh_giao_viec: "Bạc Nhớ & Thứ",
                     trang_thai: "dang_cho"
                 };
 
@@ -402,8 +430,9 @@
                     currentLoadedJson.nhat_ky_tu_hoc.unshift(newLogEntry); 
                 }
 
-                // --- HIỂN THỊ BẢNG XẾP HẠNG ---
+                // --- HIỂN THỊ BẢNG XẾP HẠNG (6 MÔ HÌNH) ---
                 let models = [
+                    { name: 'Bạc Nhớ & Thứ', score: modelScoreTracker['Bạc Nhớ & Thứ'] },
                     { name: 'Chạm Tổng', score: modelScoreTracker['Chạm Tổng'] },
                     { name: 'Thần Học', score: modelScoreTracker['Thần Học'] },
                     { name: 'Markov', score: modelScoreTracker['Markov'] },
@@ -414,13 +443,13 @@
 
                 let lbHtml = "";
                 models.forEach((m, idx) => {
-                    let badge = idx === 0 ? "👑 TỐI ƯU NHẤT" : `Top ${idx+1}`;
+                    let badge = idx === 0 ? "👑 TỐI ƯU" : `Top ${idx+1}`;
                     let color = idx === 0 ? "bg-indigo-600 border-indigo-400 ring-2 ring-indigo-400" : "bg-white/10 border-white/10 dark:bg-slate-800/50";
                     lbHtml += `
-                        <div class="${color} p-4 rounded-lg border">
-                            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-black/30 text-white">${badge}</span>
-                            <p class="text-sm font-bold mt-2">${m.name}</p>
-                            <p class="text-xs text-indigo-200 mt-1">Uy tín tự học: <strong>${m.score}đ</strong></p>
+                        <div class="${color} p-3 rounded-lg border text-center">
+                            <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-black/30 text-white">${badge}</span>
+                            <p class="text-xs font-bold mt-1.5">${m.name}</p>
+                            <p class="text-xs text-indigo-200 mt-1"><strong>${m.score}đ</strong></p>
                         </div>
                     `;
                 });
@@ -437,6 +466,9 @@
                 `;
                 document.getElementById('resultThanHoc').innerHTML = model5Preds.map(n => 
                     `<span class="bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 px-3 py-1 rounded-lg font-bold border border-amber-100 dark:border-amber-800">${n} (Dự báo ngày ${targetDateStr})</span>`
+                ).join('');
+                document.getElementById('resultBacNho').innerHTML = model6Preds.map(n => 
+                    `<span class="bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 px-3 py-1 rounded-lg font-bold border border-rose-100 dark:border-rose-800">${n} (Quy luật ${selectThu.value})</span>`
                 ).join('');
 
                 veBieuDoDanhGia(models);
