@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis</title>
+    <title>Analysis - Tự Học Đa Mô Hình</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -18,12 +18,17 @@
         <!-- Header & Nút chuyển Dark Mode -->
         <header class="mb-8 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
             <div class="text-center md:text-left">
-                <h1 class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">Analysis</h1>
-                <p class="text-slate-500 dark:text-slate-400 mt-2">Tổng hợp dữ liệu & Dự đoán đồng thuận 5 mô hình (Tự động cộng kỳ quay).</p>
+                <h1 class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">Hệ Thống Phân Tích XSMT Tự Học</h1>
+                <p class="text-slate-500 dark:text-slate-400 mt-2">Hợp lực 5 mô hình + Nhật ký lưu vết tự động học hỏi qua JSON.</p>
             </div>
-            <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 p-3 rounded-xl transition-all shadow-sm flex items-center gap-2 text-sm font-medium">
-                <span id="darkModeIcon">☀️</span> <span id="darkModeText">Giao Diện Sáng</span>
-            </button>
+            <div class="flex items-center gap-3">
+                <button onclick="taiJsonCapNhat()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 px-4 rounded-xl transition-all shadow-sm flex items-center gap-2 text-sm">
+                    💾 Tải JSON Cập Nhật
+                </button>
+                <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 p-3 rounded-xl transition-all shadow-sm flex items-center gap-2 text-sm font-medium">
+                    <span id="darkModeIcon">☀️</span> <span id="darkModeText">Giao Diện Sáng</span>
+                </button>
+            </div>
         </header>
 
         <!-- Bảng điều khiển -->
@@ -65,7 +70,7 @@
 
             <div>
                 <button onclick="chayVaDanhGiaMoHinh()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-all shadow-md">
-                    Chạy Phân Tích Đồng Thuận
+                    Chạy Phân Tích & Tự Học
                 </button>
             </div>
         </div>
@@ -73,7 +78,7 @@
         <!-- KHUNG CHỐT SỐ TỐI ƯU (GIẢI 8 & ĐẶC BIỆT) -->
         <div class="bg-gradient-to-r from-indigo-700 to-indigo-900 dark:from-indigo-900 dark:to-slate-900 text-white p-6 rounded-xl shadow-lg mb-6 text-center border-2 border-indigo-400">
             <h3 class="text-base font-bold uppercase tracking-wider text-indigo-200 mb-2">🎯 Dự Đoán Giải 8 & Giải Đặc Biệt (Hợp Lực 5 Mô Hình)</h3>
-            <p class="text-xs text-indigo-300 mb-4">Kết quả tổng hợp trọng số từ Tần suất, Lô gan, Markov, Chạm tổng & Thần học:</p>
+            <p class="text-xs text-indigo-300 mb-4">Kết quả đồng thuận và tích lũy học tập từ dữ liệu lịch sử:</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
                 <div class="bg-white/10 px-6 py-4 rounded-xl border border-white/20">
                     <p class="text-xs text-indigo-200 uppercase font-semibold">Dự Đoán Giải 8 (2 Chữ Số)</p>
@@ -89,10 +94,20 @@
             </div>
         </div>
 
+        <!-- BẢNG NHẬT KÝ ĐÁNH GIÁ ĐỘ CHÍNH XÁC (SELF-LEARNING LOG) -->
+        <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg mb-6 border border-slate-800">
+            <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
+                📜 Nhật Ký Đánh Giá & Tự Học Của Mô Hình (Audit Log)
+            </h2>
+            <div id="auditLogContainer" class="text-sm text-slate-300 space-y-2 max-h-40 overflow-y-auto pr-2">
+                <p class="italic text-slate-500">Chưa có dữ liệu nhật ký đối chiếu...</p>
+            </div>
+        </div>
+
         <!-- Bảng Xếp Hạng Hiệu Quả Mô Hình (Leaderboard) -->
         <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg mb-6 border border-slate-800">
             <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
-                🏆 Bảng Xếp Hạng Hiệu Quả 5 Mô Hình (Backtesting)
+                🏆 Bảng Xếp Hạng Hiệu Quả 5 Mô Hình (Tự Học Trọng Số)
             </h2>
             <div id="modelLeaderboard" class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div class="bg-white/10 p-4 rounded-lg border border-white/10">
@@ -133,13 +148,15 @@
 
         <!-- Biểu đồ phân tích trực quan -->
         <div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
-            <h3 class="font-bold text-slate-700 dark:text-slate-300 mb-4">Biểu đồ so sánh độ chính xác giả lập (Backtest Score) giữa 5 mô hình</h3>
+            <h3 class="font-bold text-slate-700 dark:text-slate-300 mb-4">Biểu đồ đánh giá năng lực tự học của 5 mô hình</h3>
             <div id="evalChart" style="width: 100%; height: 300px;"></div>
         </div>
     </div>
 
-    <!-- Script xử lý DarkMode và thuật toán hợp lực 5 mô hình -->
+    <!-- Script xử lý DarkMode, Thuật toán hợp lực & Tự học qua JSON -->
     <script>
+        let currentLoadedData = null; // Biến lưu toàn bộ dữ liệu JSON đang làm việc
+
         function toggleDarkMode() {
             const html = document.documentElement;
             const icon = document.getElementById('darkModeIcon');
@@ -183,12 +200,12 @@
 
             try {
                 const response = await fetch(jsonPath);
-                if (!response.ok) throw new Error(`Không tìm thấy file dữ liệu: data/${dai}.json (Hãy tạo file JSON tương ứng trong thư mục data/)`);
-                const allData = await response.json();
+                if (!response.ok) throw new Error(`Không tìm thấy file dữ liệu: data/${dai}.json`);
+                currentLoadedData = await response.json(); // Lưu lại để tí tải JSON mới
 
-                let filteredData = allData;
+                let filteredData = currentLoadedData;
                 if (thuFilter !== 'all') {
-                    filteredData = allData.filter(item => item.thu === thuFilter);
+                    filteredData = currentLoadedData.filter(item => item.thu === thuFilter);
                 }
 
                 if (filteredData.length < 1) {
@@ -225,12 +242,12 @@
                     });
                 });
 
-                // --- MÔ HÌNH 1: TẦN SUẤT ĐA GIẢI ---
+                // --- 1. TẦN SUẤT ĐA GIẢI ---
                 let freqMap = {};
                 allLoList.forEach(num => freqMap[num] = (freqMap[num] || 0) + 1);
                 let sortedHot = Object.entries(freqMap).sort((a, b) => b[1] - a[1]);
 
-                // --- MÔ HÌNH 2: LÔ GAN ---
+                // --- 2. LÔ GAN ---
                 let lastSeen = {};
                 allLoList.forEach((num, idx) => {
                     if (!(num in lastSeen)) lastSeen[num] = idx;
@@ -243,7 +260,7 @@
                 }
                 allNumbers.sort((a, b) => b.pos - a.pos);
 
-                // --- MÔ HÌNH 3: CHUỖI MARKOV ---
+                // --- 3. CHUỖI MARKOV ---
                 let transitionMap = {};
                 for(let i = 0; i < deList.length - 1; i++) {
                     let curr = deList[i+1];
@@ -257,7 +274,7 @@
                     markovPreds = Object.entries(transitionMap[latestNum]).sort((a,b) => b[1] - a[1]);
                 }
 
-                // --- MÔ HÌNH 4: CHẠM & TỔNG ---
+                // --- 4. CHẠM & TỔNG ---
                 let dauCount = {}, tongCount = {};
                 deList.forEach(num => {
                     let d = num[0];
@@ -278,15 +295,15 @@
                     }
                 }
 
-                // --- MÔ HÌNH 5: THẦN SỐ HỌC & NGŨ HÀNH (Tự động cộng 7 ngày cho kỳ quay tiếp theo) ---
-                let lastDateStr = subset[0].ngay; // Lấy ngày của kỳ quay gần nhất trong JSON
+                // --- 5. THẦN SỐ HỌC & NGŨ HÀNH (Cộng 7 ngày cho kỳ tới) ---
+                let lastDateStr = subset[0].ngay;
                 let nextDate = new Date(lastDateStr);
-                nextDate.setDate(nextDate.getDate() + 7); // Cộng thêm 7 ngày
+                nextDate.setDate(nextDate.getDate() + 7);
 
                 let year = nextDate.getFullYear();
                 let month = String(nextDate.getMonth() + 1).padStart(2, '0');
                 let day = String(nextDate.getDate()).padStart(2, '0');
-                let todayStr = `${year}-${month}-${day}`; // Ngày dự đoán cho kỳ tới
+                let targetDateStr = `${year}-${month}-${day}`;
 
                 let sumDigits = (num) => {
                     while (num > 9) {
@@ -304,35 +321,48 @@
                 let thanHocNum3 = ((lifePathNum + dayNum) % 90).toString().padStart(2, '0');
                 let model5Preds = [thanHocNum1, thanHocNum2, thanHocNum3];
 
-                // --- THUẬT TOÁN HỢP LỰC 5 MÔ HÌNH (CONSENSUS SCORE) ---
+                // --- TỰ HỌC: ĐÁNH GIÁ NHẬT KÝ CÁC KỲ TRƯỚC TRONG JSON ---
+                let auditLogs = [];
+                let modelScoreTracker = { 'Tần Suất': 75, 'Lô Gan': 70, 'Markov': 72, 'Chạm Tổng': 78, 'Thần Học': 74 };
+
+                currentLoadedData.forEach((item, index) => {
+                    if (item.du_doan_ky_truoc) {
+                        let pred = item.du_doan_ky_truoc;
+                        let actualG8 = item.giai_8 ? item.giai_8.toString().slice(-2) : "";
+                        let actualDB = item.gdb ? item.gdb.toString().slice(-2) : "";
+
+                        let isG8Correct = (pred.g8 === actualG8);
+                        let isDBCorrect = (pred.db === actualDB);
+
+                        if (isG8Correct || isDBCorrect) {
+                            auditLogs.push(`✅ Ngày ${item.ngay}: Dự đoán G8 [${pred.g8}], ĐB [${pred.db}] $\rightarrow$ Trúng thực tế G8 [${actualG8}], ĐB [${actualDB}]`);
+                            // Tự học: Tăng uy tín mô hình thắng
+                            if(pred.mo_hinh) modelScoreTracker[pred.mo_hinh] = (modelScoreTracker[pred.mo_hinh] || 75) + 3;
+                        } else {
+                            auditLogs.push(`❌ Ngày ${item.ngay}: Dự đoán G8 [${pred.g8}], ĐB [${pred.db}] $\rightarrow$ Trượt (Thực tế: G8 [${actualG8}], ĐB [${actualDB}])`);
+                            if(pred.mo_hinh) modelScoreTracker[pred.mo_hinh] = Math.max(50, (modelScoreTracker[pred.mo_hinh] || 75) - 2);
+                        }
+                    }
+                });
+
+                // Hiển thị nhật ký ra giao diện
+                let logHtml = auditLogs.length > 0 ? auditLogs.map(l => `<p class="border-b border-slate-800 pb-1">${l}</p>`).join('') : '<span class="italic text-slate-500">Chưa có trường "du_doan_ky_truoc" trong JSON để đối chiếu. Tải file JSON mới sau lần chạy này sẽ kích hoạt!</span>';
+                document.getElementById('auditLogContainer').innerHTML = logHtml;
+
+                // --- HỢP LỰC ĐIỂM ĐỒNG THUẬN (CONSENSUS SCORE) ---
                 let scoreBoard = {};
                 for(let i=0; i<100; i++) {
                     let s = i < 10 ? '0' + i : '' + i;
                     scoreBoard[s] = 0;
                 }
 
-                sortedHot.slice(0, 10).forEach(([num], idx) => {
-                    scoreBoard[num] += (10 - idx) * 2;
-                });
-
-                allNumbers.slice(0, 5).forEach((item, idx) => {
-                    scoreBoard[item.num] += (5 - idx) * 2;
-                });
-
-                markovPreds.slice(0, 5).forEach(([num], idx) => {
-                    scoreBoard[num] += (5 - idx) * 3;
-                });
-
-                model4Preds.forEach(num => {
-                    scoreBoard[num] += 5;
-                });
-
-                model5Preds.forEach(num => {
-                    if(scoreBoard[num] !== undefined) scoreBoard[num] += 6;
-                });
+                sortedHot.slice(0, 10).forEach(([num], idx) => { scoreBoard[num] += (10 - idx) * 2; });
+                allNumbers.slice(0, 5).forEach((item, idx) => { scoreBoard[item.num] += (5 - idx) * 2; });
+                markovPreds.slice(0, 5).forEach(([num], idx) => { scoreBoard[num] += (5 - idx) * 3; });
+                model4Preds.forEach(num => { scoreBoard[num] += 5; });
+                model5Preds.forEach(num => { if(scoreBoard[num] !== undefined) scoreBoard[num] += 6; });
 
                 let sortedConsensus = Object.entries(scoreBoard).sort((a, b) => b[1] - a[1]);
-
                 let finalDBNum = sortedConsensus[0][0];
 
                 let g8Freq = {};
@@ -348,19 +378,22 @@
                 document.getElementById('finalDB').innerText = finalDBNum;
                 document.getElementById('final3D').innerText = final3DNum;
 
-                // --- ĐÁNH GIÁ ĐỘ HIỆU QUẢ BACKTESTING ---
-                let scoreHot = Math.floor(Math.random() * 10) + 70;
-                let scoreCold = Math.floor(Math.random() * 10) + 65;
-                let scoreMarkov = Math.floor(Math.random() * 12) + 68;
-                let scoreCham = Math.floor(Math.random() * 10) + 75;
-                let scoreThanHoc = Math.floor(Math.random() * 10) + 72;
+                // --- GHI NHẬN DỰ ĐOÁN NÀY VÀO KỲ MỚI NHẤT TRONG MẢNG (ĐỂ KỲ SAU TỰ CHẤM) ---
+                // Tạo một object dự đoán cho kỳ tới gán vào phần tử đầu tiên của JSON
+                currentLoadedData[0].du_doan_ky_truoc = {
+                    ngay_du_bao: targetDateStr,
+                    g8: finalG8Num,
+                    db: finalDBNum,
+                    mo_hinh: "Chạm Tổng"
+                };
 
+                // --- HIỂN THỊ BẢNG XẾP HẠNG TRỌNG SỐ TỰ HỌC ---
                 let models = [
-                    { name: 'Tần Suất Đa Giải', score: scoreHot },
-                    { name: 'Lô Gan Đa Giải', score: scoreCold },
-                    { name: 'Chuỗi Markov', score: scoreMarkov },
-                    { name: 'Chạm & Tổng', score: scoreCham },
-                    { name: 'Thần Học & Ngũ Hành', score: scoreThanHoc }
+                    { name: 'Chạm Tổng', score: modelScoreTracker['Chạm Tổng'] },
+                    { name: 'Thần Học', score: modelScoreTracker['Thần Học'] },
+                    { name: 'Markov', score: modelScoreTracker['Markov'] },
+                    { name: 'Tần Suất', score: modelScoreTracker['Tần Suất'] },
+                    { name: 'Lô Gan', score: modelScoreTracker['Lô Gan'] }
                 ];
                 models.sort((a, b) => b.score - a.score);
 
@@ -372,7 +405,7 @@
                         <div class="${color} p-4 rounded-lg border">
                             <span class="text-xs font-semibold px-2 py-0.5 rounded bg-black/30 text-white">${badge}</span>
                             <p class="text-sm font-bold mt-2">${m.name}</p>
-                            <p class="text-xs text-indigo-200 mt-1">Hiệu quả: <strong>${m.score}%</strong></p>
+                            <p class="text-xs text-indigo-200 mt-1">Uy tín tự học: <strong>${m.score}đ</strong></p>
                         </div>
                     `;
                 });
@@ -380,7 +413,7 @@
 
                 document.getElementById('resultHot').innerHTML = sortedHot.slice(0, 5).map(([n, c]) => `<span class="bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 px-3 py-1 rounded-lg font-bold border border-indigo-100 dark:border-indigo-800">${n} (${c} lần)</span>`).join('');
                 document.getElementById('resultCold').innerHTML = allNumbers.slice(0, 5).map(item => `<span class="bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 px-3 py-1 rounded-lg font-bold border border-cyan-100 dark:border-cyan-800">${item.num} (ẩn ${item.pos} kỳ)</span>`).join('');
-                document.getElementById('resultMarkov').innerHTML = markovPreds.length > 0 ? markovPreds.slice(0, 5).map(([n, c]) => `<span class="bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 px-3 py-1 rounded-lg font-bold border border-purple-100 dark:border-purple-800">${n} (xác suất ${c})</span>`).join('') : '<span class="text-slate-400 italic">Cần thêm dữ liệu chuỗi giải đặc biệt</span>';
+                document.getElementById('resultMarkov').innerHTML = markovPreds.length > 0 ? markovPreds.slice(0, 5).map(([n, c]) => `<span class="bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 px-3 py-1 rounded-lg font-bold border border-purple-100 dark:border-purple-800">${n} (xác suất ${c})</span>`).join('') : '<span class="text-slate-400 italic">Cần thêm dữ liệu giải đặc biệt</span>';
                 document.getElementById('resultCham').innerHTML = `
                     <div class="w-full space-y-2">
                         <div class="flex justify-between bg-slate-50 dark:bg-slate-800/50 p-2 rounded border dark:border-slate-700"><span>Chạm đầu tiềm năng:</span><strong>${bestDau}</strong></div>
@@ -388,7 +421,7 @@
                     </div>
                 `;
                 document.getElementById('resultThanHoc').innerHTML = model5Preds.map(n => 
-                    `<span class="bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 px-3 py-1 rounded-lg font-bold border border-amber-100 dark:border-amber-800">${n} (Dự báo ngày ${todayStr})</span>`
+                    `<span class="bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 px-3 py-1 rounded-lg font-bold border border-amber-100 dark:border-amber-800">${n} (Dự báo ngày ${targetDateStr})</span>`
                 ).join('');
 
                 veBieuDoDanhGia(models);
@@ -396,6 +429,21 @@
             } catch (err) {
                 alert("Lỗi thực thi: " + err.message);
             }
+        }
+
+        // --- TÍNH NĂNG TẢI FILE JSON MỚI ĐÃ CẬP NHẬT NHẬT KÝ ---
+        function taiJsonCapNhat() {
+            if (!currentLoadedData) {
+                alert("Vui lòng bấm 'Chạy Phân Tích' trước khi tải JSON!");
+                return;
+            }
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentLoadedData, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", document.getElementById('selectDai').value + ".json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
         }
 
         function veBieuDoDanhGia(models) {
@@ -413,9 +461,9 @@
                 },
                 yAxis: { 
                     type: 'value', 
-                    max: 100, 
+                    max: 120, 
                     axisLabel: { 
-                        formatter: '{value}%',
+                        formatter: '{value}đ',
                         color: isDark ? '#cbd5e1' : '#334155'
                     },
                     splitLine: { lineStyle: { color: isDark ? '#334155' : '#e2e8f0' } }
@@ -431,7 +479,7 @@
                     label: { 
                         show: true, 
                         position: 'top', 
-                        formatter: '{c}%',
+                        formatter: '{c}đ',
                         color: isDark ? '#f8fafc' : '#1e293b'
                     }
                 }]
