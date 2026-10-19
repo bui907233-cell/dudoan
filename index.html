@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis</title>
+    <title>Analysis - Hệ Thống 8 Mô Hình Tự Học XSMT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -18,8 +18,8 @@
         <!-- Header & Nút chuyển Dark Mode -->
         <header class="mb-8 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
             <div class="text-center md:text-left">
-                <h1 class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">Analysis</h1>
-                <p class="text-slate-500 dark:text-slate-400 mt-2">Phân tích</p>
+                <h1 class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">Hệ Thống Phân Tích XSMT Tự Học (8 Mô Hình)</h1>
+                <p class="text-slate-500 dark:text-slate-400 mt-2">Hợp lực đa mô hình + Khoảng cách nhịp + Bù trừ gương + Nhật ký tự học JSON đa đài.</p>
             </div>
             <div class="flex items-center gap-3">
                 <button onclick="taiJsonCapNhat()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 px-4 rounded-xl transition-all shadow-sm flex items-center gap-2 text-sm">
@@ -87,7 +87,7 @@
 
         <!-- KHUNG CHỐT SỐ TỐI ƯU (GIẢI 8 & ĐẶC BIỆT) -->
         <div class="bg-gradient-to-r from-indigo-700 to-indigo-900 dark:from-indigo-900 dark:to-slate-900 text-white p-6 rounded-xl shadow-lg mb-6 text-center border-2 border-indigo-400">
-            <h3 class="text-base font-bold uppercase tracking-wider text-indigo-200 mb-2">🎯 Dự Đoán Giải 8 & Giải Đặc Biệt (Hợp Lực 6 Mô Hình)</h3>
+            <h3 class="text-base font-bold uppercase tracking-wider text-indigo-200 mb-2">🎯 Dự Đoán Giải 8 & Giải Đặc Biệt (Hợp Lực 8 Mô Hình)</h3>
             <p class="text-xs text-indigo-300 mb-4">Kết quả đồng thuận và tích lũy học tập từ dữ liệu lịch sử đa đài:</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
                 <div class="bg-white/10 px-6 py-4 rounded-xl border border-white/20">
@@ -117,12 +117,12 @@
         <!-- Bảng Xếp Hạng Hiệu Quả Mô Hình (Leaderboard) -->
         <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg mb-6 border border-slate-800">
             <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
-                🏆 Bảng Xếp Hạng Hiệu Quả 6 Mô Hình (Tự Học Trọng Số)
+                🏆 Bảng Xếp Hạng Hiệu Quả 8 Mô Hình (Tự Học Trọng Số)
             </h2>
-            <div id="modelLeaderboard" class="grid grid-cols-1 md:grid-cols-6 gap-3">
-                <div class="bg-white/10 p-4 rounded-lg border border-white/10">
+            <div id="modelLeaderboard" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
+                <div class="bg-white/10 p-3 rounded-lg border border-white/10">
                     <p class="text-xs text-slate-300 uppercase font-semibold">Trạng thái</p>
-                    <p class="text-lg font-bold mt-1">Đang chờ bấm chạy...</p>
+                    <p class="text-sm font-bold mt-1">Đang chờ bấm chạy...</p>
                 </div>
             </div>
         </div>
@@ -131,43 +131,51 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-6">
                 <div>
-                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">🔥 Mô hình 1: Tần Suất Đa Giải Cao</h3>
+                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">🔥 1. Tần Suất Đa Giải Cao</h3>
                     <div id="resultHot" class="flex flex-wrap gap-2"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
                 </div>
                 <div>
-                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">🧊 Mô hình 2: Lô Gan Đa Giải</h3>
+                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">🧊 2. Lô Gan Đa Giải</h3>
                     <div id="resultCold" class="flex flex-wrap gap-2"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
                 </div>
                 <div>
-                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">🔮 Mô hình 5: Thần Số Học & Ngũ Hành</h3>
-                    <div id="resultThanHoc" class="flex flex-wrap gap-2"><span class="text-slate-400 italic">Chưa có dữ liệu ngày</span></div>
+                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">🔄 3. Chuỗi Markov Chuyển Tiếp</h3>
+                    <div id="resultMarkov" class="flex flex-wrap gap-2"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">⚡ 4. Chạm & Tổng Đề Tiềm Năng</h3>
+                    <div id="resultCham" class="flex flex-wrap gap-2"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
                 </div>
             </div>
 
             <div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-6">
                 <div>
-                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">🔄 Mô hình 3: Chuỗi Markov</h3>
-                    <div id="resultMarkov" class="flex flex-wrap gap-2"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
+                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">🔮 5. Thần Số Học & Ngũ Hành</h3>
+                    <div id="resultThanHoc" class="flex flex-wrap gap-2"><span class="text-slate-400 italic">Chưa có dữ liệu ngày</span></div>
                 </div>
                 <div>
-                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">⚡ Mô hình 4: Chạm & Tổng Đề</h3>
-                    <div id="resultCham" class="flex flex-wrap gap-2"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
-                </div>
-                <div>
-                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">🎯 Mô hình 6: Bạc Nhớ & Lọc Theo Thứ</h3>
+                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">🎯 6. Bạc Nhớ Theo Thứ Trong Tuần</h3>
                     <div id="resultBacNho" class="flex flex-wrap gap-2"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">📈 7. Khoảng Cách Nhịp (Delta)</h3>
+                    <div id="resultDelta" class="flex flex-wrap gap-2"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">🪞 8. Tổng Bù & Gương Đối Xứng</h3>
+                    <div id="resultMirror" class="flex flex-wrap gap-2"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
                 </div>
             </div>
         </div>
 
         <!-- Biểu đồ phân tích trực quan -->
         <div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
-            <h3 class="font-bold text-slate-700 dark:text-slate-300 mb-4">Biểu đồ đánh giá năng lực tự học của 6 mô hình</h3>
-            <div id="evalChart" style="width: 100%; height: 300px;"></div>
+            <h3 class="font-bold text-slate-700 dark:text-slate-300 mb-4">Biểu đồ đánh giá năng lực tự học của 8 mô hình</h3>
+            <div id="evalChart" style="width: 100%; height: 320px;"></div>
         </div>
     </div>
 
-    <!-- Script xử lý -->
+    <!-- Script xử lý 8 mô hình -->
     <script>
         let currentLoadedJson = null;
 
@@ -340,8 +348,7 @@
                 let thanHocNum3 = ((lifePathNum + dayNum) % 90).toString().padStart(2, '0');
                 let model5Preds = [thanHocNum1, thanHocNum2, thanHocNum3];
 
-                // --- 6. MÔ HÌNH MỚI: BẠC NHỚ & LỌC THEO THỨ TRONG TUẦN ---
-                // Lọc toàn bộ lịch sử đúng theo thứ được chọn để tìm các con số đặc trưng xuất hiện nhiều nhất vào thứ đó
+                // --- 6. BẠC NHỚ THEO THỨ TRONG TUẦN ---
                 let sameDayHistory = lichSuQuay.filter(item => item.thu === selectThu.value);
                 let dayFreqMap = {};
                 sameDayHistory.forEach(item => {
@@ -350,11 +357,35 @@
                 });
                 let sortedBacNho = Object.entries(dayFreqMap).sort((a, b) => b[1] - a[1]);
                 let model6Preds = sortedBacNho.slice(0, 5).map(([num]) => num);
-                if(model6Preds.length === 0) model6Preds = ["12", "38", "79", "86", "45"]; // fallback nếu ít dữ liệu
+                if(model6Preds.length === 0) model6Preds = ["12", "38", "79", "86", "45"];
 
-                // --- XỬ LÝ NHẬT KÝ TỰ HỌC & CHẤM ĐIỂM (6 MÔ HÌNH) ---
+                // --- 7. MÔ HÌNH KHOẢNG CÁCH NHỊP (DELTA PATTERN) ---
+                let deltaList = [];
+                for(let i = 0; i < deList.length - 1; i++) {
+                    let diff = (parseInt(deList[i]) - parseInt(deList[i+1]) + 100) % 100;
+                    deltaList.push(diff);
+                }
+                let avgDelta = deltaList.length > 0 ? Math.round(deltaList.reduce((a,b)=>a+b, 0) / deltaList.length) : 15;
+                let latestDeVal = parseInt(deList[0] || "50");
+                let predictedDeltaVal = (latestDeVal + avgDelta) % 100;
+                let model7Num1 = predictedDeltaVal < 10 ? '0' + predictedDeltaVal : '' + predictedDeltaVal;
+                let model7Num2 = (100 - predictedDeltaVal).toString().padStart(2, '0');
+                let model7Preds = [model7Num1, model7Num2, ((predictedDeltaVal + 11) % 100).toString().padStart(2, '0')];
+
+                // --- 8. MÔ HÌNH TỔNG BÙ & GƯƠNG ĐỐI XỨNG (COMPLEMENTARY & MIRROR) ---
+                let latestDbTwo = deList[0] || "26";
+                let d1 = parseInt(latestDbTwo[0]), d2 = parseInt(latestDbTwo[1]);
+                let mirror1 = '' + d2 + d1; // Đảo ngược số (Gương)
+                let complement1 = '' + (9 - d1) + (9 - d2); // Bù 9
+                let complement2 = '' + ((10 - d1) % 10) + ((10 - d2) % 10); // Bù 10
+                let model8Preds = [mirror1, complement1, complement2];
+
+                // --- XỬ LÝ NHẬT KÝ TỰ HỌC & CHẤM ĐIỂM (8 MÔ HÌNH) ---
                 let auditLogs = [];
-                let modelScoreTracker = { 'Tần Suất': 75, 'Lô Gan': 70, 'Markov': 72, 'Chạm Tổng': 78, 'Thần Học': 74, 'Bạc Nhớ & Thứ': 76 };
+                let modelScoreTracker = { 
+                    'Tần Suất': 75, 'Lô Gan': 70, 'Markov': 72, 'Chạm Tổng': 78, 
+                    'Thần Học': 74, 'Bạc Nhớ Thứ': 76, 'Khoảng Cách Nhịp': 73, 'Bù Gương': 75 
+                };
 
                 if (!currentLoadedJson.nhat_ky_tu_hoc) {
                     currentLoadedJson.nhat_ky_tu_hoc = [];
@@ -384,7 +415,7 @@
 
                 document.getElementById('auditLogContainer').innerHTML = auditLogs.length > 0 ? auditLogs.map(l => `<p class="border-b border-slate-800 pb-1">${l}</p>`).join('') : '<span class="italic text-slate-500">Chưa có nhật ký ghi nhận.</span>';
 
-                // --- HỢP LỰC ĐIỂM ĐỒNG THUẬN (6 MÔ HÌNH) ---
+                // --- HỢP LỰC ĐIỂM ĐỒNG THUẬN (8 MÔ HÌNH) ---
                 let scoreBoard = {};
                 for(let i=0; i<100; i++) {
                     let s = i < 10 ? '0' + i : '' + i;
@@ -396,7 +427,9 @@
                 markovPreds.slice(0, 5).forEach(([num], idx) => { scoreBoard[num] += (5 - idx) * 3; });
                 model4Preds.forEach(num => { scoreBoard[num] += 5; });
                 model5Preds.forEach(num => { if(scoreBoard[num] !== undefined) scoreBoard[num] += 6; });
-                model6Preds.forEach((num, idx) => { if(scoreBoard[num] !== undefined) scoreBoard[num] += (5 - idx) * 3; }); // Đóng góp mô hình mới
+                model6Preds.forEach((num, idx) => { if(scoreBoard[num] !== undefined) scoreBoard[num] += (5 - idx) * 3; });
+                model7Preds.forEach(num => { if(scoreBoard[num] !== undefined) scoreBoard[num] += 6; });
+                model8Preds.forEach(num => { if(scoreBoard[num] !== undefined) scoreBoard[num] += 7; });
 
                 let sortedConsensus = Object.entries(scoreBoard).sort((a, b) => b[1] - a[1]);
                 let finalDBNum = sortedConsensus[0][0];
@@ -420,7 +453,7 @@
                     ngay_du_bao: targetDateStr,
                     g8_du_doan: finalG8Num,
                     db_du_doan: finalDBNum,
-                    mo_hinh_giao_viec: "Bạc Nhớ & Thứ",
+                    mo_hinh_giao_viec: "Bù Gương",
                     trang_thai: "dang_cho"
                 };
 
@@ -430,9 +463,11 @@
                     currentLoadedJson.nhat_ky_tu_hoc.unshift(newLogEntry); 
                 }
 
-                // --- HIỂN THỊ BẢNG XẾP HẠNG (6 MÔ HÌNH) ---
+                // --- HIỂN THỊ BẢNG XẾP HẠNG (8 MÔ HÌNH) ---
                 let models = [
-                    { name: 'Bạc Nhớ & Thứ', score: modelScoreTracker['Bạc Nhớ & Thứ'] },
+                    { name: 'Bù Gương', score: modelScoreTracker['Bù Gương'] },
+                    { name: 'Khoảng Cách Nhịp', score: modelScoreTracker['Khoảng Cách Nhịp'] },
+                    { name: 'Bạc Nhớ Thứ', score: modelScoreTracker['Bạc Nhớ Thứ'] },
                     { name: 'Chạm Tổng', score: modelScoreTracker['Chạm Tổng'] },
                     { name: 'Thần Học', score: modelScoreTracker['Thần Học'] },
                     { name: 'Markov', score: modelScoreTracker['Markov'] },
@@ -446,10 +481,10 @@
                     let badge = idx === 0 ? "👑 TỐI ƯU" : `Top ${idx+1}`;
                     let color = idx === 0 ? "bg-indigo-600 border-indigo-400 ring-2 ring-indigo-400" : "bg-white/10 border-white/10 dark:bg-slate-800/50";
                     lbHtml += `
-                        <div class="${color} p-3 rounded-lg border text-center">
-                            <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-black/30 text-white">${badge}</span>
-                            <p class="text-xs font-bold mt-1.5">${m.name}</p>
-                            <p class="text-xs text-indigo-200 mt-1"><strong>${m.score}đ</strong></p>
+                        <div class="${color} p-2.5 rounded-lg border text-center">
+                            <span class="text-[9px] font-semibold px-1 py-0.5 rounded bg-black/30 text-white">${badge}</span>
+                            <p class="text-xs font-bold mt-1">${m.name}</p>
+                            <p class="text-xs text-indigo-200 mt-0.5"><strong>${m.score}đ</strong></p>
                         </div>
                     `;
                 });
@@ -469,6 +504,12 @@
                 ).join('');
                 document.getElementById('resultBacNho').innerHTML = model6Preds.map(n => 
                     `<span class="bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 px-3 py-1 rounded-lg font-bold border border-rose-100 dark:border-rose-800">${n} (Quy luật ${selectThu.value})</span>`
+                ).join('');
+                document.getElementById('resultDelta').innerHTML = model7Preds.map(n => 
+                    `<span class="bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 px-3 py-1 rounded-lg font-bold border border-teal-100 dark:border-teal-800">${n} (Nhịp tịnh tiến)</span>`
+                ).join('');
+                document.getElementById('resultMirror').innerHTML = model8Preds.map(n => 
+                    `<span class="bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 px-3 py-1 rounded-lg font-bold border border-emerald-100 dark:border-emerald-800">${n} (Bù & Gương đối xứng)</span>`
                 ).join('');
 
                 veBieuDoDanhGia(models);
@@ -503,7 +544,7 @@
                 xAxis: { 
                     type: 'category', 
                     data: models.map(m => m.name),
-                    axisLabel: { color: isDark ? '#cbd5e1' : '#334155' }
+                    axisLabel: { color: isDark ? '#cbd5e1' : '#334155', interval: 0, rotate: 15 }
                 },
                 yAxis: { 
                     type: 'value', 
