@@ -182,10 +182,11 @@
 
     <script>
         let currentLoadedJson = null;
-        let lastCachedResults = null; // Lưu trữ kết quả phân tích 9 mô hình để dùng cho nút Lấy Phần Giao
+        let lastCachedResults = null; 
 
+        // Khởi tạo trạng thái sạch hoàn toàn, không lưu trữ và không tự động nạp dữ liệu ngầm
         window.onload = function() {
-            taiDuLieuDai(false);
+            resetUI();
         };
 
         function toggleDarkMode() {
@@ -205,7 +206,6 @@
             currentLoadedJson = null;
             lastCachedResults = null;
             resetUI();
-            taiDuLieuDai(false);
         }
 
         function resetUI() {
@@ -263,7 +263,10 @@
             });
         }
 
-        function thucHienPhanTichHoacBacktesting() {
+        async function thucHienPhanTichHoacBacktesting() {
+            if (!currentLoadedJson) {
+                await taiDuLieuDai(false);
+            }
             const ngayChon = document.getElementById('selectTraCuuNgay').value;
             chayVaDanhGiaMoHinh(ngayChon ? ngayChon : null);
         }
@@ -355,14 +358,16 @@
             let m4 = [];
             for(let i=0; i<100; i++) { let s = i < 10 ? '0' + i : '' + i; if(s[0] === bestDau || (parseInt(s[0]) + parseInt(s[1])) % 10 === parseInt(bestTong)) m4.push(s); }
 
-            let nextDate = new Date(subset[0].ngay);
+            let dateParts = subset[0].ngay.split('-');
+            let nextDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
             nextDate.setDate(nextDate.getDate() + 7);
+            
             let sumDigits = (n) => { while(n > 9) n = n.toString().split('').reduce((a,b)=>parseInt(a)+parseInt(b),0); return n; };
             let lifePath = sumDigits(nextDate.getDate()) + sumDigits(nextDate.getMonth()+1) + sumDigits(sumDigits(nextDate.getFullYear()));
             lifePath = sumDigits(lifePath);
             let m5 = [(lifePath * 9).toString().padStart(2, '0'), (lifePath * 11).toString().slice(-2), ((lifePath + nextDate.getDate()) % 90).toString().padStart(2, '0')];
 
-            let targetThu = subset[0].thu || "Chủ Nhật";
+            let targetThu = subset[0].thu || "Thứ Hai";
             let sameDayHistory = lichSuQuay.filter(item => item.thu === targetThu);
             let dayFreqMap = {};
             sameDayHistory.forEach(item => {
@@ -461,10 +466,9 @@
                 }
 
                 let results = chay9MoHinhNoiBo(subset, lichSuQuay);
-                lastCachedResults = results; // Lưu lại kết quả để dùng cho nút Lấy Phần Giao
+                lastCachedResults = results; 
                 let scores = tinhDiemDongTuLichSu(lichSuQuay);
 
-                // --- HỢP LỰC 9 MÔ HÌNH VỚI TRỌNG SỐ ---
                 let scoreBoard = {};
                 for(let i=0; i<100; i++) scoreBoard[i < 10 ? '0' + i : '' + i] = 0;
 
@@ -483,7 +487,6 @@
                 let sortedConsensus = Object.entries(scoreBoard).sort((a, b) => b[1] - a[1]);
                 let final2DNum = sortedConsensus[0][0];
 
-                // --- TỔNG HỢP TOP 12 SỐ GỢI Ý THAM KHẢO TỪ 9 MÔ HÌNH ---
                 let topSuggested = sortedConsensus.slice(0, 12).map(([num, score]) => ({ num, score: Math.round(score * 10) / 10 }));
                 document.getElementById('sectionTitleSuggest').innerText = "💡 Danh Sách Số Gợi Ý 2 Chữ Số Tham Khảo (Tổng Hợp Từ 9 Mô Hình)";
                 let suggestedHtml = topSuggested.map((item, idx) => {
@@ -495,7 +498,6 @@
                 }).join('');
                 document.getElementById('suggestedNumbersList').innerHTML = suggestedHtml;
 
-                // 3 CÀNG BÓNG ÂM DƯƠNG
                 let allDeList = subset.map(item => item.gdb ? item.gdb.toString().slice(-2) : "").filter(Boolean);
                 let latestDe = allDeList[0] || "53";
                 let sumDe = (parseInt(latestDe[0]) + parseInt(latestDe[1])) % 10;
@@ -512,7 +514,6 @@
                 document.getElementById('final3DList').innerHTML = html3D;
                 document.getElementById('detail3DHint').innerText = `(Hàng trăm dịch bóng từ tổng ${latestDe}: ${topHundreds.join(', ')})`;
 
-                // ĐỐI CHIẾU KẾT QUẢ VÀ TÔ ĐỎ NẾU ĐÚNG
                 if (actualDrawData) {
                     let actualDBVal = actualDrawData.gdb ? actualDrawData.gdb.toString() : "";
                     let actual2D = actualDBVal.slice(-2);
@@ -534,7 +535,6 @@
                     document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình đã phân tích lịch sử)";
                 }
 
-                // Hiển thị chi tiết mô hình
                 document.getElementById('resultHot').innerHTML = results['Tần Suất'].slice(0, 6).map(n => `<span class="bg-indigo-50 dark:bg-indigo-950/60 text-indigo-300 px-2 py-0.5 rounded font-bold text-xs border border-indigo-800">${n}</span>`).join('');
                 document.getElementById('resultCold').innerHTML = results['Lô Gan'].slice(0, 6).map(n => `<span class="bg-cyan-50 dark:bg-cyan-950/60 text-cyan-300 px-2 py-0.5 rounded font-bold text-xs border border-cyan-800">${n}</span>`).join('');
                 document.getElementById('resultMarkov').innerHTML = results['Markov'].length > 0 ? results['Markov'].slice(0, 5).map(n => `<span class="bg-purple-50 dark:bg-purple-950/60 text-purple-300 px-2 py-0.5 rounded font-bold text-xs border border-purple-800">${n}</span>`).join('') : '<span class="text-slate-400 text-xs italic">Chưa đủ dữ liệu</span>';
@@ -564,11 +564,11 @@
                 veBieuDoDanhGia(modelArr);
 
             } catch (err) {
-                console.warn("Vui lòng bấm 'Chạy Phân Tích' để hệ thống nạp dữ liệu.", err.message);
+                console.warn("Vui lòng kiểm tra lại đường dẫn file JSON của đài.", err.message);
             }
         }
 
-        // --- HÀM XỬ LÝ LẤY PHẦN GIAO (INTERSECTION) GIỮA CÁC MÔ HÌNH ---
+        // --- HÀM XỬ LÝ LẤY PHẦN GIAO THÔNG MINH (LỌC TỪ 2 MÔ HÌNH TRỞ LÊN) ---
         function layPhanGiaoCacMoHinh() {
             if (!lastCachedResults) {
                 alert("Vui lòng bấm 'Chạy Phân Tích' trước để hệ thống sinh dữ liệu các mô hình!");
@@ -576,12 +576,11 @@
                 if (!lastCachedResults) return;
             }
 
-            // Đếm số lượng mô hình đề xuất cho từng con số
             let countMap = {};
-            let modelSourceMap = {}; // Lưu xem số đó xuất hiện ở mô hình nào
+            let modelSourceMap = {}; 
 
             Object.keys(lastCachedResults).forEach(mName => {
-                let preds = [...new Set(lastCachedResults[mName])]; // Loại bỏ trùng lặp trong nội bộ 1 mô hình
+                let preds = [...new Set(lastCachedResults[mName])];
                 preds.forEach(num => {
                     countMap[num] = (countMap[num] || 0) + 1;
                     if (!modelSourceMap[num]) modelSourceMap[num] = [];
@@ -589,21 +588,30 @@
                 });
             });
 
-            // Sắp xếp các số theo số lượng mô hình đồng thuận giảm dần
-            let sortedIntersection = Object.entries(countMap).sort((a, b) => b[1] - a[1]);
+            // Chỉ lọc các số xuất hiện từ 2 mô hình trở lên để tránh bị loãng số
+            let filteredIntersection = Object.entries(countMap).filter(([num, count]) => count >= 2);
 
-            document.getElementById('sectionTitleSuggest').innerText = "🔗 PHẦN GIAO ĐỒNG THUẬN GIỮA CÁC MÔ HÌNH (Sắp xếp theo số mô hình trùng nhau)";
+            if (filteredIntersection.length === 0) {
+                filteredIntersection = Object.entries(countMap).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            } else {
+                filteredIntersection.sort((a, b) => b[1] - a[1]);
+            }
+
+            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA (Chỉ lọc các số xuất hiện từ 2 mô hình trở lên)";
             
-            let intersectionHtml = sortedIntersection.map(([num, count], idx) => {
+            let intersectionHtml = filteredIntersection.map(([num, count]) => {
                 let modelsList = modelSourceMap[num].join(', ');
-                let badgeColor = count >= 2 ? "bg-emerald-600 text-white font-bold ring-2 ring-emerald-400" : "bg-slate-800 text-slate-300 border border-slate-700 opacity-70";
-                return `<div title="Xuất hiện ở mô hình: ${modelsList}" class="${badgeColor} px-3 py-1.5 rounded-lg text-center text-sm flex flex-col items-center shadow-sm cursor-help">
-                    <span class="text-base tracking-wider font-extrabold">${num}</span>
-                    <span class="text-[9px] opacity-90">${count} mô hình chung</span>
+                let badgeColor = count >= 3 
+                    ? "bg-amber-500 text-slate-950 font-extrabold ring-2 ring-amber-300 scale-105" 
+                    : "bg-emerald-600 text-white font-bold ring-2 ring-emerald-400";
+                
+                return `<div title="Được đề xuất bởi các mô hình: ${modelsList}" class="${badgeColor} px-3 py-2 rounded-xl text-center text-sm flex flex-col items-center shadow-md cursor-help transition-transform hover:scale-110">
+                    <span class="text-lg tracking-wider">${num}</span>
+                    <span class="text-[10px] opacity-90 font-semibold">⚡ ${count} mô hình</span>
                 </div>`;
             }).join('');
 
-            document.getElementById('suggestedNumbersList').innerHTML = intersectionHtml || '<span class="text-slate-400 text-xs italic">Không tìm thấy phần giao phù hợp.</span>';
+            document.getElementById('suggestedNumbersList').innerHTML = intersectionHtml || '<span class="text-slate-400 text-xs italic">Không tìm thấy con số nào có từ 2 mô hình đồng thuận trở lên.</span>';
         }
 
         function veBieuDoDanhGia(models) {
