@@ -57,9 +57,9 @@
 
             <div>
                 <label class="block text-xs font-medium text-indigo-400 mb-1">🔍 Chọn Ngày Kiểm Chứng Lịch Sử:</label>
-                <!-- Khi chọn ngày ở đây, hệ thống sẽ tự động chạy backtesting mô hình cho đúng mốc ngày đó -->
-                <select id="selectTraCuuNgay" onchange="chayBacktestingNgayChon()" class="w-full border border-indigo-500/50 rounded-lg px-3 py-2 bg-indigo-50 dark:bg-indigo-950/40 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
-                    <option value="">-- Chọn ngày xem kết quả / Backtesting --</option>
+                <!-- Dùng sự kiện onchange để bật Popup chi tiết các giải của ngày đó -->
+                <select id="selectTraCuuNgay" onchange="hienPopupTraCuu()" class="w-full border border-indigo-500/50 rounded-lg px-3 py-2 bg-indigo-50 dark:bg-indigo-950/40 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
+                    <option value="">-- Mặc định (Dự đoán kỳ mới nhất) --</option>
                 </select>
             </div>
 
@@ -73,8 +73,9 @@
             </div>
 
             <div>
-                <button onclick="chayVaDanhGiaMoHinh()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-all shadow-md text-sm">
-                    🚀 Chạy Phân Tích Mới Nhất
+                <!-- Nút bấm phân tích chủ động -->
+                <button onclick="thucHienPhanTichHoacBacktesting()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-all shadow-md text-sm">
+                    🚀 Chạy Phân Tích
                 </button>
             </div>
         </div>
@@ -163,14 +164,14 @@
         </div>
     </div>
 
-    <!-- POPUP MODAL XEM CHI TIẾT KẾT QUẢ QUAY -->
+    <!-- POPUP MODAL XEM CHI TIẾT CÁC GIẢI (CHỮ ĐỎ NẾU CÓ SỐ) -->
     <div id="resultModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-2xl shadow-2xl border border-slate-700 overflow-hidden">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-xl rounded-2xl shadow-2xl border border-slate-700 overflow-hidden">
             <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white">
                 <h3 id="modalTitle" class="font-bold text-base">📊 Chi Tiết Kết Quả XSMT</h3>
                 <button onclick="dongPopup()" class="text-white hover:text-slate-200 text-xl font-bold">&times;</button>
             </div>
-            <div id="modalBody" class="p-6 space-y-3 text-sm max-h-[75vh] overflow-y-auto"></div>
+            <div id="modalBody" class="p-6 space-y-2 text-sm max-h-[75vh] overflow-y-auto"></div>
             <div class="bg-slate-100 dark:bg-slate-800 px-6 py-3 text-right">
                 <button onclick="dongPopup()" class="bg-slate-600 hover:bg-slate-700 text-white px-4 py-1.5 rounded-lg text-xs font-medium">Đóng</button>
             </div>
@@ -214,9 +215,9 @@
                 document.getElementById(id).innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
             });
 
-            document.getElementById('modelLeaderboard').innerHTML = '<div class="bg-white/5 p-2 rounded-lg border border-white/10 text-center col-span-full"><p class="text-xs text-slate-400">Vui lòng bấm "Chạy Phân Tích" hoặc chọn ngày kiểm chứng</p></div>';
+            document.getElementById('modelLeaderboard').innerHTML = '<div class="bg-white/5 p-2 rounded-lg border border-white/10 text-center col-span-full"><p class="text-xs text-slate-400">Vui lòng bấm "Chạy Phân Tích"</p></div>';
             document.getElementById('auditLogContainer').innerHTML = '<p class="italic text-slate-500">Chưa có dữ liệu nhật ký đối chiếu...</p>';
-            document.getElementById('selectTraCuuNgay').innerHTML = '<option value="">-- Chọn ngày xem kết quả / Backtesting --</option>';
+            document.getElementById('selectTraCuuNgay').innerHTML = '<option value="">-- Mặc định (Dự đoán kỳ mới nhất) --</option>';
 
             const chartDom = document.getElementById('evalChart');
             if (chartDom) {
@@ -233,7 +234,7 @@
                 if (!response.ok) throw new Error(`Không tìm thấy file: data/${dai}.json`);
                 currentLoadedJson = await response.json();
                 capNhatDropdownNgay();
-                if (shouldRunAnalysis) chayVaDanhGiaMoHinh();
+                if (shouldRunAnalysis) thucHienPhanTichHoacBacktesting();
             } catch (err) {
                 console.warn("Chưa tải được file JSON:", err.message);
             }
@@ -241,7 +242,7 @@
 
         function capNhatDropdownNgay() {
             const selectNgay = document.getElementById('selectTraCuuNgay');
-            selectNgay.innerHTML = '<option value="">-- Chọn ngày xem kết quả / Backtesting --</option>';
+            selectNgay.innerHTML = '<option value="">-- Mặc định (Dự đoán kỳ mới nhất) --</option>';
             if (!currentLoadedJson) return;
             const lichSu = currentLoadedJson.lich_su_quay || currentLoadedJson;
             if (!Array.isArray(lichSu)) return;
@@ -258,11 +259,48 @@
             document.getElementById('resultModal').classList.add('hidden');
         }
 
-        // Khi chọn một ngày cụ thể từ ô tra cứu -> Tiến hành Backtesting mô hình lùi về trước ngày đó
-        function chayBacktestingNgayChon() {
+        // Kích hoạt khi bấm nút "Chạy Phân Tích"
+        function thucHienPhanTichHoacBacktesting() {
+            const ngayChon = document.getElementById('selectTraCuuNgay').value;
+            chayVaDanhGiaMoHinh(ngayChon ? ngayChon : null);
+        }
+
+        // Popup xem chi tiết các giải, hiển thị thông tin bên phải và tô chữ đỏ nếu có số
+        function hienPopupTraCuu() {
             const ngayChon = document.getElementById('selectTraCuuNgay').value;
             if (!ngayChon || !currentLoadedJson) return;
-            chayVaDanhGiaMoHinh(ngayChon);
+
+            const lichSu = currentLoadedJson.lich_su_quay || currentLoadedJson;
+            const kyQuay = lichSu.find(i => i.ngay === ngayChon);
+            if (!kyQuay) return;
+
+            document.getElementById('modalTitle').innerText = `📊 Chi Tiết Kết Quả XSMT Ngày ${kyQuay.ngay} (${kyQuay.thu})`;
+
+            let renderGiaiRow = (label, val) => {
+                let valStr = Array.isArray(val) ? val.join(' - ') : (val || '--');
+                return `<div class="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-2 rounded-lg text-xs">
+                    <span class="font-semibold text-slate-500">${label}:</span>
+                    <strong class="text-red-500 font-bold">${valStr}</strong>
+                </div>`;
+            };
+
+            let html = `
+                ${renderGiaiRow('Giải 8', kyQuay.giai_8)}
+                ${renderGiaiRow('Giải 7', kyQuay.giai_7)}
+                ${renderGiaiRow('Giải 6', kyQuay.giai_6)}
+                ${renderGiaiRow('Giải 5', kyQuay.giai_5)}
+                ${renderGiaiRow('Giải 4', kyQuay.giai_4)}
+                ${renderGiaiRow('Giải 3', kyQuay.giai_3)}
+                ${renderGiaiRow('Giải 2', kyQuay.giai_2)}
+                ${renderGiaiRow('Giải 1', kyQuay.giai_1)}
+                <div class="flex justify-between items-center bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-500/30 p-2.5 rounded-lg text-xs">
+                    <span class="font-bold text-indigo-400">Giải Đặc Biệt:</span>
+                    <strong class="text-red-500 font-extrabold text-base tracking-widest">${kyQuay.gdb || '--'}</strong>
+                </div>
+            `;
+
+            document.getElementById('modalBody').innerHTML = html;
+            document.getElementById('resultModal').classList.remove('hidden');
         }
 
         async function chayVaDanhGiaMoHinh(targetBacktestDate = null) {
@@ -283,20 +321,24 @@
 
                 let activeSubset = lichSuQuay;
                 let actualDrawData = null;
+                let targetDisplayDate = "";
 
-                // Nếu có chỉ định ngày Backtesting cụ thể
+                // QUY LUẬT BACKTESTING CHUẨN: Chọn ngày X -> Dùng dữ liệu từ ngày X trở về trước để dự đoán cho kỳ kế tiếp (X+1)
                 if (targetBacktestDate) {
                     let targetIndex = lichSuQuay.findIndex(i => i.ngay === targetBacktestDate);
-                    if (targetIndex >= 0) {
-                        actualDrawData = lichSuQuay[targetIndex];
-                        // Cắt lấy dữ liệu các kỳ TRƯỚC ngày được chọn để huấn luyện mô hình
-                        activeSubset = lichSuQuay.slice(targetIndex + 1);
+                    if (targetIndex > 0) {
+                        actualDrawData = lichSuQuay[targetIndex - 1]; // Kỳ thực tế cần đối chiếu là kỳ ngay trước trong mảng (kỳ kế tiếp theo thời gian)
+                        targetDisplayDate = actualDrawData.ngay;
+                        activeSubset = lichSuQuay.slice(targetIndex); // Lấy từ ngày được chọn trở về quá khứ xa hơn
+                    } else if (targetIndex === 0) {
+                        actualDrawData = null;
+                        activeSubset = lichSuQuay;
                     }
                 }
 
                 const subset = activeSubset.slice(0, limit);
                 if (subset.length === 0) {
-                    alert("Không đủ dữ liệu lịch sử trước ngày này để phân tích!");
+                    alert("Không đủ dữ liệu lịch sử để phân tích!");
                     return;
                 }
 
@@ -468,15 +510,15 @@
                 document.getElementById('final3DList').innerHTML = html3D;
                 document.getElementById('detail3DHint').innerText = `(Hàng trăm dịch bóng từ tổng ${latestDe}: ${topHundreds.join(', ')})`;
 
-                // Nếu đang ở chế độ kiểm chứng (Backtesting ngày cụ thể), hiển thị đối chiếu thực tế ngay trên giao diện
+                // Đối chiếu kết quả Backtesting đúng chuẩn (Từ ngày X đối chiếu sang kỳ kế tiếp X+1)
                 if (actualDrawData) {
                     let actualDBVal = actualDrawData.gdb ? actualDrawData.gdb.toString() : "";
                     let actual2D = actualDBVal.slice(-2);
                     let isMatch2D = (final2DNum === actual2D);
                     let isMatch3D = list3D.includes(actualDBVal);
 
-                    document.getElementById('resultTitleBanner').innerText = `🔍 KẾT QUẢ KIỂM CHỨNG (BACKTESTING) NGÀY ${actualDrawData.ngay}`;
-                    let compareText = `Thực tế ngày ${actualDrawData.ngay} về ĐB: <strong class="text-yellow-300">${actualDBVal}</strong> | `;
+                    document.getElementById('resultTitleBanner').innerText = `🔍 TỪ NGÀY ${targetBacktestDate} ➔ ĐỐI CHIẾU KỲ ${targetDisplayDate}`;
+                    let compareText = `Thực tế ngày ${targetDisplayDate} về ĐB: <strong class="text-yellow-300">${actualDBVal}</strong> | `;
                     compareText += isMatch2D ? `✅ Khớp 2S (${actual2D})` : `❌ Lệch 2S (Thực tế: ${actual2D})`;
                     if(isMatch3D) compareText += ` | 👑 TRÚNG 3 CÀNG!`;
                     document.getElementById('actualCompareNote').innerHTML = compareText;
@@ -485,7 +527,7 @@
                     document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình toàn cục)";
                 }
 
-                // Hiển thị giao diện 9 mô hình
+                // Hiển thị chi tiết 9 mô hình giao diện
                 document.getElementById('resultHot').innerHTML = sortedHot.slice(0, 6).map(([n, c]) => `<span class="bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded font-bold text-xs border border-indigo-100 dark:border-indigo-800">${n} (${c})</span>`).join('');
                 document.getElementById('resultCold').innerHTML = allNumbers.slice(0, 6).map(item => `<span class="bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 px-2 py-0.5 rounded font-bold text-xs border border-cyan-100 dark:border-cyan-800">${item.num} (ẩn ${item.pos})</span>`).join('');
                 document.getElementById('resultMarkov').innerHTML = markovPreds.length > 0 ? markovPreds.slice(0, 5).map(([n, c]) => `<span class="bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded font-bold text-xs border border-purple-100 dark:border-purple-800">${n} (${c})</span>`).join('') : '<span class="text-slate-400 text-xs italic">Chưa đủ dữ liệu</span>';
