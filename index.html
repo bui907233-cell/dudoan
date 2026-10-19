@@ -56,9 +56,9 @@
             </div>
 
             <div>
-                <label class="block text-xs font-medium text-indigo-400 mb-1">🔍 Chọn Ngày Kiểm Chứng Lịch Sử:</label>
-                <!-- Dùng sự kiện onchange để bật Popup chi tiết các giải của ngày đó -->
-                <select id="selectTraCuuNgay" onchange="hienPopupTraCuu()" class="w-full border border-indigo-500/50 rounded-lg px-3 py-2 bg-indigo-50 dark:bg-indigo-950/40 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
+                <label class="block text-xs font-medium text-indigo-400 mb-1">🔍 Chọn Ngày Xem / Kiểm Chứng:</label>
+                <!-- Khi chọn ngày, bảng thông tin chi tiết sẽ hiển thị trực tiếp bên phải giao diện -->
+                <select id="selectTraCuuNgay" onchange="hienThongTinNgayTrucTiep()" class="w-full border border-indigo-500/50 rounded-lg px-3 py-2 bg-indigo-50 dark:bg-indigo-950/40 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
                     <option value="">-- Mặc định (Dự đoán kỳ mới nhất) --</option>
                 </select>
             </div>
@@ -73,28 +73,44 @@
             </div>
 
             <div>
-                <!-- Nút bấm phân tích chủ động -->
                 <button onclick="thucHienPhanTichHoacBacktesting()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-all shadow-md text-sm">
                     🚀 Chạy Phân Tích
                 </button>
             </div>
         </div>
 
-        <!-- KHUNG KẾT QUẢ CHỐT SỐ TOÀN DIỆN -->
-        <div class="bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-xl mb-6 text-center border border-indigo-500/30">
-            <h3 id="resultTitleBanner" class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4">🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH & 3 CÀNG BÓNG ÂM DƯƠNG</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-xl mx-auto">
-                <div class="bg-white/5 backdrop-blur px-5 py-4 rounded-xl border border-white/10">
-                    <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp 2 Chữ Số Tối Ưu</p>
-                    <span id="final2D" class="text-5xl font-extrabold tracking-wider text-yellow-400 mt-2 block">--</span>
-                    <span id="actualCompareNote" class="text-[10px] text-slate-300 mt-1 block">(Đồng thuận từ 9 mô hình toàn cục)</span>
-                </div>
-                <div class="bg-white/5 backdrop-blur px-5 py-4 rounded-xl border border-white/10">
-                    <p class="text-[11px] text-indigo-200 uppercase font-semibold">Top 3 Càng Bóng Âm Dương</p>
-                    <div id="final3DList" class="flex justify-center gap-2 mt-2">
-                        <span class="text-3xl font-extrabold tracking-wider text-yellow-400">---</span>
+        <!-- KHU VỰC HIỂN THỊ SONG SONG: KẾT QUẢ DỰ ĐOÁN (TRÁI) & CHI TIẾT NGÀY ĐÃ CHỌN (PHẢI) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <!-- Cột trái (2 phần): Kết quả hợp lực 9 mô hình -->
+            <div class="lg:col-span-2 bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-xl border border-indigo-500/30 flex flex-col justify-between">
+                <div>
+                    <h3 id="resultTitleBanner" class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4 text-center">🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH & 3 CÀNG BÓNG ÂM DƯƠNG</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto mb-4">
+                        <div class="bg-white/5 backdrop-blur px-4 py-3 rounded-xl border border-white/10 text-center">
+                            <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp 2 Chữ Số Tối Ưu</p>
+                            <span id="final2D" class="text-4xl font-extrabold tracking-wider text-yellow-400 mt-1 block">--</span>
+                            <span id="actualCompareNote" class="text-[10px] text-slate-300 mt-1 block">(Đồng thuận từ 9 mô hình)</span>
+                        </div>
+                        <div class="bg-white/5 backdrop-blur px-4 py-3 rounded-xl border border-white/10 text-center">
+                            <p class="text-[11px] text-indigo-200 uppercase font-semibold">Top 3 Càng Bóng Âm Dương</p>
+                            <div id="final3DList" class="flex justify-center gap-1.5 mt-1">
+                                <span class="text-2xl font-extrabold tracking-wider text-yellow-400">---</span>
+                            </div>
+                            <span id="detail3DHint" class="text-[10px] text-indigo-300 mt-1 block">(Hàng trăm dịch bóng)</span>
+                        </div>
                     </div>
-                    <span id="detail3DHint" class="text-[10px] text-indigo-300 mt-1 block">(Chi phối bởi bóng âm dương hàng trăm)</span>
+                </div>
+            </div>
+
+            <!-- Cột phải (1 phần): Bảng thông tin chi tiết giải của ngày được chọn ngay trên trang -->
+            <div id="panelChiTietNgay" class="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-xl border border-indigo-500/30 flex flex-col justify-between">
+                <div>
+                    <h3 id="panelTitle" class="text-xs font-bold uppercase tracking-wider text-indigo-500 dark:text-indigo-400 border-b border-slate-200 dark:border-slate-800 pb-2 mb-3">
+                        📋 Chi Tiết Giải Ngày Đã Chọn
+                    </h3>
+                    <div id="panelBody" class="space-y-1.5 text-xs">
+                        <p class="text-slate-400 italic text-center py-6">Vui lòng chọn ngày ở ô "Tra cứu nhanh" bên trên để xem kết quả chi tiết tại đây.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -164,20 +180,6 @@
         </div>
     </div>
 
-    <!-- POPUP MODAL XEM CHI TIẾT CÁC GIẢI (CHỮ ĐỎ NẾU CÓ SỐ) -->
-    <div id="resultModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 w-full max-w-xl rounded-2xl shadow-2xl border border-slate-700 overflow-hidden">
-            <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white">
-                <h3 id="modalTitle" class="font-bold text-base">📊 Chi Tiết Kết Quả XSMT</h3>
-                <button onclick="dongPopup()" class="text-white hover:text-slate-200 text-xl font-bold">&times;</button>
-            </div>
-            <div id="modalBody" class="p-6 space-y-2 text-sm max-h-[75vh] overflow-y-auto"></div>
-            <div class="bg-slate-100 dark:bg-slate-800 px-6 py-3 text-right">
-                <button onclick="dongPopup()" class="bg-slate-600 hover:bg-slate-700 text-white px-4 py-1.5 rounded-lg text-xs font-medium">Đóng</button>
-            </div>
-        </div>
-    </div>
-
     <script>
         let currentLoadedJson = null;
 
@@ -206,11 +208,14 @@
 
         function resetUI() {
             document.getElementById('final2D').innerText = "--";
-            document.getElementById('final3DList').innerHTML = '<span class="text-3xl font-extrabold tracking-wider text-yellow-400">---</span>';
-            document.getElementById('detail3DHint').innerText = "(Chi phối bởi bóng âm dương hàng trăm)";
-            document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình toàn cục)";
+            document.getElementById('final3DList').innerHTML = '<span class="text-2xl font-extrabold tracking-wider text-yellow-400">---</span>';
+            document.getElementById('detail3DHint').innerText = "(Hàng trăm dịch bóng)";
+            document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình)";
             document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH & 3 CÀNG BÓNG ÂM DƯƠNG";
             
+            document.getElementById('panelTitle').innerText = "📋 Chi Tiết Giải Ngày Đã Chọn";
+            document.getElementById('panelBody').innerHTML = '<p class="text-slate-400 italic text-center py-6">Vui lòng chọn ngày ở ô "Tra cứu nhanh" bên trên để xem kết quả chi tiết tại đây.</p>';
+
             ['resultHot', 'resultCold', 'resultMarkov', 'resultCham', 'resultThanHoc', 'resultBacNho', 'resultDelta', 'resultMirror', 'resultBong'].forEach(id => {
                 document.getElementById(id).innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
             });
@@ -255,30 +260,29 @@
             });
         }
 
-        function dongPopup() {
-            document.getElementById('resultModal').classList.add('hidden');
-        }
-
-        // Kích hoạt khi bấm nút "Chạy Phân Tích"
         function thucHienPhanTichHoacBacktesting() {
             const ngayChon = document.getElementById('selectTraCuuNgay').value;
             chayVaDanhGiaMoHinh(ngayChon ? ngayChon : null);
         }
 
-        // Popup xem chi tiết các giải, hiển thị thông tin bên phải và tô chữ đỏ nếu có số
-        function hienPopupTraCuu() {
+        // Hiển thị trực tiếp thông tin chi tiết các giải ngay khung bên phải trang khi chọn ngày
+        function hienThongTinNgayTrucTiep() {
             const ngayChon = document.getElementById('selectTraCuuNgay').value;
-            if (!ngayChon || !currentLoadedJson) return;
+            if (!ngayChon || !currentLoadedJson) {
+                document.getElementById('panelTitle').innerText = "📋 Chi Tiết Giải Ngày Đã Chọn";
+                document.getElementById('panelBody').innerHTML = '<p class="text-slate-400 italic text-center py-6">Vui lòng chọn ngày ở ô "Tra cứu nhanh" bên trên để xem kết quả chi tiết tại đây.</p>';
+                return;
+            }
 
             const lichSu = currentLoadedJson.lich_su_quay || currentLoadedJson;
             const kyQuay = lichSu.find(i => i.ngay === ngayChon);
             if (!kyQuay) return;
 
-            document.getElementById('modalTitle').innerText = `📊 Chi Tiết Kết Quả XSMT Ngày ${kyQuay.ngay} (${kyQuay.thu})`;
+            document.getElementById('panelTitle').innerText = `📋 Chi Tiết Ngày ${kyQuay.ngay} (${kyQuay.thu})`;
 
             let renderGiaiRow = (label, val) => {
                 let valStr = Array.isArray(val) ? val.join(' - ') : (val || '--');
-                return `<div class="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-2 rounded-lg text-xs">
+                return `<div class="flex justify-between items-center bg-slate-50 dark:bg-slate-800/60 p-1.5 rounded border border-slate-100 dark:border-slate-800">
                     <span class="font-semibold text-slate-500">${label}:</span>
                     <strong class="text-red-500 font-bold">${valStr}</strong>
                 </div>`;
@@ -293,14 +297,13 @@
                 ${renderGiaiRow('Giải 3', kyQuay.giai_3)}
                 ${renderGiaiRow('Giải 2', kyQuay.giai_2)}
                 ${renderGiaiRow('Giải 1', kyQuay.giai_1)}
-                <div class="flex justify-between items-center bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-500/30 p-2.5 rounded-lg text-xs">
+                <div class="flex justify-between items-center bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-500/30 p-2 rounded">
                     <span class="font-bold text-indigo-400">Giải Đặc Biệt:</span>
-                    <strong class="text-red-500 font-extrabold text-base tracking-widest">${kyQuay.gdb || '--'}</strong>
+                    <strong class="text-red-500 font-extrabold text-sm tracking-widest">${kyQuay.gdb || '--'}</strong>
                 </div>
             `;
 
-            document.getElementById('modalBody').innerHTML = html;
-            document.getElementById('resultModal').classList.remove('hidden');
+            document.getElementById('panelBody').innerHTML = html;
         }
 
         async function chayVaDanhGiaMoHinh(targetBacktestDate = null) {
@@ -323,13 +326,12 @@
                 let actualDrawData = null;
                 let targetDisplayDate = "";
 
-                // QUY LUẬT BACKTESTING CHUẨN: Chọn ngày X -> Dùng dữ liệu từ ngày X trở về trước để dự đoán cho kỳ kế tiếp (X+1)
                 if (targetBacktestDate) {
                     let targetIndex = lichSuQuay.findIndex(i => i.ngay === targetBacktestDate);
                     if (targetIndex > 0) {
-                        actualDrawData = lichSuQuay[targetIndex - 1]; // Kỳ thực tế cần đối chiếu là kỳ ngay trước trong mảng (kỳ kế tiếp theo thời gian)
+                        actualDrawData = lichSuQuay[targetIndex - 1]; 
                         targetDisplayDate = actualDrawData.ngay;
-                        activeSubset = lichSuQuay.slice(targetIndex); // Lấy từ ngày được chọn trở về quá khứ xa hơn
+                        activeSubset = lichSuQuay.slice(targetIndex); 
                     } else if (targetIndex === 0) {
                         actualDrawData = null;
                         activeSubset = lichSuQuay;
@@ -506,11 +508,11 @@
                 let list3D = topHundreds.map(h => h + final2DNum);
 
                 document.getElementById('final2D').innerText = final2DNum;
-                let html3D = list3D.map((val, idx) => `<span class="${idx === 0 ? 'text-yellow-400 font-extrabold' : 'text-indigo-200 font-bold'} text-2xl px-2 py-1 bg-black/20 rounded border border-white/10">${val}</span>`).join('');
+                let html3D = list3D.map((val, idx) => `<span class="${idx === 0 ? 'text-yellow-400 font-extrabold' : 'text-indigo-200 font-bold'} text-xl px-2 py-0.5 bg-black/20 rounded border border-white/10">${val}</span>`).join('');
                 document.getElementById('final3DList').innerHTML = html3D;
                 document.getElementById('detail3DHint').innerText = `(Hàng trăm dịch bóng từ tổng ${latestDe}: ${topHundreds.join(', ')})`;
 
-                // Đối chiếu kết quả Backtesting đúng chuẩn (Từ ngày X đối chiếu sang kỳ kế tiếp X+1)
+                // Đối chiếu kết quả Backtesting
                 if (actualDrawData) {
                     let actualDBVal = actualDrawData.gdb ? actualDrawData.gdb.toString() : "";
                     let actual2D = actualDBVal.slice(-2);
