@@ -1,15 +1,5 @@
 {
-  "model_scores": {
-    "Tần Suất": 50,
-    "Lô Gan": 50,
-    "Markov": 50,
-    "Chạm Tổng": 50,
-    "Thần Học": 50,
-    "Bạc Nhớ Thứ": 50,
-    "Delta": 50,
-    "Bù Gương": 50,
-    "Bóng Âm Dương": 50
-  },
+  
   "lich_su_quay": [
     {
       "ngay": "2026-10-11",
