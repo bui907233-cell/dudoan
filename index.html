@@ -20,14 +20,8 @@
                 <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis</h1>
                 <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Phân tích...</p>
             </div>
-            <div class="flex items-center gap-2 flex-wrap">
-                <button onclick="chayQuaTrinhTuHoc()" class="bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 px-3 rounded-lg transition-all shadow-sm flex items-center gap-1.5 text-xs">
-                    🤖 Tự Học Toàn Bộ Lịch Sử
-                </button>
-                <button onclick="taiJsonThongMinh()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-3 rounded-lg transition-all shadow-sm flex items-center gap-1.5 text-xs">
-                    💾 Tải File [Đài]Hoc.json
-                </button>
-                <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 p-2 rounded-lg transition-all shadow-sm text-xs">
+            <div class="flex items-center gap-2">
+                <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 p-2 rounded-lg transition-all shadow-sm text-xs flex items-center gap-1.5">
                     <span id="darkModeIcon">☀️</span> <span id="darkModeText">Giao Diện Sáng</span>
                 </button>
             </div>
@@ -37,9 +31,9 @@
         <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div>
                 <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Chọn Đài Miền Trung:</label>
-                <!-- Khôi phục đúng thứ tự các đài chuẩn -->
                 <select id="selectDai" onchange="onDaiChange()" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
-                    <option value="phuyen" selected>Thứ 2 - Phú Yên</option>
+                    <option value="kontum" selected>Chủ Nhật - Kon Tum</option>
+                    <option value="phuyen">Thứ 2 - Phú Yên</option>
                     <option value="hue">Thứ 2 - Thừa Thiên Huế</option>
                     <option value="daklak">Thứ 3 - Đắk Lắk</option>
                     <option value="quangnam">Thứ 3 - Quảng Nam</option>
@@ -53,7 +47,6 @@
                     <option value="danang">Thứ 7 - Đà Nẵng</option>
                     <option value="quangngai">Thứ 7 - Quảng Ngãi</option>
                     <option value="daknong">Thứ 7 - Đắk Nông</option>
-                    <option value="kontum">Chủ Nhật - Kon Tum</option>
                     <option value="khanhhoa_cn">Chủ Nhật - Khánh Hòa</option>
                     <option value="hue_cn">Chủ Nhật - Thừa Thiên Huế</option>
                 </select>
@@ -155,28 +148,18 @@
         <!-- BẢNG XẾP HẠNG 9 MÔ HÌNH -->
         <div class="bg-slate-900 text-white p-5 rounded-xl shadow-lg mb-6 border border-slate-800">
             <h2 class="text-sm font-bold mb-3 flex items-center gap-2 text-indigo-300">
-                🏆 Bảng Xếp Hạng Trọng Số Động 9 Mô Hình
+                🏆 Bảng Xếp Hạng Trọng Số 9 Mô Hình
             </h2>
             <div id="modelLeaderboard" class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-2">
                 <div class="bg-white/5 p-2 rounded-lg border border-white/10 text-center col-span-full">
-                    <p class="text-xs text-slate-400">Đang chờ...</p>
+                    <p class="text-xs text-slate-400">Đang chờ bấm "Chạy Phân Tích"...</p>
                 </div>
-            </div>
-        </div>
-
-        <!-- NHẬT KÝ TỰ HỌC AUDIT LOG -->
-        <div class="bg-slate-900 text-white p-5 rounded-xl shadow-lg mb-6 border border-slate-800">
-            <h2 class="text-sm font-bold mb-2 flex items-center gap-2 text-indigo-300">
-                📜 Nhật Ký Quét Tự Học Toàn Bộ Lịch Sử
-            </h2>
-            <div id="auditLogContainer" class="text-xs text-slate-300 space-y-1.5 max-h-36 overflow-y-auto pr-2">
-                <p class="italic text-slate-500">Chưa chạy tự học...</p>
             </div>
         </div>
 
         <!-- BIỂU ĐỒ TRỰC QUAN -->
         <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
-            <h3 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">Biểu Đồ Uy Tín 9 Mô Hình</h3>
+            <h3 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">Biểu Đồ Trọng Số 9 Mô Hình</h3>
             <div id="evalChart" style="width: 100%; height: 280px;"></div>
         </div>
     </div>
@@ -222,7 +205,6 @@
             });
 
             document.getElementById('modelLeaderboard').innerHTML = '<div class="bg-white/5 p-2 rounded-lg border border-white/10 text-center col-span-full"><p class="text-xs text-slate-400">Vui lòng bấm "Chạy Phân Tích"</p></div>';
-            document.getElementById('auditLogContainer').innerHTML = '<p class="italic text-slate-500">Chưa chạy tự học...</p>';
             document.getElementById('selectTraCuuNgay').innerHTML = '<option value="">-- Mặc định (Dự đoán kỳ mới nhất) --</option>';
 
             const chartDom = document.getElementById('evalChart');
@@ -261,42 +243,7 @@
             });
         }
 
-        // --- HÀM TỰ ĐỘNG QUÉT HỌC NGẦM KHI BẤM CHẠY PHÂN TÍCH ---
         function thucHienPhanTichHoacBacktesting() {
-            if (!currentLoadedJson) return;
-            // Tự động kích hoạt quét toàn bộ lịch sử nếu chưa có model_scores để đảm bảo độ chuẩn xác
-            if (!currentLoadedJson.model_scores) {
-                chayQuaTrinhTuHocSilently();
-            } else {
-                const ngayChon = document.getElementById('selectTraCuuNgay').value;
-                chayVaDanhGiaMoHinh(ngayChon ? ngayChon : null);
-            }
-        }
-
-        function chayQuaTrinhTuHocSilently() {
-            const lichSuQuay = currentLoadedJson.lich_su_quay || currentLoadedJson;
-            let scores = { 
-                'Tần Suất': 50, 'Lô Gan': 50, 'Markov': 50, 'Chạm Tổng': 50, 
-                'Thần Học': 50, 'Bạc Nhớ Thứ': 50, 'Delta': 50, 'Bù Gương': 50, 'Bóng Âm Dương': 50 
-            };
-
-            for (let i = lichSuQuay.length - 1; i >= 1; i--) {
-                let targetDraw = lichSuQuay[i];
-                let actualDraw = lichSuQuay[i - 1];
-                let subset = lichSuQuay.slice(i);
-                let results = chay9MoHinhNoiBo(subset);
-                let actual2D = actualDraw.gdb ? actualDraw.gdb.toString().slice(-2) : "";
-
-                Object.keys(results).forEach(mName => {
-                    let preds = results[mName];
-                    if (preds.includes(actual2D)) {
-                        scores[mName] = (scores[mName] || 50) + 4;
-                    } else {
-                        scores[mName] = Math.max(20, (scores[mName] || 50) - 2);
-                    }
-                });
-            }
-            currentLoadedJson.model_scores = scores;
             const ngayChon = document.getElementById('selectTraCuuNgay').value;
             chayVaDanhGiaMoHinh(ngayChon ? ngayChon : null);
         }
@@ -341,62 +288,7 @@
             document.getElementById('panelBody').innerHTML = html;
         }
 
-        // --- CƠ CHẾ TỰ HỌC CHỦ ĐỘNG QUA NÚT BẤM ---
-        async function chayQuaTrinhTuHoc() {
-            if (!currentLoadedJson) {
-                await taiDuLieuDai(false);
-                if (!currentLoadedJson) { alert("Không tìm thấy dữ liệu đài để tự học!"); return; }
-            }
-
-            const lichSuQuay = currentLoadedJson.lich_su_quay || currentLoadedJson;
-            if (!Array.isArray(lichSuQuay) || lichSuQuay.length < 5) {
-                alert("Dữ liệu lịch sử quá ngắn để tiến hành tự học tự động!");
-                return;
-            }
-
-            let scores = { 
-                'Tần Suất': 50, 'Lô Gan': 50, 'Markov': 50, 'Chạm Tổng': 50, 
-                'Thần Học': 50, 'Bạc Nhớ Thứ': 50, 'Delta': 50, 'Bù Gương': 50, 'Bóng Âm Dương': 50 
-            };
-
-            let auditLogs = [];
-            let totalTrained = 0;
-
-            // Quét triệt để toàn bộ lịch sử từ kỳ cũ đến kỳ mới (i >= 1)
-            for (let i = lichSuQuay.length - 1; i >= 1; i--) {
-                let targetDraw = lichSuQuay[i];
-                let actualDraw = lichSuQuay[i - 1];
-                let subset = lichSuQuay.slice(i);
-
-                let results = chay9MoHinhNoiBo(subset);
-                let actual2D = actualDraw.gdb ? actualDraw.gdb.toString().slice(-2) : "";
-
-                let hitAny = false;
-                Object.keys(results).forEach(mName => {
-                    let preds = results[mName];
-                    if (preds.includes(actual2D)) {
-                        scores[mName] = (scores[mName] || 50) + 4;
-                        hitAny = true;
-                    } else {
-                        scores[mName] = Math.max(20, (scores[mName] || 50) - 2);
-                    }
-                });
-
-                if (hitAny) {
-                    auditLogs.push(`🤖 Kỳ ${targetDraw.ngay} ➔ Thực tế ${actualDraw.ngay} về [${actual2D}]`);
-                }
-                totalTrained++;
-            }
-
-            currentLoadedJson.model_scores = scores;
-
-            document.getElementById('auditLogContainer').innerHTML = auditLogs.length > 0 ? auditLogs.map(l => `<p class="border-b border-slate-800 pb-1">${l}</p>`).join('') : '<p class="text-green-400">Hoàn tất tự học!</p>';
-            alert(`Tự học hoàn tất qua ${totalTrained} kỳ lịch sử! Trọng số đã được tối ưu.`);
-            
-            thucHienPhanTichHoacBacktesting();
-        }
-
-        function chay9MoHinhNoiBo(subset) {
+        function chay9MoHinhNoiBo(subset, lichSuQuay) {
             let allLoList = [], deList = [], allNumRaw = [];
             subset.forEach(item => {
                 let currentGiais = [item.giai_8, item.giai_7, item.giai_5, item.giai_2, item.giai_1, item.gdb];
@@ -450,7 +342,7 @@
             let m5 = [(lifePath * 9).toString().padStart(2, '0'), (lifePath * 11).toString().slice(-2), ((lifePath + nextDate.getDate()) % 90).toString().padStart(2, '0')];
 
             let targetThu = subset[0].thu || "Chủ Nhật";
-            let sameDayHistory = subset.filter(item => item.thu === targetThu);
+            let sameDayHistory = lichSuQuay.filter(item => item.thu === targetThu);
             let dayFreqMap = {};
             sameDayHistory.forEach(item => {
                 let dbVal = item.gdb ? item.gdb.toString().slice(-2) : "";
@@ -520,13 +412,13 @@
                     return;
                 }
 
-                let results = chay9MoHinhNoiBo(subset);
+                let results = chay9MoHinhNoiBo(subset, lichSuQuay);
                 let scores = currentLoadedJson.model_scores || { 
                     'Tần Suất': 50, 'Lô Gan': 50, 'Markov': 50, 'Chạm Tổng': 50, 
                     'Thần Học': 50, 'Bạc Nhớ Thứ': 50, 'Delta': 50, 'Bù Gương': 50, 'Bóng Âm Dương': 50 
                 };
 
-                // --- HỢP LỰC 9 MÔ HÌNH VỚI TRỌNG SỐ ĐỘNG ---
+                // --- HỢP LỰC 9 MÔ HÌNH VỚI TRỌNG SỐ ---
                 let scoreBoard = {};
                 for(let i=0; i<100; i++) scoreBoard[i < 10 ? '0' + i : '' + i] = 0;
 
@@ -580,15 +472,15 @@
                     
                     document.getElementById('actualCompareNote').innerHTML = compareText;
                 } else {
-                    document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH (ĐÃ TỰ HỌC)";
-                    document.getElementById('actualCompareNote').innerText = "(Trọng số tối ưu hóa tự động từ lịch sử)";
+                    document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH";
+                    document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình toàn cục)";
                 }
 
                 // Hiển thị chi tiết mô hình
                 document.getElementById('resultHot').innerHTML = results['Tần Suất'].slice(0, 6).map(n => `<span class="bg-indigo-50 dark:bg-indigo-950/60 text-indigo-300 px-2 py-0.5 rounded font-bold text-xs border border-indigo-800">${n}</span>`).join('');
                 document.getElementById('resultCold').innerHTML = results['Lô Gan'].slice(0, 6).map(n => `<span class="bg-cyan-50 dark:bg-cyan-950/60 text-cyan-300 px-2 py-0.5 rounded font-bold text-xs border border-cyan-800">${n}</span>`).join('');
                 document.getElementById('resultMarkov').innerHTML = results['Markov'].length > 0 ? results['Markov'].slice(0, 5).map(n => `<span class="bg-purple-50 dark:bg-purple-950/60 text-purple-300 px-2 py-0.5 rounded font-bold text-xs border border-purple-800">${n}</span>`).join('') : '<span class="text-slate-400 text-xs italic">Chưa đủ dữ liệu</span>';
-                document.getElementById('resultCham').innerHTML = `<div class="flex justify-between bg-slate-800/50 p-1 rounded border border-slate-700"><span>Chạm/Tổng:</span><strong>Đã học</strong></div>`;
+                document.getElementById('resultCham').innerHTML = `<div class="flex justify-between bg-slate-800/50 p-1 rounded border border-slate-700"><span>Chạm/Tổng:</span><strong>Đang phân tích</strong></div>`;
                 document.getElementById('resultThanHoc').innerHTML = results['Thần Học'].map(n => `<span class="bg-amber-50 dark:bg-amber-950/60 text-amber-300 px-2 py-0.5 rounded font-bold text-xs border border-amber-800">${n}</span>`).join('');
                 document.getElementById('resultBacNho').innerHTML = results['Bạc Nhớ Thứ'].map(n => `<span class="bg-rose-50 dark:bg-rose-950/60 text-rose-300 px-2 py-0.5 rounded font-bold text-xs border border-rose-800">${n}</span>`).join('');
                 document.getElementById('resultDelta').innerHTML = results['Delta'].map(n => `<span class="bg-teal-50 dark:bg-teal-950/60 text-teal-300 px-2 py-0.5 rounded font-bold text-xs border border-teal-800">${n}</span>`).join('');
@@ -627,25 +519,13 @@
                 backgroundColor: 'transparent',
                 tooltip: { trigger: 'axis' },
                 xAxis: { type: 'category', data: models.map(m => m.name), axisLabel: { color: isDark ? '#cbd5e1' : '#334155', interval: 0, rotate: 15, fontSize: 10 } },
-                yAxis: { type: 'value', max: 150, axisLabel: { color: isDark ? '#cbd5e1' : '#334155' }, splitLine: { lineStyle: { color: isDark ? '#334155' : '#e2e8f0' } } },
+                yAxis: { type: 'value', max: 100, axisLabel: { color: isDark ? '#cbd5e1' : '#334155' }, splitLine: { lineStyle: { color: isDark ? '#334155' : '#e2e8f0' } } },
                 series: [{
                     data: models.map(m => m.score), type: 'bar',
                     itemStyle: { color: (params) => params.dataIndex === 0 ? '#6366f1' : (isDark ? '#334155' : '#cbd5e1') },
                     label: { show: true, position: 'top', formatter: '{c}đ', color: isDark ? '#f8fafc' : '#1e293b', fontSize: 10 }
                 }]
             });
-        }
-
-        function taiJsonThongMinh() {
-            if (!currentLoadedJson) { alert("Vui lòng thực hiện tự học trước khi tải!"); return; }
-            const dai = document.getElementById('selectDai').value;
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentLoadedJson, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", dai + "Hoc.json");
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
         }
     </script>
 </body>
