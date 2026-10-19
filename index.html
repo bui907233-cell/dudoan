@@ -8,7 +8,6 @@
     <script>
         tailwind.config = { darkMode: 'class' }
     </script>
-    <!-- Thư viện ECharts để vẽ biểu đồ -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
 </head>
 <body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen p-6 transition-colors duration-300">
@@ -34,7 +33,6 @@
         <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div>
                 <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Chọn Đài Miền Trung:</label>
-                <!-- Khi đổi đài, gọi hàm resetUI và tải JSON mới nhưng KHÔNG tự động chạy phân tích -->
                 <select id="selectDai" onchange="onDaiChange()" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
                     <option value="phuyen" selected>Thứ 2 - Phú Yên</option>
                     <option value="hue">Thứ 2 - Thừa Thiên Huế</option>
@@ -56,7 +54,6 @@
                 </select>
             </div>
 
-            <!-- Ô tra cứu nhanh Ngày Quay -->
             <div>
                 <label class="block text-xs font-medium text-indigo-400 mb-1">🔍 Tra cứu nhanh Ngày Quay:</label>
                 <select id="selectTraCuuNgay" onchange="hienPopupTraCuu()" class="w-full border border-indigo-500/50 rounded-lg px-3 py-2 bg-indigo-50 dark:bg-indigo-950/40 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
@@ -82,7 +79,7 @@
 
         <!-- KHUNG KẾT QUẢ CHỐT SỐ TOÀN DIỆN -->
         <div class="bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-xl mb-6 text-center border border-indigo-500/30">
-            <h3 class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4">🎯 KẾT QUẢ HỢP LỰC 8 MÔ HÌNH & 3 CÀNG CHUYÊN SÂU</h3>
+            <h3 class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4">🎯 KẾT QUẢ HỢP LỰC 8 MÔ HÌNH & 3 CÀNG ĐA PHƯƠNG ÁN</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-xl mx-auto">
                 <div class="bg-white/5 backdrop-blur px-5 py-4 rounded-xl border border-white/10">
                     <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp 2 Chữ Số Tối Ưu</p>
@@ -90,9 +87,11 @@
                     <span class="text-[10px] text-slate-300 mt-1 block">(Đồng thuận từ 8 mô hình toàn cục)</span>
                 </div>
                 <div class="bg-white/5 backdrop-blur px-5 py-4 rounded-xl border border-white/10">
-                    <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp 3 Càng Chuyên Sâu</p>
-                    <span id="final3D" class="text-5xl font-extrabold tracking-wider text-yellow-400 mt-2 block">---</span>
-                    <span id="detail3DHint" class="text-[10px] text-indigo-300 mt-1 block">(Ghép từ chạm tổng hàng trăm)</span>
+                    <p class="text-[11px] text-indigo-200 uppercase font-semibold">Top 3 Càng Tiềm Năng</p>
+                    <div id="final3DList" class="flex justify-center gap-2 mt-2">
+                        <span class="text-3xl font-extrabold tracking-wider text-yellow-400">---</span>
+                    </div>
+                    <span id="detail3DHint" class="text-[10px] text-indigo-300 mt-1 block">(Bao trọn các biến thể hàng trăm)</span>
                 </div>
             </div>
         </div>
@@ -176,7 +175,7 @@
         let currentLoadedJson = null;
 
         window.onload = function() {
-            taiDuLieuDai(false); // Khi load trang lần đầu chỉ tải dữ liệu thô, không tự động phân tích
+            taiDuLieuDai(false);
         };
 
         function toggleDarkMode() {
@@ -192,18 +191,16 @@
             }
         }
 
-        // Khi đổi đài: Reset trắng toàn bộ UI, xóa dữ liệu cũ và tải file JSON mới
         function onDaiChange() {
             currentLoadedJson = null;
             resetUI();
             taiDuLieuDai(false);
         }
 
-        // Hàm reset trắng giao diện HTML
         function resetUI() {
             document.getElementById('final2D').innerText = "--";
-            document.getElementById('final3D').innerText = "---";
-            document.getElementById('detail3DHint').innerText = "(Ghép từ chạm tổng hàng trăm)";
+            document.getElementById('final3DList').innerHTML = '<span class="text-3xl font-extrabold tracking-wider text-yellow-400">---</span>';
+            document.getElementById('detail3DHint').innerText = "(Bao trọn các biến thể hàng trăm)";
             document.getElementById('resultHot').innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
             document.getElementById('resultCold').innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
             document.getElementById('resultMarkov').innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
@@ -214,11 +211,8 @@
             document.getElementById('resultMirror').innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
             document.getElementById('modelLeaderboard').innerHTML = '<div class="bg-white/5 p-2.5 rounded-lg border border-white/10 text-center col-span-full"><p class="text-xs text-slate-400">Vui lòng bấm "Chạy Phân Tích"</p></div>';
             document.getElementById('auditLogContainer').innerHTML = '<p class="italic text-slate-500">Chưa có dữ liệu nhật ký đối chiếu...</p>';
-            
-            // Xóa sạch dropdown ngày tra cứu cũ
             document.getElementById('selectTraCuuNgay').innerHTML = '<option value="">-- Chọn ngày xem kết quả --</option>';
 
-            // Xóa biểu đồ
             const chartDom = document.getElementById('evalChart');
             if (chartDom) {
                 const chartInstance = echarts.getInstanceByDom(chartDom);
@@ -233,13 +227,8 @@
                 const response = await fetch(jsonPath);
                 if (!response.ok) throw new Error(`Không tìm thấy file: data/${dai}.json`);
                 currentLoadedJson = await response.json();
-                
-                // Nạp danh sách ngày mới vào ô tra cứu nhanh của đài đó
                 capNhatDropdownNgay();
-                
-                if (shouldRunAnalysis) {
-                    chayVaDanhGiaMoHinh();
-                }
+                if (shouldRunAnalysis) chayVaDanhGiaMoHinh();
             } catch (err) {
                 console.warn("Chưa tải được file JSON:", err.message);
             }
@@ -248,7 +237,6 @@
         function capNhatDropdownNgay() {
             const selectNgay = document.getElementById('selectTraCuuNgay');
             selectNgay.innerHTML = '<option value="">-- Chọn ngày xem kết quả --</option>';
-            
             if (!currentLoadedJson) return;
             const lichSu = currentLoadedJson.lich_su_quay || currentLoadedJson;
             if (!Array.isArray(lichSu)) return;
@@ -436,25 +424,30 @@
                 let sortedConsensus = Object.entries(scoreBoard).sort((a, b) => b[1] - a[1]);
                 let final2DNum = sortedConsensus[0][0];
 
-                // --- THUẬT TOÁN 3 CÀNG CHUYÊN SÂU ---
+                // --- TÍNH TOÁN ĐA PHƯƠNG ÁN 3 CÀNG (Top 3 biến thể hàng trăm) ---
                 let latestDbTwoStr = deList[0] || "53";
                 let sumLatestDb = (parseInt(latestDbTwoStr[0]) + parseInt(latestDbTwoStr[1])) % 10;
-                let hundredDigit1 = sumLatestDb.toString();
-                let hundredDigit2 = (9 - sumLatestDb).toString();
-                let best3D = hundredDigit1 + final2DNum;
-                let sub3D = hundredDigit2 + final2DNum;
+                let h1 = sumLatestDb.toString();
+                let h2 = (9 - sumLatestDb).toString(); // Bóng âm
+                let h3 = (parseInt(final2DNum[0]) + 1) % 10; // Biến thể phụ dựa trên số đầu của giải
+
+                let list3D = [h1 + final2DNum, h2 + final2DNum, h3 + final2DNum];
+                // Lọc bỏ trùng lặp nếu có
+                list3D = [...new Set(list3D)].slice(0, 3);
 
                 document.getElementById('final2D').innerText = final2DNum;
-                document.getElementById('final3D').innerText = best3D;
-                document.getElementById('detail3DHint').innerText = `(Hàng trăm ${hundredDigit1} hoặc ${sub3D} theo tổng ${latestDbTwoStr})`;
+                
+                let html3D = list3D.map((val, idx) => `<span class="${idx === 0 ? 'text-yellow-400 font-extrabold' : 'text-indigo-200 font-bold'} text-2xl px-2 py-1 bg-black/20 rounded border border-white/10">${val}</span>`).join('');
+                document.getElementById('final3DList').innerHTML = html3D;
+                document.getElementById('detail3DHint').innerText = `(Gồm các hàng trăm: ${h1}, ${h2}, ${h3} dựa trên tổng ${latestDbTwoStr})`;
 
                 // Ghi nhận nhật ký kỳ tới
                 let existingLogIndex = currentLoadedJson.nhat_ky_tu_hoc.findIndex(l => l.ngay_du_bao === targetDateStr);
-                let newLogEntry = { ngay_du_bao: targetDateStr, s2_du_doan: final2DNum, s3_du_doan: best3D, mo_hinh_giao_viec: "Bạc Nhớ Thứ", trang_thai: "dang_cho" };
+                let newLogEntry = { ngay_du_bao: targetDateStr, s2_du_doan: final2DNum, s3_du_doan: list3D[0], mo_hinh_giao_viec: "Bạc Nhớ Thứ", trang_thai: "dang_cho" };
                 if (existingLogIndex >= 0) currentLoadedJson.nhat_ky_tu_hoc[existingLogIndex] = newLogEntry;
                 else currentLoadedJson.nhat_ky_tu_hoc.unshift(newLogEntry);
 
-                // Hiển thị chi tiết giao diện
+                // Hiển thị giao diện chi tiết
                 document.getElementById('resultHot').innerHTML = sortedHot.slice(0, 6).map(([n, c]) => `<span class="bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 px-2.5 py-1 rounded-md font-bold text-xs border border-indigo-100 dark:border-indigo-800">${n} (${c} lần)</span>`).join('');
                 document.getElementById('resultCold').innerHTML = allNumbers.slice(0, 6).map(item => `<span class="bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 px-2.5 py-1 rounded-md font-bold text-xs border border-cyan-100 dark:border-cyan-800">${item.num} (ẩn ${item.pos} kỳ)</span>`).join('');
                 document.getElementById('resultMarkov').innerHTML = markovPreds.length > 0 ? markovPreds.slice(0, 5).map(([n, c]) => `<span class="bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 px-2.5 py-1 rounded-md font-bold text-xs border border-purple-100 dark:border-purple-800">${n} (xs: ${c})</span>`).join('') : '<span class="text-slate-400 text-xs italic">Chưa đủ dữ liệu</span>';
@@ -493,7 +486,6 @@
                 });
                 document.getElementById('modelLeaderboard').innerHTML = lbHtml;
 
-                // --- VẼ BIỂU ĐỒ TRỰC QUAN ---
                 veBieuDoDanhGia(models);
 
             } catch (err) {
