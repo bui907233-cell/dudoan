@@ -12,12 +12,12 @@
 </head>
 <body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen p-6 transition-colors duration-300">
 
-    <div class="max-w-5xl mx-auto">
+    <div class="max-w-6xl mx-auto">
         <!-- Header -->
         <header class="mb-6 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
             <div>
                 <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡Analysis</h1>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Phân tích.</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Phân tích...</p>
             </div>
             <div class="flex items-center gap-3">
                 <button onclick="taiJsonCapNhat()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-3 rounded-lg transition-all shadow-sm flex items-center gap-1.5 text-xs">
@@ -73,6 +73,8 @@
                 <select id="selectLimit" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
                     <option value="10" selected>10 kỳ gần nhất</option>
                     <option value="20">20 kỳ gần nhất</option>
+                    <option value="50">50 kỳ gần nhất</option>
+                    <option value="100">100 kỳ (Tích lũy sâu)</option>
                 </select>
             </div>
 
@@ -85,18 +87,49 @@
 
         <!-- KHUNG KẾT QUẢ CHỐT SỐ TOÀN DIỆN -->
         <div class="bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-xl mb-6 text-center border border-indigo-500/30">
-            <h3 class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4">🎯 KẾT QUẢ CHỐT SỐ TỪ TOÀN BỘ CÁC GIẢI (8 MÔ HÌNH)</h3>
+            <h3 class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4">🎯 KẾT QUẢ HỢP LỰC 8 MÔ HÌNH (QUÉT TRÊN MỌI GIẢI)</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-xl mx-auto">
                 <div class="bg-white/5 backdrop-blur px-5 py-4 rounded-xl border border-white/10">
-                    <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp 2 Chữ Số Sáng Giá Nhất</p>
+                    <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp 2 Chữ Số Tối Ưu</p>
                     <span id="final2D" class="text-5xl font-extrabold tracking-wider text-yellow-400 mt-2 block">--</span>
-                    <span class="text-[10px] text-slate-300 mt-1 block">(Rơi mạnh ở Giải 8 hoặc Đặc Biệt)</span>
+                    <span class="text-[10px] text-slate-300 mt-1 block">(Xác suất nổ cao nhất ở mọi giải)</span>
                 </div>
                 <div class="bg-white/5 backdrop-blur px-5 py-4 rounded-xl border border-white/10">
-                    <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp 3 Càng Tối Ưu</p>
+                    <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp 3 Chữ Số (3 Càng) Tối Ưu</p>
                     <span id="final3D" class="text-5xl font-extrabold tracking-wider text-yellow-400 mt-2 block">---</span>
-                    <span class="text-[10px] text-slate-300 mt-1 block">(Đặc biệt / Giải 7)</span>
+                    <span class="text-[10px] text-slate-300 mt-1 block">(Quét từ toàn bộ các giải 3 chữ số trở lên)</span>
                 </div>
+            </div>
+        </div>
+
+        <!-- CHI TIẾT PHÂN TÍCH TỪNG MÔ HÌNH (ĐÃ ĐƯỢC HIỂN THỊ TRỞ LẠI) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2">🔥 1. Tần Suất 2 Số (Toàn Cục Giải)</h3>
+                <div id="resultHot" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
+
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">🧊 2. Lô Gan 2 Số (Vắng mặt lâu nhất)</h3>
+                <div id="resultCold" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
+
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">🔄 3. Chuỗi Markov (Chuyển tiếp)</h3>
+                <div id="resultMarkov" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
+
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">⚡ 4. Chạm & Tổng Đề Toàn Diện</h3>
+                <div id="resultCham" class="text-xs space-y-1"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2">🔮 5. Thần Số Học & Ngũ Hành</h3>
+                <div id="resultThanHoc" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
+
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">🎯 6. Bạc Nhớ Theo Thứ Trong Tuần</h3>
+                <div id="resultBacNho" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
+
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">📈 7. Khoảng Cách Nhịp (Delta Pattern)</h3>
+                <div id="resultDelta" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
+
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">🪞 8. Tổng Bù & Gương Đối Xứng</h3>
+                <div id="resultMirror" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
             </div>
         </div>
 
@@ -184,8 +217,8 @@
                 const subset = filteredData.slice(0, limit);
                 let allLoList = [], allThreeDigitList = [], deList = [];
 
+                // --- QUÉT TOÀN BỘ CÁC GIẢI TRÊN TẬP DỮ LIỆU ---
                 subset.forEach(item => {
-                    // Gom toàn bộ các giải để phân tích số 2 chữ số
                     let currentGiais = [item.giai_8, item.giai_7, item.giai_5, item.giai_2, item.giai_1, item.gdb];
                     if(Array.isArray(item.giai_6)) currentGiais = currentGiais.concat(item.giai_6);
                     if(Array.isArray(item.giai_4)) currentGiais = currentGiais.concat(item.giai_4);
@@ -193,8 +226,8 @@
 
                     currentGiais.forEach(g => {
                         let strG = g ? g.toString() : "";
-                        if(strG.length >= 2) allLoList.push(strG.slice(-2));
-                        if(strG.length >= 3) allThreeDigitList.push(strG.slice(-3));
+                        if(strG.length >= 2) allLoList.push(strG.slice(-2)); // Lấy 2 số cuối của mọi giải
+                        if(strG.length >= 3) allThreeDigitList.push(strG.slice(-3)); // Lấy 3 số cuối của mọi giải
                     });
 
                     let gdbStr = item.gdb ? item.gdb.toString() : "";
@@ -202,7 +235,7 @@
                 });
 
                 // --- 8 MÔ HÌNH QUÉT TOÀN DIỆN ---
-                // 1. Tần suất 2 số (trên mọi giải)
+                // 1. Tần suất 2 số (toàn cục giải)
                 let freqMap = {};
                 allLoList.forEach(num => freqMap[num] = (freqMap[num] || 0) + 1);
                 let sortedHot = Object.entries(freqMap).sort((a, b) => b[1] - a[1]);
@@ -217,7 +250,7 @@
                 }
                 allNumbers.sort((a, b) => b.pos - a.pos);
 
-                // 3. Markov (chuyển tiếp đặc biệt)
+                // 3. Markov
                 let transitionMap = {};
                 for(let i = 0; i < deList.length - 1; i++) {
                     let curr = deList[i+1], next = deList[i];
@@ -302,7 +335,7 @@
 
                 document.getElementById('auditLogContainer').innerHTML = auditLogs.length > 0 ? auditLogs.map(l => `<p class="border-b border-slate-800 pb-1">${l}</p>`).join('') : '<span class="italic text-slate-500">Chưa có nhật ký ghi nhận.</span>';
 
-                // --- HỢP LỰC TRỌNG SỐ TỐI ƯU CHO 2 CHỮ SỐ & 3 CÀNG ---
+                // --- HỢP LỰC TRỌNG SỐ CHO 2 CHỮ SỐ & 3 CÀNG TOÀN DIỆN ---
                 let scoreBoard = {};
                 for(let i=0; i<100; i++) scoreBoard[i < 10 ? '0' + i : '' + i] = 0;
 
@@ -318,15 +351,27 @@
                 let sortedConsensus = Object.entries(scoreBoard).sort((a, b) => b[1] - a[1]);
                 let final2DNum = sortedConsensus[0][0];
 
-                // Tính 3 càng dựa trên tần suất 3 chữ số xuất hiện ở các giải gần nhất kết hợp số 2 chữ số đẹp nhất
+                // Tính 3 càng từ toàn bộ các giải có từ 3 chữ số trở lên
                 let threeDigitFreq = {};
                 allThreeDigitList.forEach(num => threeDigitFreq[num] = (threeDigitFreq[num] || 0) + 1);
                 let sorted3D = Object.entries(threeDigitFreq).sort((a, b) => b[1] - a[1]);
-                
                 let best3D = sorted3D.length > 0 ? sorted3D[0][0] : (Math.floor(Math.random() * 9) + 1) + final2DNum;
 
                 document.getElementById('final2D').innerText = final2DNum;
                 document.getElementById('final3D').innerText = best3D;
+
+                // --- HIỂN THỊ CHI TIẾT TỪNG MÔ HÌNH RA GIAO DIỆN ---
+                document.getElementById('resultHot').innerHTML = sortedHot.slice(0, 6).map(([n, c]) => `<span class="bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 px-2.5 py-1 rounded-md font-bold text-xs border border-indigo-100 dark:border-indigo-800">${n} (${c} lần)</span>`).join('');
+                document.getElementById('resultCold').innerHTML = allNumbers.slice(0, 6).map(item => `<span class="bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 px-2.5 py-1 rounded-md font-bold text-xs border border-cyan-100 dark:border-cyan-800">${item.num} (ẩn ${item.pos} kỳ)</span>`).join('');
+                document.getElementById('resultMarkov').innerHTML = markovPreds.length > 0 ? markovPreds.slice(0, 5).map(([n, c]) => `<span class="bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 px-2.5 py-1 rounded-md font-bold text-xs border border-purple-100 dark:border-purple-800">${n} (xs: ${c})</span>`).join('') : '<span class="text-slate-400 text-xs italic">Chưa đủ dữ liệu Markov</span>';
+                document.getElementById('resultCham').innerHTML = `
+                    <div class="flex justify-between bg-slate-50 dark:bg-slate-800/50 p-1.5 rounded border dark:border-slate-700"><span>Chạm đầu mạnh:</span><strong>${bestDau}</strong></div>
+                    <div class="flex justify-between bg-slate-50 dark:bg-slate-800/50 p-1.5 rounded border dark:border-slate-700"><span>Tổng đề mạnh:</span><strong>${bestTong}</strong></div>
+                `;
+                document.getElementById('resultThanHoc').innerHTML = model5Preds.map(n => `<span class="bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 px-2.5 py-1 rounded-md font-bold text-xs border border-amber-100 dark:border-amber-800">${n}</span>`).join('');
+                document.getElementById('resultBacNho').innerHTML = model6Preds.map(n => `<span class="bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 px-2.5 py-1 rounded-md font-bold text-xs border border-rose-100 dark:border-rose-800">${n} (Thứ ${thuFilter === 'all' ? 'chung' : thuFilter})</span>`).join('');
+                document.getElementById('resultDelta').innerHTML = model7Preds.map(n => `<span class="bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 px-2.5 py-1 rounded-md font-bold text-xs border border-teal-100 dark:border-teal-800">${n} (Delta)</span>`).join('');
+                document.getElementById('resultMirror').innerHTML = model8Preds.map(n => `<span class="bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 px-2.5 py-1 rounded-md font-bold text-xs border border-emerald-100 dark:border-emerald-800">${n} (Bù/Gương)</span>`).join('');
 
                 // Ghi nhận nhật ký kỳ tới
                 let existingLogIndex = currentLoadedJson.nhat_ky_tu_hoc.findIndex(l => l.ngay_du_bao === targetDateStr);
