@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <!-- Thư viện ECharts để vẽ biểu đồ -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen p-6 transition-colors duration-300">
+
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="mb-6 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
+            <div>
+                <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis</h1>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Phân tích...</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 p-2 rounded-lg transition-all shadow-sm text-xs flex items-center gap-1.5">
+                    <span id="darkModeIcon">☀️</span> <span id="darkModeText">Giao Diện Sáng</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Bảng điều khiển -->
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6 grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+            <div>
+                <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Chọn Đài Miền Bắc:</label>
+                <select id="selectDai" onchange="onDaiChange()" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
+                    <option value="hanoi" selected>Thứ 2 - Hà Nội (XSHN)</option>
+                    <option value="quangninh">Thứ 3 - Quảng Ninh (XSQN)</option>
+                    <option value="bacninh">Thứ 4 - Bắc Ninh (XSBN)</option>
+                    <option value="hanoi">Thứ 5 - Hà Nội (XSHN)</option>
+                    <option value="haiphong">Thứ 6 - Hải Phòng (XSHP)</option>
+                    <option value="namdinh">Thứ 7 - Nam Định (XSND)</option>
+                    <option value="thaibinh">Chủ Nhật - Thái Bình (XSTB)</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-medium text-indigo-400 mb-1">🔍 Chọn Ngày Xem / Kiểm Chứng:</label>
+                <select id="selectTraCuuNgay" onchange="hienThongTinNgayTrucTiep()" class="w-full border border-indigo-500/50 rounded-lg px-3 py-2 bg-indigo-50 dark:bg-indigo-950/40 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
+                    <option value="">-- Mặc định (Dự đoán kỳ mới nhất) --</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Biên độ phân tích:</label>
+                <select id="selectLimit" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
+                    <option value="10" selected>10 kỳ gần nhất</option>
+                    <option value="20">20 kỳ gần nhất</option>
+                    <option value="50">50 kỳ gần nhất</option>
+                </select>
+            </div>
+
+            <div>
+                <button onclick="thucHienPhanTichHoacBacktesting()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-all shadow-md text-sm">
+                    🚀 Chạy Phân Tích
+                </button>
+            </div>
+
+            <div>
+                <button onclick="layPhanGiaoCacMoHinh()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 px-4 rounded-lg transition-all shadow-md text-sm">
+                    🔗 Lấy Phần Giao
+                </button>
+            </div>
+        </div>
+
+        <!-- KHU VỰC HIỂN THỊ SONG SONG -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <div class="lg:col-span-2 bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-xl border border-indigo-500/30 flex flex-col justify-between">
+                <div>
+                    <h3 id="resultTitleBanner" class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4 text-center">🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH & 3 CÀNG BÓNG ÂM DƯƠNG</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto mb-4">
+                        <div class="bg-white/5 backdrop-blur px-4 py-3 rounded-xl border border-white/10 text-center">
+                            <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp 2 Chữ Số Tối Ưu</p>
+                            <span id="final2D" class="text-4xl font-extrabold tracking-wider text-yellow-400 mt-1 block">--</span>
+                            <span id="actualCompareNote" class="text-[11px] text-slate-300 mt-2 block">(Đồng thuận từ 9 mô hình)</span>
+                        </div>
+                        <div class="bg-white/5 backdrop-blur px-4 py-3 rounded-xl border border-white/10 text-center">
+                            <p class="text-[11px] text-indigo-200 uppercase font-semibold">Top 3 Càng Bóng Âm Dương</p>
+                            <div id="final3DList" class="flex justify-center gap-1.5 mt-1">
+                                <span class="text-2xl font-extrabold tracking-wider text-yellow-400">---</span>
+                            </div>
+                            <span id="detail3DHint" class="text-[10px] text-indigo-300 mt-1 block">(Hàng trăm dịch bóng)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="panelChiTietNgay" class="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-xl border border-indigo-500/30 flex flex-col justify-between">
+                <div>
+                    <h3 id="panelTitle" class="text-xs font-bold uppercase tracking-wider text-indigo-500 dark:text-indigo-400 border-b border-slate-200 dark:border-slate-800 pb-2 mb-3">
+                        📋 Chi Tiết Giải Ngày Đã Chọn
+                    </h3>
+                    <div id="panelBody" class="space-y-1.5 text-xs">
+                        <p class="text-slate-400 italic text-center py-6">Vui lòng chọn ngày ở ô "Tra cứu nhanh" bên trên để xem kết quả chi tiết tại đây.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KHU VỰC GỢI Ý 2 CHỮ SỐ TỪ TỔNG HỢP 9 MÔ HÌNH -->
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6">
+            <h3 id="sectionTitleSuggest" class="text-xs font-bold uppercase tracking-wider text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">
+                💡 Danh Sách Số Gợi Ý 2 Chữ Số Tham Khảo (Tổng Hợp Từ 9 Mô Hình)
+            </h3>
+            <div id="suggestedNumbersList" class="flex flex-wrap gap-2">
+                <span class="text-slate-400 text-xs italic">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị danh sách...</span>
+            </div>
+        </div>
+
+        <!-- CHI TIẾT PHÂN TÍCH 9 MÔ HÌNH -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2">🔥 1. Tần Suất 2 Số</h3>
+                <div id="resultHot" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
+
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">🧊 2. Lô Gan 2 Số</h3>
+                <div id="resultCold" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
+
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">🔄 3. Chuỗi Markov</h3>
+                <div id="resultMarkov" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2">⚡ 4. Chạm & Tổng Đề</h3>
+                <div id="resultCham" class="text-xs space-y-1"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
+
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">🔮 5. Thần Số Học</h3>
+                <div id="resultThanHoc" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
+
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">🎯 6. Bạc Nhớ Theo Thứ</h3>
+                <div id="resultBacNho" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2">📈 7. Khoảng Cách Nhịp (Delta)</h3>
+                <div id="resultDelta" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
+
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">🪞 8. Tổng Bù & Gương</h3>
+                <div id="resultMirror" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
+
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">☯️ 9. Bóng Âm Dương Toàn Cục</h3>
+                <div id="resultBong" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
+            </div>
+        </div>
+
+        <!-- BẢNG XẾP HẠNG 9 MÔ HÌNH -->
+        <div class="bg-slate-900 text-white p-5 rounded-xl shadow-lg mb-6 border border-slate-800">
+            <h2 class="text-sm font-bold mb-3 flex items-center gap-2 text-indigo-300">
+                🏆 Bảng Xếp Hạng Trọng Số Động 9 Mô Hình
+            </h2>
+            <div id="modelLeaderboard" class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-2">
+                <div class="bg-white/5 p-2 rounded-lg border border-white/10 text-center col-span-full">
+                    <p class="text-xs text-slate-400">Đang chờ bấm "Chạy Phân Tích"...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- BIỂU ĐỒ TRỰC QUAN -->
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
+            <h3 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">Biểu Đồ Trọng Số Động 9 Mô Hình</h3>
+            <div id="evalChart" style="width: 100%; height: 280px;"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentLoadedJson = null;
+        let lastCachedResults = null; 
+
+        window.onload = function() {
+            resetUI();
+        };
+
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const icon = document.getElementById('darkModeIcon');
+            const text = document.getElementById('darkModeText');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.innerText = '🌙'; text.innerText = 'Giao Diện Sáng';
+            } else {
+                html.classList.add('dark');
+                icon.innerText = '☀️'; text.innerText = 'Giao Diện Sáng';
+            }
+        }
+
+        function onDaiChange() {
+            currentLoadedJson = null;
+            lastCachedResults = null;
+            resetUI();
+        }
+
+        function resetUI() {
+            document.getElementById('final2D').innerText = "--";
+            document.getElementById('final3DList').innerHTML = '<span class="text-2xl font-extrabold tracking-wider text-yellow-400">---</span>';
+            document.getElementById('detail3DHint').innerText = "(Hàng trăm dịch bóng)";
+            document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình)";
+            document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH & 3 CÀNG BÓNG ÂM DƯƠNG";
+            document.getElementById('sectionTitleSuggest').innerText = "💡 Danh Sách Số Gợi Ý 2 Chữ Số Tham Khảo (Tổng Hợp Từ 9 Mô Hình)";
+            document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị danh sách...</span>';
+            
+            document.getElementById('panelTitle').innerText = "📋 Chi Tiết Giải Ngày Đã Chọn";
+            document.getElementById('panelBody').innerHTML = '<p class="text-slate-400 italic text-center py-6">Vui lòng chọn ngày ở ô "Tra cứu nhanh" bên trên để xem kết quả chi tiết tại đây.</p>';
+
+            ['resultHot', 'resultCold', 'resultMarkov', 'resultCham', 'resultThanHoc', 'resultBacNho', 'resultDelta', 'resultMirror', 'resultBong'].forEach(id => {
+                document.getElementById(id).innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
+            });
+
+            document.getElementById('modelLeaderboard').innerHTML = '<div class="bg-white/5 p-2 rounded-lg border border-white/10 text-center col-span-full"><p class="text-xs text-slate-400">Vui lòng bấm "Chạy Phân Tích"</p></div>';
+            document.getElementById('selectTraCuuNgay').innerHTML = '<option value="">-- Mặc định (Dự đoán kỳ mới nhất) --</option>';
+
+            const chartDom = document.getElementById('evalChart');
+            if (chartDom) {
+                const chartInstance = echarts.getInstanceByDom(chartDom);
+                if (chartInstance) chartInstance.clear();
+            }
+        }
+
+        async function taiDuLieuDai(shouldRunAnalysis = false) {
+            const dai = document.getElementById('selectDai').value;
+            const jsonPath = `data/${dai}.json`;
+            try {
+                const response = await fetch(jsonPath);
+                if (!response.ok) throw new Error(`Không tìm thấy file: data/${dai}.json`);
+                currentLoadedJson = await response.json();
+                capNhatDropdownNgay();
+                if (shouldRunAnalysis) thucHienPhanTichHoacBacktesting();
+            } catch (err) {
+                console.warn("Chưa tải được file JSON:", err.message);
+            }
+        }
+
+        function capNhatDropdownNgay() {
+            const selectNgay = document.getElementById('selectTraCuuNgay');
+            selectNgay.innerHTML = '<option value="">-- Mặc định (Dự đoán kỳ mới nhất) --</option>';
+            if (!currentLoadedJson) return;
+            const lichSu = currentLoadedJson.lich_su_quay || currentLoadedJson;
+            if (!Array.isArray(lichSu)) return;
+
+            lichSu.forEach(item => {
+                let opt = document.createElement('option');
+                opt.value = item.ngay;
+                opt.innerText = `${item.ngay} (${item.thu})`;
+                selectNgay.appendChild(opt);
+            });
+        }
+
+        async function thucHienPhanTichHoacBacktesting() {
+            if (!currentLoadedJson) {
+                await taiDuLieuDai(false);
+            }
+            const ngayChon = document.getElementById('selectTraCuuNgay').value;
+            chayVaDanhGiaMoHinh(ngayChon ? ngayChon : null);
+        }
+
+        function hienThongTinNgayTrucTiep() {
+            const ngayChon = document.getElementById('selectTraCuuNgay').value;
+            if (!ngayChon || !currentLoadedJson) {
+                document.getElementById('panelTitle').innerText = "📋 Chi Tiết Giải Ngày Đã Chọn";
+                document.getElementById('panelBody').innerHTML = '<p class="text-slate-400 italic text-center py-6">Vui lòng chọn ngày ở ô "Tra cứu nhanh" bên trên để xem kết quả chi tiết tại đây.</p>';
+                return;
+            }
+
+            const lichSu = currentLoadedJson.lich_su_quay || currentLoadedJson;
+            const kyQuay = lichSu.find(i => i.ngay === ngayChon);
+            if (!kyQuay) return;
+
+            document.getElementById('panelTitle').innerText = `📋 Chi Tiết Ngày ${kyQuay.ngay} (${kyQuay.thu})`;
+
+            let renderGiaiRow = (label, val) => {
+                let valStr = Array.isArray(val) ? val.join(' - ') : (val || '--');
+                return `<div class="flex justify-between items-center bg-slate-50 dark:bg-slate-800/60 p-1.5 rounded border border-slate-100 dark:border-slate-800">
+                    <span class="font-semibold text-slate-500">${label}:</span>
+                    <strong class="text-slate-200 font-bold">${valStr}</strong>
+                </div>`;
+            };
+
+            let html = `
+                ${renderGiaiRow('Đặc Biệt', kyQuay.gdb)}
+                ${renderGiaiRow('Giải 1', kyQuay.g1)}
+                ${renderGiaiRow('Giải 2', kyQuay.g2)}
+                ${renderGiaiRow('Giải 3', kyQuay.g3)}
+                ${renderGiaiRow('Giải 4', kyQuay.g4)}
+                ${renderGiaiRow('Giải 5', kyQuay.g5)}
+                ${renderGiaiRow('Giải 6', kyQuay.g6)}
+                ${renderGiaiRow('Giải 7', kyQuay.g7)}
+            `;
+
+            document.getElementById('panelBody').innerHTML = html;
+        }
+
+        // --- HÀM PHÂN TÍCH ĐỘC LẬP 9 MÔ HÌNH (TƯƠNG THÍCH CẤU TRÚC MIỀN BẮC 27 GIẢI) ---
+        function chay9MoHinhNoiBo(subset, lichSuQuay) {
+            let allLoList = [], deList = [], allNumRaw = [];
+            subset.forEach(item => {
+                // Gom toàn bộ các giải của Miền Bắc (gdb, g1 -> g7)
+                let currentGiais = [
+                    item.gdb, item.g1, 
+                    ...(Array.isArray(item.g2) ? item.g2 : [item.g2]),
+                    ...(Array.isArray(item.g3) ? item.g3 : [item.g3]),
+                    ...(Array.isArray(item.g4) ? item.g4 : [item.g4]),
+                    ...(Array.isArray(item.g5) ? item.g5 : [item.g5]),
+                    ...(Array.isArray(item.g6) ? item.g6 : [item.g6]),
+                    ...(Array.isArray(item.g7) ? item.g7 : [item.g7])
+                ].filter(Boolean);
+
+                currentGiais.forEach(g => {
+                    let strG = g.toString();
+                    if(strG.length >= 2) { 
+                        let twoDigit = strG.slice(-2);
+                        allLoList.push(twoDigit); 
+                        allNumRaw.push(twoDigit); 
+                    }
+                });
+
+                let gdbStr = item.gdb ? item.gdb.toString() : "";
+                if(gdbStr.length >= 2) deList.push(gdbStr.slice(-2));
+            });
+
+            let freqMap = {};
+            allLoList.forEach(num => freqMap[num] = (freqMap[num] || 0) + 1);
+            let m1 = Object.entries(freqMap).sort((a, b) => b[1] - a[1]).slice(0, 10).map(([n]) => n);
+
+            let lastSeen = {};
+            allLoList.forEach((num, idx) => { if (!(num in lastSeen)) lastSeen[num] = idx; });
+            let allNumArr = [];
+            for(let i=0; i<100; i++) { let s = i < 10 ? '0' + i : '' + i; allNumArr.push({num: s, pos: lastSeen[s] !== undefined ? lastSeen[s] : 999}); }
+            allNumArr.sort((a, b) => b.pos - a.pos);
+            let m2 = allNumArr.slice(0, 10).map(item => item.num);
+
+            let transitionMap = {};
+            for(let i = 0; i < deList.length - 1; i++) {
+                let curr = deList[i+1], next = deList[i];
+                if(!transitionMap[curr]) transitionMap[curr] = {};
+                transitionMap[curr][next] = (transitionMap[curr][next] || 0) + 1;
+            }
+            let latestNum = deList[0] || "53";
+            let m3 = transitionMap[latestNum] ? Object.entries(transitionMap[latestNum]).sort((a,b) => b[1] - a[1]).slice(0, 5).map(([n]) => n) : [];
+
+            let dauCount = {}, tongCount = {};
+            deList.forEach(num => {
+                dauCount[num[0]] = (dauCount[num[0]] || 0) + 1;
+                tongCount[(parseInt(num[0]) + parseInt(num[1])) % 10] = (tongCount[(parseInt(num[0]) + parseInt(num[1])) % 10] || 0) + 1;
+            });
+            let bestDau = Object.entries(dauCount).sort((a,b) => b[1] - a[1])[0]?.[0] || '0';
+            let bestTong = Object.entries(tongCount).sort((a,b) => b[1] - a[1])[0]?.[0] || '0';
+            let m4 = [];
+            for(let i=0; i<100; i++) { let s = i < 10 ? '0' + i : '' + i; if(s[0] === bestDau || (parseInt(s[0]) + parseInt(s[1])) % 10 === parseInt(bestTong)) m4.push(s); }
+
+            let dateParts = subset[0].ngay.split('-');
+            let nextDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
+            nextDate.setDate(nextDate.getDate() + 1); // Miền Bắc quay hàng ngày
+            
+            let sumDigits = (n) => { while(n > 9) n = n.toString().split('').reduce((a,b)=>parseInt(a)+parseInt(b),0); return n; };
+            let lifePath = sumDigits(nextDate.getDate()) + sumDigits(nextDate.getMonth()+1) + sumDigits(sumDigits(nextDate.getFullYear()));
+            lifePath = sumDigits(lifePath);
+            let m5 = [(lifePath * 9).toString().padStart(2, '0'), (lifePath * 11).toString().slice(-2), ((lifePath + nextDate.getDate()) % 90).toString().padStart(2, '0')];
+
+            // 6. BẠC NHỚ THEO THỨ (Tích hợp trọng số thời gian)
+            let targetThu = subset[0].thu || "Thứ Hai";
+            let sameDayHistory = lichSuQuay.filter(item => item.thu === targetThu);
+            let dayFreqMap = {};
+            sameDayHistory.forEach((item, index) => {
+                let dbVal = item.gdb ? item.gdb.toString().slice(-2) : "";
+                if(dbVal.length === 2) {
+                    let weight = Math.max(1, sameDayHistory.length - index);
+                    dayFreqMap[dbVal] = (dayFreqMap[dbVal] || 0) + weight;
+                }
+            });
+            let m6 = Object.entries(dayFreqMap).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([num]) => num);
+            if(m6.length === 0) m6 = ["12", "38", "79", "86", "45"];
+
+            let deltaList = [];
+            for(let i = 0; i < deList.length - 1; i++) deltaList.push((parseInt(deList[i]) - parseInt(deList[i+1]) + 100) % 100);
+            let avgDelta = deltaList.length > 0 ? Math.round(deltaList.reduce((a,b)=>a+b, 0) / deltaList.length) : 15;
+            let predDelta = (parseInt(deList[0] || "50") + avgDelta) % 100;
+            let m7 = [predDelta < 10 ? '0' + predDelta : '' + predDelta, (100 - predDelta).toString().padStart(2, '0')];
+
+            let d1 = parseInt((deList[0] || "26")[0]), d2 = parseInt((deList[0] || "26")[1]);
+            let m8 = [''+d2+d1, ''+(9-d1)+(9-d2), ''+((10-d1)%10)+((10-d2)%10)];
+
+            const bongDuongMap = {'0':'5', '5':'0', '1':'6', '6':'1', '2':'7', '7':'2', '3':'8', '8':'3', '4':'9', '9':'4'};
+            let bongFreq = {};
+            allNumRaw.forEach(num => {
+                let d1_b = bongDuongMap[num[0]] || num[0];
+                let d2_b = bongDuongMap[num[1]] || num[1];
+                let bongNum = d1_b + d2_b;
+                bongFreq[bongNum] = (bongFreq[bongNum] || 0) + 1;
+            });
+            let m9 = Object.entries(bongFreq).sort((a,b) => b[1] - a[1]).slice(0, 5).map(([num]) => num);
+            if(m9.length === 0) m9 = ["53", "08", "86", "27"];
+
+            return { 'Tần Suất': m1, 'Lô Gan': m2, 'Markov': m3, 'Chạm Tổng': m4, 'Thần Học': m5, 'Bạc Nhớ Thứ': m6, 'Delta': m7, 'Bù Gương': m8, 'Bóng Âm Dương': m9 };
+        }
+
+        function tinhDiemDongTuLichSu(lichSuQuay) {
+            let scores = { 
+                'Tần Suất': 50, 'Lô Gan': 50, 'Markov': 50, 'Chạm Tổng': 50, 
+                'Thần Học': 50, 'Bạc Nhớ Thứ': 50, 'Delta': 50, 'Bù Gương': 50, 'Bóng Âm Dương': 50 
+            };
+
+            if (!Array.isArray(lichSuQuay) || lichSuQuay.length < 5) return scores;
+
+            for (let i = lichSuQuay.length - 1; i >= 1; i--) {
+                let targetDraw = lichSuQuay[i];
+                let actualDraw = lichSuQuay[i - 1];
+                let subset = lichSuQuay.slice(i);
+                let results = chay9MoHinhNoiBo(subset, lichSuQuay);
+                let actual2D = actualDraw.gdb ? actualDraw.gdb.toString().slice(-2) : "";
+
+                Object.keys(results).forEach(mName => {
+                    let preds = results[mName];
+                    if (preds.includes(actual2D)) {
+                        scores[mName] = (scores[mName] || 50) + 3;
+                    } else {
+                        scores[mName] = Math.max(20, (scores[mName] || 50) - 1.5);
+                    }
+                });
+            }
+            return scores;
+        }
+
+        async function chayVaDanhGiaMoHinh(targetBacktestDate = null) {
+            const dai = document.getElementById('selectDai').value;
+            const limit = parseInt(document.getElementById('selectLimit').value);
+            const jsonPath = `data/${dai}.json`;
+
+            try {
+                if (!currentLoadedJson) {
+                    const response = await fetch(jsonPath);
+                    if (!response.ok) throw new Error(`Không tìm thấy file: data/${dai}.json`);
+                    currentLoadedJson = await response.json();
+                    capNhatDropdownNgay();
+                }
+
+                const lichSuQuay = currentLoadedJson.lich_su_quay || currentLoadedJson; 
+                if (!Array.isArray(lichSuQuay)) throw new Error("Cấu trúc file JSON thiếu mảng lich_su_quay.");
+
+                let activeSubset = lichSuQuay;
+                let actualDrawData = null;
+                let targetDisplayDate = "";
+
+                if (targetBacktestDate) {
+                    let targetIndex = lichSuQuay.findIndex(i => i.ngay === targetBacktestDate);
+                    if (targetIndex > 0) {
+                        actualDrawData = lichSuQuay[targetIndex - 1]; 
+                        targetDisplayDate = actualDrawData.ngay;
+                        activeSubset = lichSuQuay.slice(targetIndex); 
+                    } else if (targetIndex === 0) {
+                        actualDrawData = null;
+                        activeSubset = lichSuQuay;
+                    }
+                }
+
+                const subset = activeSubset.slice(0, limit);
+                if (subset.length === 0) {
+                    alert("Không đủ dữ liệu lịch sử để phân tích!");
+                    return;
+                }
+
+                let results = chay9MoHinhNoiBo(subset, lichSuQuay);
+                lastCachedResults = results; 
+                let scores = tinhDiemDongTuLichSu(lichSuQuay);
+
+                let scoreBoard = {};
+                for(let i=0; i<100; i++) scoreBoard[i < 10 ? '0' + i : '' + i] = 0;
+
+                let addScore = (preds, weightMultiplier) => {
+                    preds.forEach((num, idx) => {
+                        if(scoreBoard[num] !== undefined) {
+                            scoreBoard[num] += (preds.length - idx) * (weightMultiplier / 50);
+                        }
+                    });
+                };
+
+                Object.keys(results).forEach(mName => {
+                    addScore(results[mName], scores[mName] || 50);
+                });
+
+                let sortedConsensus = Object.entries(scoreBoard).sort((a, b) => b[1] - a[1]);
+                let final2DNum = sortedConsensus[0][0];
+
+                let topSuggested = sortedConsensus.slice(0, 12).map(([num, score]) => ({ num, score: Math.round(score * 10) / 10 }));
+                document.getElementById('sectionTitleSuggest').innerText = "💡 Danh Sách Số Gợi Ý 2 Chữ Số Tham Khảo (Tổng Hợp Từ 9 Mô Hình)";
+                let suggestedHtml = topSuggested.map((item, idx) => {
+                    let badgeColor = idx === 0 ? "bg-yellow-500 text-slate-950 font-extrabold ring-2 ring-yellow-300" : "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-300 border border-indigo-800";
+                    return `<div class="${badgeColor} px-3 py-1.5 rounded-lg text-center font-bold text-sm flex flex-col items-center shadow-sm">
+                        <span class="text-base tracking-wider">${item.num}</span>
+                        <span class="text-[9px] opacity-75">Điểm: ${item.score}</span>
+                    </div>`;
+                }).join('');
+                document.getElementById('suggestedNumbersList').innerHTML = suggestedHtml;
+
+                let allDeList = subset.map(item => item.gdb ? item.gdb.toString().slice(-2) : "").filter(Boolean);
+                let latestDe = allDeList[0] || "53";
+                let sumDe = (parseInt(latestDe[0]) + parseInt(latestDe[1])) % 10;
+                let hBase = sumDe.toString();
+                const bongDuongMap = {'0':'5', '5':'0', '1':'6', '6':'1', '2':'7', '7':'2', '3':'8', '8':'3', '4':'9', '9':'4'};
+                const bongAmMap = {'0':'7', '7':'0', '1':'4', '4':'1', '2':'9', '9':'2', '3':'6', '6':'3', '5':'8', '8':'5'};
+                let hDuong = bongDuongMap[hBase] || hBase;
+                let hAm = bongAmMap[hBase] || hBase;
+                let topHundreds = [...new Set([hBase, hDuong, hAm])].slice(0, 3);
+                let list3D = topHundreds.map(h => h + final2DNum);
+
+                document.getElementById('final2D').innerText = final2DNum;
+                let html3D = list3D.map((val, idx) => `<span class="${idx === 0 ? 'text-yellow-400 font-extrabold' : 'text-indigo-200 font-bold'} text-xl px-2 py-0.5 bg-black/20 rounded border border-white/10">${val}</span>`).join('');
+                document.getElementById('final3DList').innerHTML = html3D;
+                document.getElementById('detail3DHint').innerText = `(Hàng trăm dịch bóng từ tổng ${latestDe}: ${topHundreds.join(', ')})`;
+
+                if (actualDrawData) {
+                    let actualDBVal = actualDrawData.gdb ? actualDrawData.gdb.toString() : "";
+                    let actual2D = actualDBVal.slice(-2);
+                    let isMatch2D = (final2DNum === actual2D);
+                    let isMatch3D = list3D.includes(actualDBVal);
+
+                    document.getElementById('resultTitleBanner').innerText = `🔍 TỪ NGÀY ${targetBacktestDate} ➔ ĐỐI CHIẾU KỲ ${targetDisplayDate}`;
+                    
+                    let colorClass = (isMatch2D || isMatch3D) ? "text-red-500 font-bold" : "text-slate-200";
+                    let compareText = `Thực tế ngày ${targetDisplayDate} về ĐB: <strong class="text-yellow-300">${actualDBVal}</strong><br>`;
+                    compareText += `<span class="${colorClass}">`;
+                    compareText += isMatch2D ? `✅ Khớp 2S (${actual2D})` : `❌ Lệch 2S (Thực tế: ${actual2D})`;
+                    if(isMatch3D) compareText += ` | 👑 TRÚNG 3 CÀNG!`;
+                    compareText += `</span>`;
+                    
+                    document.getElementById('actualCompareNote').innerHTML = compareText;
+                } else {
+                    document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH";
+                    document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình đã phân tích lịch sử)";
+                }
+
+                document.getElementById('resultHot').innerHTML = results['Tần Suất'].slice(0, 6).map(n => `<span class="bg-indigo-50 dark:bg-indigo-950/60 text-indigo-300 px-2 py-0.5 rounded font-bold text-xs border border-indigo-800">${n}</span>`).join('');
+                document.getElementById('resultCold').innerHTML = results['Lô Gan'].slice(0, 6).map(n => `<span class="bg-cyan-50 dark:bg-cyan-950/60 text-cyan-300 px-2 py-0.5 rounded font-bold text-xs border border-cyan-800">${n}</span>`).join('');
+                document.getElementById('resultMarkov').innerHTML = results['Markov'].length > 0 ? results['Markov'].slice(0, 5).map(n => `<span class="bg-purple-50 dark:bg-purple-950/60 text-purple-300 px-2 py-0.5 rounded font-bold text-xs border border-purple-800">${n}</span>`).join('') : '<span class="text-slate-400 text-xs italic">Chưa đủ dữ liệu</span>';
+                document.getElementById('resultCham').innerHTML = `<div class="flex justify-between bg-slate-800/50 p-1 rounded border border-slate-700"><span>Chạm/Tổng:</span><strong>Đã phân tích</strong></div>`;
+                document.getElementById('resultThanHoc').innerHTML = results['Thần Học'].map(n => `<span class="bg-amber-50 dark:bg-amber-950/60 text-amber-300 px-2 py-0.5 rounded font-bold text-xs border border-amber-800">${n}</span>`).join('');
+                document.getElementById('resultBacNho').innerHTML = results['Bạc Nhớ Thứ'].map(n => `<span class="bg-rose-50 dark:bg-rose-950/60 text-rose-300 px-2 py-0.5 rounded font-bold text-xs border border-rose-800">${n}</span>`).join('');
+                document.getElementById('resultDelta').innerHTML = results['Delta'].map(n => `<span class="bg-teal-50 dark:bg-teal-950/60 text-teal-300 px-2 py-0.5 rounded font-bold text-xs border border-teal-800">${n}</span>`).join('');
+                document.getElementById('resultMirror').innerHTML = results['Bù Gương'].map(n => `<span class="bg-emerald-50 dark:bg-emerald-950/60 text-emerald-300 px-2 py-0.5 rounded font-bold text-xs border border-emerald-800">${n}</span>`).join('');
+                document.getElementById('resultBong').innerHTML = results['Bóng Âm Dương'].map(n => `<span class="bg-violet-50 dark:bg-violet-950/60 text-violet-300 px-2 py-0.5 rounded font-bold text-xs border border-violet-800">${n}</span>`).join('');
+
+                let modelArr = Object.keys(scores).map(name => ({ name, score: Math.round(scores[name]) }));
+                modelArr.sort((a, b) => b.score - a.score);
+
+                let lbHtml = "";
+                modelArr.forEach((m, idx) => {
+                    let badge = idx === 0 ? "👑 TỐI ƯU" : `Top ${idx+1}`;
+                    let color = idx === 0 ? "bg-indigo-600 border-indigo-400 ring-1 ring-indigo-400" : "bg-white/5 border-white/10";
+                    lbHtml += `
+                        <div class="${color} p-2 rounded-lg border text-center">
+                            <span class="text-[8px] font-semibold px-1 py-0.1 rounded bg-black/30 text-white">${badge}</span>
+                            <p class="text-[11px] font-bold mt-1 truncate">${m.name}</p>
+                            <p class="text-[11px] text-indigo-200 mt-0.5"><strong>${m.score}đ</strong></p>
+                        </div>
+                    `;
+                });
+                document.getElementById('modelLeaderboard').innerHTML = lbHtml;
+                veBieuDoDanhGia(modelArr);
+
+            } catch (err) {
+                console.warn("Vui lòng kiểm tra lại đường dẫn file JSON của đài.", err.message);
+            }
+        }
+
+        // --- HÀM XỬ LÝ LẤY PHẦN GIAO THÔNG MINH (LỌC TỪ 2 MÔ HÌNH TRỞ LÊN) ---
+        function layPhanGiaoCacMoHinh() {
+            if (!lastCachedResults) {
+                alert("Vui lòng bấm 'Chạy Phân Tích' trước để hệ thống sinh dữ liệu các mô hình!");
+                thucHienPhanTichHoacBacktesting();
+                if (!lastCachedResults) return;
+            }
+
+            let countMap = {};
+            let modelSourceMap = {}; 
+
+            Object.keys(lastCachedResults).forEach(mName => {
+                let preds = [...new Set(lastCachedResults[mName])];
+                preds.forEach(num => {
+                    countMap[num] = (countMap[num] || 0) + 1;
+                    if (!modelSourceMap[num]) modelSourceMap[num] = [];
+                    modelSourceMap[num].push(mName);
+                });
+            });
+
+            let filteredIntersection = Object.entries(countMap).filter(([num, count]) => count >= 2);
+
+            if (filteredIntersection.length === 0) {
+                filteredIntersection = Object.entries(countMap).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            } else {
+                filteredIntersection.sort((a, b) => b[1] - a[1]);
+            }
+
+            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA (Chỉ lọc các số xuất hiện từ 2 mô hình trở lên)";
+            
+            let intersectionHtml = filteredIntersection.map(([num, count]) => {
+                let modelsList = modelSourceMap[num].join(', ');
+                let badgeColor = count >= 3 
+                    ? "bg-amber-500 text-slate-950 font-extrabold ring-2 ring-amber-300 scale-105" 
+                    : "bg-emerald-600 text-white font-bold ring-2 ring-emerald-400";
+                
+                return `<div title="Được đề xuất bởi các mô hình: ${modelsList}" class="${badgeColor} px-3 py-2 rounded-xl text-center text-sm flex flex-col items-center shadow-md cursor-help transition-transform hover:scale-110">
+                    <span class="text-lg tracking-wider">${num}</span>
+                    <span class="text-[10px] opacity-90 font-semibold">⚡ ${count} mô hình</span>
+                </div>`;
+            }).join('');
+
+            document.getElementById('suggestedNumbersList').innerHTML = intersectionHtml || '<span class="text-slate-400 text-xs italic">Không tìm thấy con số nào có từ 2 mô hình đồng thuận trở lên.</span>';
+        }
+
+        function veBieuDoDanhGia(models) {
+            const chartDom = document.getElementById('evalChart');
+            if (!chartDom) return;
+            const myChart = echarts.init(chartDom);
+            const isDark = document.documentElement.classList.contains('dark');
+            myChart.setOption({
+                backgroundColor: 'transparent',
+                tooltip: { trigger: 'axis' },
+                xAxis: { type: 'category', data: models.map(m => m.name), axisLabel: { color: isDark ? '#cbd5e1' : '#334155', interval: 0, rotate: 15, fontSize: 10 } },
+                yAxis: { type: 'value', max: 120, axisLabel: { color: isDark ? '#cbd5e1' : '#334155' }, splitLine: { lineStyle: { color: isDark ? '#334155' : '#e2e8f0' } } },
+                series: [{
+                    data: models.map(m => m.score), type: 'bar',
+                    itemStyle: { color: (params) => params.dataIndex === 0 ? '#6366f1' : (isDark ? '#334155' : '#cbd5e1') },
+                    label: { show: true, position: 'top', formatter: '{c}đ', color: isDark ? '#f8fafc' : '#1e293b', fontSize: 10 }
+                }]
+            });
+        }
+    </script>
+</body>
+</html>
