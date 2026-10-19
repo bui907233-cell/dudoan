@@ -184,7 +184,6 @@
         let currentLoadedJson = null;
         let lastCachedResults = null; 
 
-        // Khởi tạo trạng thái sạch hoàn toàn, không lưu trữ và không tự động nạp dữ liệu ngầm
         window.onload = function() {
             resetUI();
         };
@@ -367,12 +366,16 @@
             lifePath = sumDigits(lifePath);
             let m5 = [(lifePath * 9).toString().padStart(2, '0'), (lifePath * 11).toString().slice(-2), ((lifePath + nextDate.getDate()) % 90).toString().padStart(2, '0')];
 
+            // 6. BẠC NHỚ THEO THỨ (Tích hợp trọng số thời gian)
             let targetThu = subset[0].thu || "Thứ Hai";
             let sameDayHistory = lichSuQuay.filter(item => item.thu === targetThu);
             let dayFreqMap = {};
-            sameDayHistory.forEach(item => {
+            sameDayHistory.forEach((item, index) => {
                 let dbVal = item.gdb ? item.gdb.toString().slice(-2) : "";
-                if(dbVal.length === 2) dayFreqMap[dbVal] = (dayFreqMap[dbVal] || 0) + 1;
+                if(dbVal.length === 2) {
+                    let weight = Math.max(1, sameDayHistory.length - index);
+                    dayFreqMap[dbVal] = (dayFreqMap[dbVal] || 0) + weight;
+                }
             });
             let m6 = Object.entries(dayFreqMap).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([num]) => num);
             if(m6.length === 0) m6 = ["12", "38", "79", "86", "45"];
@@ -588,7 +591,6 @@
                 });
             });
 
-            // Chỉ lọc các số xuất hiện từ 2 mô hình trở lên để tránh bị loãng số
             let filteredIntersection = Object.entries(countMap).filter(([num, count]) => count >= 2);
 
             if (filteredIntersection.length === 0) {
