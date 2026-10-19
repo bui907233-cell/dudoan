@@ -56,9 +56,10 @@
             </div>
 
             <div>
-                <label class="block text-xs font-medium text-indigo-400 mb-1">🔍 Tra cứu nhanh Ngày Quay:</label>
-                <select id="selectTraCuuNgay" onchange="hienPopupTraCuu()" class="w-full border border-indigo-500/50 rounded-lg px-3 py-2 bg-indigo-50 dark:bg-indigo-950/40 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
-                    <option value="">-- Chọn ngày xem kết quả --</option>
+                <label class="block text-xs font-medium text-indigo-400 mb-1">🔍 Chọn Ngày Kiểm Chứng Lịch Sử:</label>
+                <!-- Khi chọn ngày ở đây, hệ thống sẽ tự động chạy backtesting mô hình cho đúng mốc ngày đó -->
+                <select id="selectTraCuuNgay" onchange="chayBacktestingNgayChon()" class="w-full border border-indigo-500/50 rounded-lg px-3 py-2 bg-indigo-50 dark:bg-indigo-950/40 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
+                    <option value="">-- Chọn ngày xem kết quả / Backtesting --</option>
                 </select>
             </div>
 
@@ -73,19 +74,19 @@
 
             <div>
                 <button onclick="chayVaDanhGiaMoHinh()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-all shadow-md text-sm">
-                    🚀 Chạy Phân Tích (9 Mô Hình)
+                    🚀 Chạy Phân Tích Mới Nhất
                 </button>
             </div>
         </div>
 
         <!-- KHUNG KẾT QUẢ CHỐT SỐ TOÀN DIỆN -->
         <div class="bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-xl mb-6 text-center border border-indigo-500/30">
-            <h3 class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4">🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH & 3 CÀNG BÓNG ÂM DƯƠNG</h3>
+            <h3 id="resultTitleBanner" class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4">🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH & 3 CÀNG BÓNG ÂM DƯƠNG</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-xl mx-auto">
                 <div class="bg-white/5 backdrop-blur px-5 py-4 rounded-xl border border-white/10">
                     <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp 2 Chữ Số Tối Ưu</p>
                     <span id="final2D" class="text-5xl font-extrabold tracking-wider text-yellow-400 mt-2 block">--</span>
-                    <span class="text-[10px] text-slate-300 mt-1 block">(Đồng thuận từ 9 mô hình toàn cục)</span>
+                    <span id="actualCompareNote" class="text-[10px] text-slate-300 mt-1 block">(Đồng thuận từ 9 mô hình toàn cục)</span>
                 </div>
                 <div class="bg-white/5 backdrop-blur px-5 py-4 rounded-xl border border-white/10">
                     <p class="text-[11px] text-indigo-200 uppercase font-semibold">Top 3 Càng Bóng Âm Dương</p>
@@ -99,7 +100,6 @@
 
         <!-- CHI TIẾT PHÂN TÍCH 9 MÔ HÌNH -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <!-- Cột 1 -->
             <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
                 <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2">🔥 1. Tần Suất 2 Số</h3>
                 <div id="resultHot" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
@@ -111,7 +111,6 @@
                 <div id="resultMarkov" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
             </div>
 
-            <!-- Cột 2 -->
             <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
                 <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2">⚡ 4. Chạm & Tổng Đề</h3>
                 <div id="resultCham" class="text-xs space-y-1"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
@@ -123,7 +122,6 @@
                 <div id="resultBacNho" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
             </div>
 
-            <!-- Cột 3 -->
             <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
                 <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2">📈 7. Khoảng Cách Nhịp (Delta)</h3>
                 <div id="resultDelta" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
@@ -209,14 +207,16 @@
             document.getElementById('final2D').innerText = "--";
             document.getElementById('final3DList').innerHTML = '<span class="text-3xl font-extrabold tracking-wider text-yellow-400">---</span>';
             document.getElementById('detail3DHint').innerText = "(Chi phối bởi bóng âm dương hàng trăm)";
+            document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình toàn cục)";
+            document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH & 3 CÀNG BÓNG ÂM DƯƠNG";
             
             ['resultHot', 'resultCold', 'resultMarkov', 'resultCham', 'resultThanHoc', 'resultBacNho', 'resultDelta', 'resultMirror', 'resultBong'].forEach(id => {
                 document.getElementById(id).innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
             });
 
-            document.getElementById('modelLeaderboard').innerHTML = '<div class="bg-white/5 p-2 rounded-lg border border-white/10 text-center col-span-full"><p class="text-xs text-slate-400">Vui lòng bấm "Chạy Phân Tích"</p></div>';
+            document.getElementById('modelLeaderboard').innerHTML = '<div class="bg-white/5 p-2 rounded-lg border border-white/10 text-center col-span-full"><p class="text-xs text-slate-400">Vui lòng bấm "Chạy Phân Tích" hoặc chọn ngày kiểm chứng</p></div>';
             document.getElementById('auditLogContainer').innerHTML = '<p class="italic text-slate-500">Chưa có dữ liệu nhật ký đối chiếu...</p>';
-            document.getElementById('selectTraCuuNgay').innerHTML = '<option value="">-- Chọn ngày xem kết quả --</option>';
+            document.getElementById('selectTraCuuNgay').innerHTML = '<option value="">-- Chọn ngày xem kết quả / Backtesting --</option>';
 
             const chartDom = document.getElementById('evalChart');
             if (chartDom) {
@@ -241,7 +241,7 @@
 
         function capNhatDropdownNgay() {
             const selectNgay = document.getElementById('selectTraCuuNgay');
-            selectNgay.innerHTML = '<option value="">-- Chọn ngày xem kết quả --</option>';
+            selectNgay.innerHTML = '<option value="">-- Chọn ngày xem kết quả / Backtesting --</option>';
             if (!currentLoadedJson) return;
             const lichSu = currentLoadedJson.lich_su_quay || currentLoadedJson;
             if (!Array.isArray(lichSu)) return;
@@ -254,38 +254,18 @@
             });
         }
 
-        function hienPopupTraCuu() {
-            const ngayChon = document.getElementById('selectTraCuuNgay').value;
-            if (!ngayChon || !currentLoadedJson) return;
-
-            const lichSu = currentLoadedJson.lich_su_quay || currentLoadedJson;
-            const kyQuay = lichSu.find(i => i.ngay === ngayChon);
-            if (!kyQuay) return;
-
-            document.getElementById('modalTitle').innerText = `📊 Kết Quả XSMT Ngày ${kyQuay.ngay} (${kyQuay.thu})`;
-
-            let html = `
-                <div class="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-2.5 rounded-lg"><span class="font-semibold text-slate-500">Giải 8:</span><strong class="text-rose-500 text-lg">${kyQuay.giai_8 || '--'}</strong></div>
-                <div class="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-2.5 rounded-lg"><span class="font-semibold text-slate-500">Giải 7:</span><strong class="text-slate-800 dark:text-slate-100">${kyQuay.giai_7 || '--'}</strong></div>
-                <div class="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-2.5 rounded-lg"><span class="font-semibold text-slate-500">Giải 6:</span><strong class="text-slate-800 dark:text-slate-100">${Array.isArray(kyQuay.giai_6) ? kyQuay.giai_6.join(' - ') : (kyQuay.giai_6 || '--')}</strong></div>
-                <div class="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-2.5 rounded-lg"><span class="font-semibold text-slate-500">Giải 5:</span><strong class="text-slate-800 dark:text-slate-100">${kyQuay.giai_5 || '--'}</strong></div>
-                <div class="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-2.5 rounded-lg"><span class="font-semibold text-slate-500">Giải 4:</span><strong class="text-xs text-slate-800 dark:text-slate-100 text-right">${Array.isArray(kyQuay.giai_4) ? kyQuay.giai_4.join(', ') : (kyQuay.giai_4 || '--')}</strong></div>
-                <div class="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-2.5 rounded-lg"><span class="font-semibold text-slate-500">Giải 3:</span><strong class="text-slate-800 dark:text-slate-100">${Array.isArray(kyQuay.giai_3) ? kyQuay.giai_3.join(' - ') : (kyQuay.giai_3 || '--')}</strong></div>
-                <div class="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-2.5 rounded-lg"><span class="font-semibold text-slate-500">Giải 2:</span><strong class="text-slate-800 dark:text-slate-100">${kyQuay.giai_2 || '--'}</strong></div>
-                <div class="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-2.5 rounded-lg"><span class="font-semibold text-slate-500">Giải 1:</span><strong class="text-slate-800 dark:text-slate-100">${kyQuay.giai_1 || '--'}</strong></div>
-                <div class="flex justify-between items-center bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-500/30 p-3 rounded-lg"><span class="font-bold text-indigo-400">Giải Đặc Biệt:</span><strong class="text-yellow-400 text-xl tracking-widest">${kyQuay.gdb || '--'}</strong></div>
-            `;
-
-            document.getElementById('modalBody').innerHTML = html;
-            document.getElementById('resultModal').classList.remove('hidden');
-            document.getElementById('selectTraCuuNgay').value = "";
-        }
-
         function dongPopup() {
             document.getElementById('resultModal').classList.add('hidden');
         }
 
-        async function chayVaDanhGiaMoHinh() {
+        // Khi chọn một ngày cụ thể từ ô tra cứu -> Tiến hành Backtesting mô hình lùi về trước ngày đó
+        function chayBacktestingNgayChon() {
+            const ngayChon = document.getElementById('selectTraCuuNgay').value;
+            if (!ngayChon || !currentLoadedJson) return;
+            chayVaDanhGiaMoHinh(ngayChon);
+        }
+
+        async function chayVaDanhGiaMoHinh(targetBacktestDate = null) {
             const dai = document.getElementById('selectDai').value;
             const limit = parseInt(document.getElementById('selectLimit').value);
             const jsonPath = `data/${dai}.json`;
@@ -301,7 +281,25 @@
                 const lichSuQuay = currentLoadedJson.lich_su_quay || currentLoadedJson; 
                 if (!Array.isArray(lichSuQuay)) throw new Error("Cấu trúc file JSON thiếu mảng lich_su_quay.");
 
-                const subset = lichSuQuay.slice(0, limit);
+                let activeSubset = lichSuQuay;
+                let actualDrawData = null;
+
+                // Nếu có chỉ định ngày Backtesting cụ thể
+                if (targetBacktestDate) {
+                    let targetIndex = lichSuQuay.findIndex(i => i.ngay === targetBacktestDate);
+                    if (targetIndex >= 0) {
+                        actualDrawData = lichSuQuay[targetIndex];
+                        // Cắt lấy dữ liệu các kỳ TRƯỚC ngày được chọn để huấn luyện mô hình
+                        activeSubset = lichSuQuay.slice(targetIndex + 1);
+                    }
+                }
+
+                const subset = activeSubset.slice(0, limit);
+                if (subset.length === 0) {
+                    alert("Không đủ dữ liệu lịch sử trước ngày này để phân tích!");
+                    return;
+                }
+
                 let allLoList = [], deList = [], rawHundredList = [], allNumRaw = [];
 
                 subset.forEach(item => {
@@ -456,7 +454,6 @@
                 let final2DNum = sortedConsensus[0][0];
 
                 // --- THUẬT TOÁN 3 CÀNG CHI PHỐI BỞI BÓNG ÂM DƯƠNG HÀNG TRĂM ---
-                // Lấy tổng 2 số cuối giải đặc biệt kỳ gần nhất để dịch bóng âm dương làm hàng trăm
                 let latestDe = deList[0] || "53";
                 let sumDe = (parseInt(latestDe[0]) + parseInt(latestDe[1])) % 10;
                 let hBase = sumDe.toString();
@@ -471,11 +468,22 @@
                 document.getElementById('final3DList').innerHTML = html3D;
                 document.getElementById('detail3DHint').innerText = `(Hàng trăm dịch bóng từ tổng ${latestDe}: ${topHundreds.join(', ')})`;
 
-                // Ghi nhận nhật ký kỳ tới
-                let existingLogIndex = currentLoadedJson.nhat_ky_tu_hoc.findIndex(l => l.ngay_du_bao === targetDateStr);
-                let newLogEntry = { ngay_du_bao: targetDateStr, s2_du_doan: final2DNum, s3_du_doan: list3D[0], mo_hinh_giao_viec: "Bạc Nhớ Thứ", trang_thai: "dang_cho" };
-                if (existingLogIndex >= 0) currentLoadedJson.nhat_ky_tu_hoc[existingLogIndex] = newLogEntry;
-                else currentLoadedJson.nhat_ky_tu_hoc.unshift(newLogEntry);
+                // Nếu đang ở chế độ kiểm chứng (Backtesting ngày cụ thể), hiển thị đối chiếu thực tế ngay trên giao diện
+                if (actualDrawData) {
+                    let actualDBVal = actualDrawData.gdb ? actualDrawData.gdb.toString() : "";
+                    let actual2D = actualDBVal.slice(-2);
+                    let isMatch2D = (final2DNum === actual2D);
+                    let isMatch3D = list3D.includes(actualDBVal);
+
+                    document.getElementById('resultTitleBanner').innerText = `🔍 KẾT QUẢ KIỂM CHỨNG (BACKTESTING) NGÀY ${actualDrawData.ngay}`;
+                    let compareText = `Thực tế ngày ${actualDrawData.ngay} về ĐB: <strong class="text-yellow-300">${actualDBVal}</strong> | `;
+                    compareText += isMatch2D ? `✅ Khớp 2S (${actual2D})` : `❌ Lệch 2S (Thực tế: ${actual2D})`;
+                    if(isMatch3D) compareText += ` | 👑 TRÚNG 3 CÀNG!`;
+                    document.getElementById('actualCompareNote').innerHTML = compareText;
+                } else {
+                    document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH & 3 CÀNG BÓNG ÂM DƯƠNG";
+                    document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình toàn cục)";
+                }
 
                 // Hiển thị giao diện 9 mô hình
                 document.getElementById('resultHot').innerHTML = sortedHot.slice(0, 6).map(([n, c]) => `<span class="bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded font-bold text-xs border border-indigo-100 dark:border-indigo-800">${n} (${c})</span>`).join('');
