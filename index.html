@@ -16,7 +16,7 @@
         <!-- Header -->
         <header class="mb-6 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
             <div>
-                <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡Analysis</h1>
+                <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis</h1>
                 <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Phân tích...</p>
             </div>
             <div class="flex items-center gap-3">
@@ -30,10 +30,10 @@
         </header>
 
         <!-- Bảng điều khiển -->
-        <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6 grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
             <div>
                 <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Chọn Đài Miền Trung:</label>
-                <select id="selectDai" onchange="capNhatNgayTheoDai()" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
+                <select id="selectDai" onchange="taiDuLieuDai()" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
                     <option value="phuyen" selected>Thứ 2 - Phú Yên</option>
                     <option value="hue">Thứ 2 - Thừa Thiên Huế</option>
                     <option value="daklak">Thứ 3 - Đắk Lắk</option>
@@ -58,13 +58,21 @@
                 <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Lọc theo Thứ:</label>
                 <select id="selectThu" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
                     <option value="all">Tất cả các thứ</option>
-                    <option value="Thứ Hai" selected>Thứ Hai</option>
+                    <option value="Thứ Hai">Thứ Hai</option>
                     <option value="Thứ Ba">Thứ Ba</option>
                     <option value="Thứ Tư">Thứ Tư</option>
                     <option value="Thứ Năm">Thứ Năm</option>
                     <option value="Thứ Sáu">Thứ Sáu</option>
                     <option value="Thứ Bảy">Thứ Bảy</option>
-                    <option value="Chủ Nhật">Chủ Nhật</option>
+                    <option value="Chủ Nhật" selected>Chủ Nhật</option>
+                </select>
+            </div>
+
+            <!-- THÊM Ô CHỌN NGÀY TRA CỨU NHANH -->
+            <div>
+                <label class="block text-xs font-medium text-indigo-400 mb-1">🔍 Tra cứu nhanh Ngày Quay:</label>
+                <select id="selectTraCuuNgay" onchange="hienPopupTraCuu()" class="w-full border border-indigo-500/50 rounded-lg px-3 py-2 bg-indigo-50 dark:bg-indigo-950/40 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
+                    <option value="">-- Chọn ngày xem kết quả --</option>
                 </select>
             </div>
 
@@ -74,13 +82,12 @@
                     <option value="10" selected>10 kỳ gần nhất</option>
                     <option value="20">20 kỳ gần nhất</option>
                     <option value="50">50 kỳ gần nhất</option>
-                    <option value="100">100 kỳ (Tích lũy sâu)</option>
                 </select>
             </div>
 
             <div>
                 <button onclick="chayVaDanhGiaMoHinh()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-all shadow-md text-sm">
-                    🚀 Chạy Phân Tích & Chốt Số
+                    🚀 Chạy Phân Tích
                 </button>
             </div>
         </div>
@@ -155,16 +162,31 @@
                 <p class="italic text-slate-500">Chưa có dữ liệu nhật ký đối chiếu...</p>
             </div>
         </div>
+    </div>
 
-        <!-- BIỂU ĐỒ TRỰC QUAN -->
-        <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
-            <h3 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">Biểu Đồ Uy Tín 8 Mô Hình</h3>
-            <div id="evalChart" style="width: 100%; height: 260px;"></div>
+    <!-- POPUP MODAL XEM CHI TIẾT KẾT QUẢ QUAY -->
+    <div id="resultModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-2xl shadow-2xl border border-slate-700 overflow-hidden">
+            <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white">
+                <h3 id="modalTitle" class="font-bold text-base">📊 Chi Tiết Kết Quả XSMT</h3>
+                <button onclick="dongPopup()" class="text-white hover:text-slate-200 text-xl font-bold">&times;</button>
+            </div>
+            <div id="modalBody" class="p-6 space-y-3 text-sm max-h-[75vh] overflow-y-auto">
+                <!-- Nội dung kết quả từ G8 đến ĐB sẽ được chèn vào đây -->
+            </div>
+            <div class="bg-slate-100 dark:bg-slate-800 px-6 py-3 text-right">
+                <button onclick="dongPopup()" class="bg-slate-600 hover:bg-slate-700 text-white px-4 py-1.5 rounded-lg text-xs font-medium">Đóng</button>
+            </div>
         </div>
     </div>
 
     <script>
         let currentLoadedJson = null;
+
+        // Tự động tải dữ liệu đài khi mở trang hoặc đổi đài
+        window.onload = function() {
+            taiDuLieuDai();
+        };
 
         function toggleDarkMode() {
             const html = document.documentElement;
@@ -172,7 +194,7 @@
             const text = document.getElementById('darkModeText');
             if (html.classList.contains('dark')) {
                 html.classList.remove('dark');
-                icon.innerText = '🌙'; text.innerText = 'Giao Diện Sáng';
+                icon.innerText = '🌙'; text.innerText = 'Giao Diện Tối';
             } else {
                 html.classList.add('dark');
                 icon.innerText = '☀️'; text.innerText = 'Giao Diện Sáng';
@@ -192,6 +214,73 @@
                 'kontum': 'Chủ Nhật', 'khanhhoa_cn': 'Chủ Nhật', 'hue_cn': 'Chủ Nhật'
             };
             if (mapping[dai]) selectThu.value = mapping[dai];
+            taiDuLieuDai();
+        }
+
+        async function taiDuLieuDai() {
+            const dai = document.getElementById('selectDai').value;
+            const jsonPath = `data/${dai}.json`;
+            try {
+                const response = await fetch(jsonPath);
+                if (!response.ok) throw new Error(`Không tìm thấy file: data/${dai}.json`);
+                currentLoadedJson = await response.json();
+                
+                // Đổ danh sách ngày vào ô tra cứu nhanh
+                capNhatDropdownNgay();
+                chayVaDanhGiaMoHinh();
+            } catch (err) {
+                console.warn("Chưa tải được file JSON tự động:", err.message);
+            }
+        }
+
+        function capNhatDropdownNgay() {
+            const selectNgay = document.getElementById('selectTraCuuNgay');
+            selectNgay.innerHTML = '<option value="">-- Chọn ngày xem kết quả --</option>';
+            
+            if (!currentLoadedJson) return;
+            const lichSu = currentLoadedJson.lich_su_quay || currentLoadedJson;
+            if (!Array.isArray(lichSu)) return;
+
+            lichSu.forEach(item => {
+                let opt = document.createElement('option');
+                opt.value = item.ngay;
+                opt.innerText = `${item.ngay} (${item.thu})`;
+                selectNgay.appendChild(opt);
+            });
+        }
+
+        function hienPopupTraCuu() {
+            const ngayChon = document.getElementById('selectTraCuuNgay').value;
+            if (!ngayChon || !currentLoadedJson) return;
+
+            const lichSu = currentLoadedJson.lich_su_quay || currentLoadedJson;
+            const kyQuay = lichSu.find(i => i.ngay === ngayChon);
+
+            if (!kyQuay) return;
+
+            document.getElementById('modalTitle').innerText = `📊 Kết Quả XSMT Ngày ${kyQuay.ngay} (${kyQuay.thu})`;
+
+            let html = `
+                <div class="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-2.5 rounded-lg"><span class="font-semibold text-slate-500">Giải 8:</span><strong class="text-rose-500 text-lg">${kyQuay.giai_8 || '--'}</strong></div>
+                <div class="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-2.5 rounded-lg"><span class="font-semibold text-slate-500">Giải 7:</span><strong class="text-slate-800 dark:text-slate-100">${kyQuay.giai_7 || '--'}</strong></div>
+                <div class="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-2.5 rounded-lg"><span class="font-semibold text-slate-500">Giải 6:</span><strong class="text-slate-800 dark:text-slate-100">${Array.isArray(kyQuay.giai_6) ? kyQuay.giai_6.join(' - ') : (kyQuay.giai_6 || '--')}</strong></div>
+                <div class="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-2.5 rounded-lg"><span class="font-semibold text-slate-500">Giải 5:</span><strong class="text-slate-800 dark:text-slate-100">${kyQuay.giai_5 || '--'}</strong></div>
+                <div class="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-2.5 rounded-lg"><span class="font-semibold text-slate-500">Giải 4:</span><strong class="text-xs text-slate-800 dark:text-slate-100 text-right">${Array.isArray(kyQuay.giai_4) ? kyQuay.giai_4.join(', ') : (kyQuay.giai_4 || '--')}</strong></div>
+                <div class="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-2.5 rounded-lg"><span class="font-semibold text-slate-500">Giải 3:</span><strong class="text-slate-800 dark:text-slate-100">${Array.isArray(kyQuay.giai_3) ? kyQuay.giai_3.join(' - ') : (kyQuay.giai_3 || '--')}</strong></div>
+                <div class="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-2.5 rounded-lg"><span class="font-semibold text-slate-500">Giải 2:</span><strong class="text-slate-800 dark:text-slate-100">${kyQuay.giai_2 || '--'}</strong></div>
+                <div class="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-2.5 rounded-lg"><span class="font-semibold text-slate-500">Giải 1:</span><strong class="text-slate-800 dark:text-slate-100">${kyQuay.giai_1 || '--'}</strong></div>
+                <div class="flex justify-between items-center bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-500/30 p-3 rounded-lg"><span class="font-bold text-indigo-400">Giải Đặc Biệt:</span><strong class="text-yellow-400 text-xl tracking-widest">${kyQuay.gdb || '--'}</strong></div>
+            `;
+
+            document.getElementById('modalBody').innerHTML = html;
+            document.getElementById('resultModal').classList.remove('hidden');
+
+            // Reset lại dropdown về mặc định để lần sau chọn tiếp được
+            document.getElementById('selectTraCuuNgay').value = "";
+        }
+
+        function dongPopup() {
+            document.getElementById('resultModal').classList.add('hidden');
         }
 
         async function chayVaDanhGiaMoHinh() {
@@ -201,9 +290,12 @@
             const jsonPath = `data/${dai}.json`;
 
             try {
-                const response = await fetch(jsonPath);
-                if (!response.ok) throw new Error(`Không tìm thấy file dữ liệu: data/${dai}.json`);
-                currentLoadedJson = await response.json(); 
+                if (!currentLoadedJson) {
+                    const response = await fetch(jsonPath);
+                    if (!response.ok) throw new Error(`Không tìm thấy file: data/${dai}.json`);
+                    currentLoadedJson = await response.json();
+                    capNhatDropdownNgay();
+                }
 
                 const lichSuQuay = currentLoadedJson.lich_su_quay || currentLoadedJson; 
                 if (!Array.isArray(lichSuQuay)) throw new Error("Cấu trúc file JSON thiếu mảng lich_su_quay.");
@@ -341,11 +433,11 @@
                 let sortedConsensus = Object.entries(scoreBoard).sort((a, b) => b[1] - a[1]);
                 let final2DNum = sortedConsensus[0][0];
 
-                // --- THUẬT TOÁN 3 CÀNG CHUYÊN SÂU (Ép hàng trăm theo tổng đề kỳ trước) ---
+                // --- THUẬT TOÁN 3 CÀNG CHUYÊN SÂU ---
                 let latestDbTwoStr = deList[0] || "53";
                 let sumLatestDb = (parseInt(latestDbTwoStr[0]) + parseInt(latestDbTwoStr[1])) % 10;
                 let hundredDigit1 = sumLatestDb.toString();
-                let hundredDigit2 = (9 - sumLatestDb).toString(); // Bóng âm/bù
+                let hundredDigit2 = (9 - sumLatestDb).toString();
                 let best3D = hundredDigit1 + final2DNum;
                 let sub3D = hundredDigit2 + final2DNum;
 
@@ -359,7 +451,7 @@
                 if (existingLogIndex >= 0) currentLoadedJson.nhat_ky_tu_hoc[existingLogIndex] = newLogEntry;
                 else currentLoadedJson.nhat_ky_tu_hoc.unshift(newLogEntry);
 
-                // Hiển thị chi tiết mô hình & Leaderboard
+                // Hiển thị chi tiết giao diện
                 document.getElementById('resultHot').innerHTML = sortedHot.slice(0, 6).map(([n, c]) => `<span class="bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 px-2.5 py-1 rounded-md font-bold text-xs border border-indigo-100 dark:border-indigo-800">${n} (${c} lần)</span>`).join('');
                 document.getElementById('resultCold').innerHTML = allNumbers.slice(0, 6).map(item => `<span class="bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 px-2.5 py-1 rounded-md font-bold text-xs border border-cyan-100 dark:border-cyan-800">${item.num} (ẩn ${item.pos} kỳ)</span>`).join('');
                 document.getElementById('resultMarkov').innerHTML = markovPreds.length > 0 ? markovPreds.slice(0, 5).map(([n, c]) => `<span class="bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 px-2.5 py-1 rounded-md font-bold text-xs border border-purple-100 dark:border-purple-800">${n} (xs: ${c})</span>`).join('') : '<span class="text-slate-400 text-xs italic">Chưa đủ dữ liệu</span>';
@@ -397,15 +489,14 @@
                     `;
                 });
                 document.getElementById('modelLeaderboard').innerHTML = lbHtml;
-                veBieuDoDanhGia(models);
 
             } catch (err) {
-                alert("Lỗi thực thi: " + err.message);
+                console.warn("Đang chờ dữ liệu thực tế...", err.message);
             }
         }
 
         function taiJsonCapNhat() {
-            if (!currentLoadedJson) { alert("Vui lòng bấm 'Chạy Phân Tích' trước!"); return; }
+            if (!currentLoadedJson) { alert("Vui lòng đợi dữ liệu tải xong!"); return; }
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentLoadedJson, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
@@ -413,22 +504,6 @@
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
-        }
-
-        function veBieuDoDanhGia(models) {
-            const myChart = echarts.init(document.getElementById('evalChart'));
-            const isDark = document.documentElement.classList.contains('dark');
-            myChart.setOption({
-                backgroundColor: 'transparent',
-                tooltip: { trigger: 'axis' },
-                xAxis: { type: 'category', data: models.map(m => m.name), axisLabel: { color: isDark ? '#cbd5e1' : '#334155', interval: 0, rotate: 10, fontSize: 10 } },
-                yAxis: { type: 'value', max: 130, axisLabel: { color: isDark ? '#cbd5e1' : '#334155' }, splitLine: { lineStyle: { color: isDark ? '#334155' : '#e2e8f0' } } },
-                series: [{
-                    data: models.map(m => m.score), type: 'bar',
-                    itemStyle: { color: (params) => params.dataIndex === 0 ? '#6366f1' : (isDark ? '#334155' : '#cbd5e1') },
-                    label: { show: true, position: 'top', formatter: '{c}đ', color: isDark ? '#f8fafc' : '#1e293b', fontSize: 10 }
-                }]
-            });
         }
     </script>
 </body>
