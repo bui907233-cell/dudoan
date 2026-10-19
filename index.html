@@ -34,8 +34,8 @@
         <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div>
                 <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Chọn Đài Miền Trung:</label>
-                <!-- Khi đổi đài, reset biến dữ liệu cũ và tự động tải + phân tích lại ngay lập tức -->
-                <select id="selectDai" onchange="currentLoadedJson = null; taiDuLieuDai();" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
+                <!-- Khi đổi đài, gọi hàm resetUI và tải JSON mới nhưng KHÔNG tự động chạy phân tích -->
+                <select id="selectDai" onchange="onDaiChange()" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
                     <option value="phuyen" selected>Thứ 2 - Phú Yên</option>
                     <option value="hue">Thứ 2 - Thừa Thiên Huế</option>
                     <option value="daklak">Thứ 3 - Đắk Lắk</option>
@@ -66,7 +66,7 @@
 
             <div>
                 <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Biên độ phân tích:</label>
-                <select id="selectLimit" onchange="chayVaDanhGiaMoHinh()" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
+                <select id="selectLimit" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
                     <option value="10" selected>10 kỳ gần nhất</option>
                     <option value="20">20 kỳ gần nhất</option>
                     <option value="50">50 kỳ gần nhất</option>
@@ -176,7 +176,7 @@
         let currentLoadedJson = null;
 
         window.onload = function() {
-            taiDuLieuDai();
+            taiDuLieuDai(false); // Khi load trang lần đầu chỉ tải dữ liệu thô, không tự động phân tích
         };
 
         function toggleDarkMode() {
@@ -192,7 +192,41 @@
             }
         }
 
-        async function taiDuLieuDai() {
+        // Khi đổi đài: Reset trắng toàn bộ UI, xóa dữ liệu cũ và tải file JSON mới
+        function onDaiChange() {
+            currentLoadedJson = null;
+            resetUI();
+            taiDuLieuDai(false);
+        }
+
+        // Hàm reset trắng giao diện HTML
+        function resetUI() {
+            document.getElementById('final2D').innerText = "--";
+            document.getElementById('final3D').innerText = "---";
+            document.getElementById('detail3DHint').innerText = "(Ghép từ chạm tổng hàng trăm)";
+            document.getElementById('resultHot').innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
+            document.getElementById('resultCold').innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
+            document.getElementById('resultMarkov').innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
+            document.getElementById('resultCham').innerHTML = '<span class="text-slate-400 italic">Chưa có dữ liệu</span>';
+            document.getElementById('resultThanHoc').innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
+            document.getElementById('resultBacNho').innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
+            document.getElementById('resultDelta').innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
+            document.getElementById('resultMirror').innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
+            document.getElementById('modelLeaderboard').innerHTML = '<div class="bg-white/5 p-2.5 rounded-lg border border-white/10 text-center col-span-full"><p class="text-xs text-slate-400">Vui lòng bấm "Chạy Phân Tích"</p></div>';
+            document.getElementById('auditLogContainer').innerHTML = '<p class="italic text-slate-500">Chưa có dữ liệu nhật ký đối chiếu...</p>';
+            
+            // Xóa sạch dropdown ngày tra cứu cũ
+            document.getElementById('selectTraCuuNgay').innerHTML = '<option value="">-- Chọn ngày xem kết quả --</option>';
+
+            // Xóa biểu đồ
+            const chartDom = document.getElementById('evalChart');
+            if (chartDom) {
+                const chartInstance = echarts.getInstanceByDom(chartDom);
+                if (chartInstance) chartInstance.clear();
+            }
+        }
+
+        async function taiDuLieuDai(shouldRunAnalysis = false) {
             const dai = document.getElementById('selectDai').value;
             const jsonPath = `data/${dai}.json`;
             try {
@@ -200,10 +234,14 @@
                 if (!response.ok) throw new Error(`Không tìm thấy file: data/${dai}.json`);
                 currentLoadedJson = await response.json();
                 
+                // Nạp danh sách ngày mới vào ô tra cứu nhanh của đài đó
                 capNhatDropdownNgay();
-                chayVaDanhGiaMoHinh(); // Tự động chạy phân tích ngay sau khi tải xong dữ liệu đài mới
+                
+                if (shouldRunAnalysis) {
+                    chayVaDanhGiaMoHinh();
+                }
             } catch (err) {
-                console.warn("Chưa tải được file JSON tự động:", err.message);
+                console.warn("Chưa tải được file JSON:", err.message);
             }
         }
 
@@ -459,7 +497,7 @@
                 veBieuDoDanhGia(models);
 
             } catch (err) {
-                console.warn("Đang chờ dữ liệu thực tế...", err.message);
+                console.warn("Vui lòng bấm 'Chạy Phân Tích' để hệ thống nạp dữ liệu.", err.message);
             }
         }
 
@@ -482,7 +520,7 @@
         }
 
         function taiJsonCapNhat() {
-            if (!currentLoadedJson) { alert("Vui lòng đợi dữ liệu tải xong!"); return; }
+            if (!currentLoadedJson) { alert("Vui lòng chạy phân tích để nạp dữ liệu trước!"); return; }
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentLoadedJson, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
