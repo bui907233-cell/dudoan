@@ -29,8 +29,8 @@
             </div>
         </header>
 
-        <!-- Bảng điều khiển -->
-        <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6 grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+        <!-- Bảng điều khiển (Đã bỏ lọc theo thứ, tối ưu 4 cột) -->
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div>
                 <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Chọn Đài Miền Trung:</label>
                 <select id="selectDai" onchange="taiDuLieuDai()" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
@@ -54,21 +54,7 @@
                 </select>
             </div>
 
-            <div>
-                <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Lọc theo Thứ:</label>
-                <select id="selectThu" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
-                    <option value="all">Tất cả các thứ</option>
-                    <option value="Thứ Hai">Thứ Hai</option>
-                    <option value="Thứ Ba">Thứ Ba</option>
-                    <option value="Thứ Tư">Thứ Tư</option>
-                    <option value="Thứ Năm">Thứ Năm</option>
-                    <option value="Thứ Sáu">Thứ Sáu</option>
-                    <option value="Thứ Bảy">Thứ Bảy</option>
-                    <option value="Chủ Nhật" selected>Chủ Nhật</option>
-                </select>
-            </div>
-
-            <!-- THÊM Ô CHỌN NGÀY TRA CỨU NHANH -->
+            <!-- Ô tra cứu nhanh Ngày Quay -->
             <div>
                 <label class="block text-xs font-medium text-indigo-400 mb-1">🔍 Tra cứu nhanh Ngày Quay:</label>
                 <select id="selectTraCuuNgay" onchange="hienPopupTraCuu()" class="w-full border border-indigo-500/50 rounded-lg px-3 py-2 bg-indigo-50 dark:bg-indigo-950/40 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
@@ -171,9 +157,7 @@
                 <h3 id="modalTitle" class="font-bold text-base">📊 Chi Tiết Kết Quả XSMT</h3>
                 <button onclick="dongPopup()" class="text-white hover:text-slate-200 text-xl font-bold">&times;</button>
             </div>
-            <div id="modalBody" class="p-6 space-y-3 text-sm max-h-[75vh] overflow-y-auto">
-                <!-- Nội dung kết quả từ G8 đến ĐB sẽ được chèn vào đây -->
-            </div>
+            <div id="modalBody" class="p-6 space-y-3 text-sm max-h-[75vh] overflow-y-auto"></div>
             <div class="bg-slate-100 dark:bg-slate-800 px-6 py-3 text-right">
                 <button onclick="dongPopup()" class="bg-slate-600 hover:bg-slate-700 text-white px-4 py-1.5 rounded-lg text-xs font-medium">Đóng</button>
             </div>
@@ -183,7 +167,6 @@
     <script>
         let currentLoadedJson = null;
 
-        // Tự động tải dữ liệu đài khi mở trang hoặc đổi đài
         window.onload = function() {
             taiDuLieuDai();
         };
@@ -201,22 +184,6 @@
             }
         }
 
-        function capNhatNgayTheoDai() {
-            const dai = document.getElementById('selectDai').value;
-            const selectThu = document.getElementById('selectThu');
-            const mapping = {
-                'phuyen': 'Thứ Hai', 'hue': 'Thứ Hai',
-                'daklak': 'Thứ Ba', 'quangnam': 'Thứ Ba',
-                'khanhhoa': 'Thứ Tư', 'danang_t4': 'Thứ Tư',
-                'binhdinh': 'Thứ Năm', 'quangtri': 'Thứ Năm', 'quangbinh': 'Thứ Năm',
-                'gialai': 'Thứ Sáu', 'ninhthuan': 'Thứ Sáu',
-                'danang': 'Thứ Bảy', 'quangngai': 'Thứ Bảy', 'daknong': 'Thứ Bảy',
-                'kontum': 'Chủ Nhật', 'khanhhoa_cn': 'Chủ Nhật', 'hue_cn': 'Chủ Nhật'
-            };
-            if (mapping[dai]) selectThu.value = mapping[dai];
-            taiDuLieuDai();
-        }
-
         async function taiDuLieuDai() {
             const dai = document.getElementById('selectDai').value;
             const jsonPath = `data/${dai}.json`;
@@ -225,7 +192,6 @@
                 if (!response.ok) throw new Error(`Không tìm thấy file: data/${dai}.json`);
                 currentLoadedJson = await response.json();
                 
-                // Đổ danh sách ngày vào ô tra cứu nhanh
                 capNhatDropdownNgay();
                 chayVaDanhGiaMoHinh();
             } catch (err) {
@@ -255,7 +221,6 @@
 
             const lichSu = currentLoadedJson.lich_su_quay || currentLoadedJson;
             const kyQuay = lichSu.find(i => i.ngay === ngayChon);
-
             if (!kyQuay) return;
 
             document.getElementById('modalTitle').innerText = `📊 Kết Quả XSMT Ngày ${kyQuay.ngay} (${kyQuay.thu})`;
@@ -274,8 +239,6 @@
 
             document.getElementById('modalBody').innerHTML = html;
             document.getElementById('resultModal').classList.remove('hidden');
-
-            // Reset lại dropdown về mặc định để lần sau chọn tiếp được
             document.getElementById('selectTraCuuNgay').value = "";
         }
 
@@ -285,7 +248,6 @@
 
         async function chayVaDanhGiaMoHinh() {
             const dai = document.getElementById('selectDai').value;
-            const thuFilter = document.getElementById('selectThu').value;
             const limit = parseInt(document.getElementById('selectLimit').value);
             const jsonPath = `data/${dai}.json`;
 
@@ -300,13 +262,8 @@
                 const lichSuQuay = currentLoadedJson.lich_su_quay || currentLoadedJson; 
                 if (!Array.isArray(lichSuQuay)) throw new Error("Cấu trúc file JSON thiếu mảng lich_su_quay.");
 
-                let filteredData = (thuFilter !== 'all') ? lichSuQuay.filter(item => item.thu === thuFilter) : lichSuQuay;
-                if (filteredData.length < 1) {
-                    alert(`Không tìm thấy dữ liệu phù hợp với bộ lọc "${thuFilter}".`);
-                    return;
-                }
-
-                const subset = filteredData.slice(0, limit);
+                // Lấy toàn bộ dữ liệu của đài mà không cần lọc theo thứ nữa vì file JSON của đài nào đã cố định chuẩn đài đó
+                const subset = lichSuQuay.slice(0, limit);
                 let allLoList = [], deList = [];
 
                 subset.forEach(item => {
@@ -369,7 +326,8 @@
                 lifePath = sumDigits(lifePath);
                 let model5Preds = [(lifePath * 9).toString().padStart(2, '0'), (lifePath * 11).toString().slice(-2), ((lifePath + nextDate.getDate()) % 90).toString().padStart(2, '0')];
 
-                let sameDayHistory = lichSuQuay.filter(item => item.thu === selectThu.value);
+                let targetThu = subset[0].thu || "Chủ Nhật";
+                let sameDayHistory = lichSuQuay.filter(item => item.thu === targetThu);
                 let dayFreqMap = {};
                 sameDayHistory.forEach(item => {
                     let dbVal = item.gdb ? item.gdb.toString().slice(-2) : "";
