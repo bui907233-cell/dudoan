@@ -20,9 +20,12 @@
                 <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis</h1>
                 <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Phân tích...</p>
             </div>
-            <div class="flex items-center gap-3">
-                <button onclick="taiJsonCapNhat()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-3 rounded-lg transition-all shadow-sm flex items-center gap-1.5 text-xs">
-                    💾 Tải JSON Cập Nhật
+            <div class="flex items-center gap-2 flex-wrap">
+                <button onclick="chayQuaTrinhTuHoc()" class="bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 px-3 rounded-lg transition-all shadow-sm flex items-center gap-1.5 text-xs">
+                    🤖 Tự Học Toàn Bộ Lịch Sử
+                </button>
+                <button onclick="taiJsonThongMinh()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-3 rounded-lg transition-all shadow-sm flex items-center gap-1.5 text-xs">
+                    💾 Tải File [Đài]Hoc.json
                 </button>
                 <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 p-2 rounded-lg transition-all shadow-sm text-xs">
                     <span id="darkModeIcon">☀️</span> <span id="darkModeText">Giao Diện Sáng</span>
@@ -35,7 +38,8 @@
             <div>
                 <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Chọn Đài Miền Trung:</label>
                 <select id="selectDai" onchange="onDaiChange()" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
-                    <option value="phuyen" selected>Thứ 2 - Phú Yên</option>
+                    <option value="kontum" selected>Chủ Nhật - Kon Tum</option>
+                    <option value="phuyen">Thứ 2 - Phú Yên</option>
                     <option value="hue">Thứ 2 - Thừa Thiên Huế</option>
                     <option value="daklak">Thứ 3 - Đắk Lắk</option>
                     <option value="quangnam">Thứ 3 - Quảng Nam</option>
@@ -49,7 +53,6 @@
                     <option value="danang">Thứ 7 - Đà Nẵng</option>
                     <option value="quangngai">Thứ 7 - Quảng Ngãi</option>
                     <option value="daknong">Thứ 7 - Đắk Nông</option>
-                    <option value="kontum">Chủ Nhật - Kon Tum</option>
                     <option value="khanhhoa_cn">Chủ Nhật - Khánh Hòa</option>
                     <option value="hue_cn">Chủ Nhật - Thừa Thiên Huế</option>
                 </select>
@@ -163,10 +166,10 @@
         <!-- NHẬT KÝ TỰ HỌC AUDIT LOG -->
         <div class="bg-slate-900 text-white p-5 rounded-xl shadow-lg mb-6 border border-slate-800">
             <h2 class="text-sm font-bold mb-2 flex items-center gap-2 text-indigo-300">
-                📜 Nhật Ký Backtesting & Tự Học Qua JSON
+                📜 Nhật Ký Quét Tự Học Toàn Bộ Lịch Sử
             </h2>
             <div id="auditLogContainer" class="text-xs text-slate-300 space-y-1.5 max-h-36 overflow-y-auto pr-2">
-                <p class="italic text-slate-500">Chưa có dữ liệu nhật ký đối chiếu...</p>
+                <p class="italic text-slate-500">Chưa chạy tự học...</p>
             </div>
         </div>
 
@@ -197,6 +200,7 @@
             }
         }
 
+        // KHI ĐỔI ĐÀI -> RESET SẠCH TOÀN BỘ GIAO DIỆN
         function onDaiChange() {
             currentLoadedJson = null;
             resetUI();
@@ -218,7 +222,7 @@
             });
 
             document.getElementById('modelLeaderboard').innerHTML = '<div class="bg-white/5 p-2 rounded-lg border border-white/10 text-center col-span-full"><p class="text-xs text-slate-400">Vui lòng bấm "Chạy Phân Tích"</p></div>';
-            document.getElementById('auditLogContainer').innerHTML = '<p class="italic text-slate-500">Chưa có dữ liệu nhật ký đối chiếu...</p>';
+            document.getElementById('auditLogContainer').innerHTML = '<p class="italic text-slate-500">Chưa chạy tự học...</p>';
             document.getElementById('selectTraCuuNgay').innerHTML = '<option value="">-- Mặc định (Dự đoán kỳ mới nhất) --</option>';
 
             const chartDom = document.getElementById('evalChart');
@@ -302,6 +306,146 @@
             document.getElementById('panelBody').innerHTML = html;
         }
 
+        // --- CƠ CHẾ TỰ HỌC TỰ ĐỘNG (QUÉT TOÀN BỘ LỊCH SỬ) ---
+        async function chayQuaTrinhTuHoc() {
+            if (!currentLoadedJson) {
+                await taiDuLieuDai(false);
+                if (!currentLoadedJson) { alert("Không tìm thấy dữ liệu đài để tự học!"); return; }
+            }
+
+            const lichSuQuay = currentLoadedJson.lich_su_quay || currentLoadedJson;
+            if (!Array.isArray(lichSuQuay) || lichSuQuay.length < 10) {
+                alert("Dữ liệu lịch sử quá ngắn để tiến hành tự học tự động!");
+                return;
+            }
+
+            let scores = currentLoadedJson.model_scores || { 
+                'Tần Suất': 50, 'Lô Gan': 50, 'Markov': 50, 'Chạm Tổng': 50, 
+                'Thần Học': 50, 'Bạc Nhớ Thứ': 50, 'Delta': 50, 'Bù Gương': 50, 'Bóng Âm Dương': 50 
+            };
+
+            let auditLogs = [];
+            let totalTrained = 0;
+
+            for (let i = lichSuQuay.length - 1; i >= 5; i--) {
+                let targetDraw = lichSuQuay[i];
+                let actualDraw = lichSuQuay[i - 1];
+                let subset = lichSuQuay.slice(i);
+
+                let results = chay9MoHinhNoiBo(subset);
+                let actual2D = actualDraw.gdb ? actualDraw.gdb.toString().slice(-2) : "";
+
+                let hitAny = false;
+                Object.keys(results).forEach(mName => {
+                    let preds = results[mName];
+                    if (preds.includes(actual2D)) {
+                        scores[mName] = (scores[mName] || 50) + 4; // Thưởng điểm khi đúng
+                        hitAny = true;
+                    } else {
+                        scores[mName] = Math.max(20, (scores[mName] || 50) - 2); // Phạt điểm khi sai
+                    }
+                });
+
+                if (hitAny && totalTrained < 25) {
+                    auditLogs.push(`🤖 Kỳ ${targetDraw.ngay} ➔ Thực tế ${actualDraw.ngay} về [${actual2D}]`);
+                }
+                totalTrained++;
+            }
+
+            currentLoadedJson.model_scores = scores;
+
+            document.getElementById('auditLogContainer').innerHTML = auditLogs.length > 0 ? auditLogs.map(l => `<p class="border-b border-slate-800 pb-1">${l}</p>`).join('') : '<p class="text-green-400">Hoàn tất tự học!</p>';
+            alert(`Tự học hoàn tất qua ${totalTrained} kỳ! Trọng số đã được cập nhật tối ưu.`);
+            
+            thucHienPhanTichHoacBacktesting();
+        }
+
+        function chay9MoHinhNoiBo(subset) {
+            let allLoList = [], deList = [], allNumRaw = [];
+            subset.forEach(item => {
+                let currentGiais = [item.giai_8, item.giai_7, item.giai_5, item.giai_2, item.giai_1, item.gdb];
+                if(Array.isArray(item.giai_6)) currentGiais = currentGiais.concat(item.giai_6);
+                if(Array.isArray(item.giai_4)) currentGiais = currentGiais.concat(item.giai_4);
+                if(Array.isArray(item.giai_3)) currentGiais = currentGiais.concat(item.giai_3);
+
+                currentGiais.forEach(g => {
+                    let strG = g ? g.toString() : "";
+                    if(strG.length >= 2) { allLoList.push(strG.slice(-2)); allNumRaw.push(strG.slice(-2)); }
+                });
+                let gdbStr = item.gdb ? item.gdb.toString() : "";
+                if(gdbStr.length >= 2) deList.push(gdbStr.slice(-2));
+            });
+
+            let freqMap = {};
+            allLoList.forEach(num => freqMap[num] = (freqMap[num] || 0) + 1);
+            let m1 = Object.entries(freqMap).sort((a, b) => b[1] - a[1]).slice(0, 10).map(([n]) => n);
+
+            let lastSeen = {};
+            allLoList.forEach((num, idx) => { if (!(num in lastSeen)) lastSeen[num] = idx; });
+            let allNumArr = [];
+            for(let i=0; i<100; i++) { let s = i < 10 ? '0' + i : '' + i; allNumArr.push({num: s, pos: lastSeen[s] !== undefined ? lastSeen[s] : 999}); }
+            allNumArr.sort((a, b) => b.pos - a.pos);
+            let m2 = allNumArr.slice(0, 10).map(item => item.num);
+
+            let transitionMap = {};
+            for(let i = 0; i < deList.length - 1; i++) {
+                let curr = deList[i+1], next = deList[i];
+                if(!transitionMap[curr]) transitionMap[curr] = {};
+                transitionMap[curr][next] = (transitionMap[curr][next] || 0) + 1;
+            }
+            let latestNum = deList[0] || "53";
+            let m3 = transitionMap[latestNum] ? Object.entries(transitionMap[latestNum]).sort((a,b) => b[1] - a[1]).slice(0, 5).map(([n]) => n) : [];
+
+            let dauCount = {}, tongCount = {};
+            deList.forEach(num => {
+                dauCount[num[0]] = (dauCount[num[0]] || 0) + 1;
+                tongCount[(parseInt(num[0]) + parseInt(num[1])) % 10] = (tongCount[(parseInt(num[0]) + parseInt(num[1])) % 10] || 0) + 1;
+            });
+            let bestDau = Object.entries(dauCount).sort((a,b) => b[1] - a[1])[0]?.[0] || '0';
+            let bestTong = Object.entries(tongCount).sort((a,b) => b[1] - a[1])[0]?.[0] || '0';
+            let m4 = [];
+            for(let i=0; i<100; i++) { let s = i < 10 ? '0' + i : '' + i; if(s[0] === bestDau || (parseInt(s[0]) + parseInt(s[1])) % 10 === parseInt(bestTong)) m4.push(s); }
+
+            let nextDate = new Date(subset[0].ngay);
+            nextDate.setDate(nextDate.getDate() + 7);
+            let sumDigits = (n) => { while(n > 9) n = n.toString().split('').reduce((a,b)=>parseInt(a)+parseInt(b),0); return n; };
+            let lifePath = sumDigits(nextDate.getDate()) + sumDigits(nextDate.getMonth()+1) + sumDigits(sumDigits(nextDate.getFullYear()));
+            lifePath = sumDigits(lifePath);
+            let m5 = [(lifePath * 9).toString().padStart(2, '0'), (lifePath * 11).toString().slice(-2), ((lifePath + nextDate.getDate()) % 90).toString().padStart(2, '0')];
+
+            let targetThu = subset[0].thu || "Chủ Nhật";
+            let sameDayHistory = subset.filter(item => item.thu === targetThu);
+            let dayFreqMap = {};
+            sameDayHistory.forEach(item => {
+                let dbVal = item.gdb ? item.gdb.toString().slice(-2) : "";
+                if(dbVal.length === 2) dayFreqMap[dbVal] = (dayFreqMap[dbVal] || 0) + 1;
+            });
+            let m6 = Object.entries(dayFreqMap).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([num]) => num);
+            if(m6.length === 0) m6 = ["12", "38", "79", "86", "45"];
+
+            let deltaList = [];
+            for(let i = 0; i < deList.length - 1; i++) deltaList.push((parseInt(deList[i]) - parseInt(deList[i+1]) + 100) % 100);
+            let avgDelta = deltaList.length > 0 ? Math.round(deltaList.reduce((a,b)=>a+b, 0) / deltaList.length) : 15;
+            let predDelta = (parseInt(deList[0] || "50") + avgDelta) % 100;
+            let m7 = [predDelta < 10 ? '0' + predDelta : '' + predDelta, (100 - predDelta).toString().padStart(2, '0')];
+
+            let d1 = parseInt((deList[0] || "26")[0]), d2 = parseInt((deList[0] || "26")[1]);
+            let m8 = [''+d2+d1, ''+(9-d1)+(9-d2), ''+((10-d1)%10)+((10-d2)%10)];
+
+            const bongDuongMap = {'0':'5', '5':'0', '1':'6', '6':'1', '2':'7', '7':'2', '3':'8', '8':'3', '4':'9', '9':'4'};
+            let bongFreq = {};
+            allNumRaw.forEach(num => {
+                let d1_b = bongDuongMap[num[0]] || num[0];
+                let d2_b = bongDuongMap[num[1]] || num[1];
+                let bongNum = d1_b + d2_b;
+                bongFreq[bongNum] = (bongFreq[bongNum] || 0) + 1;
+            });
+            let m9 = Object.entries(bongFreq).sort((a,b) => b[1] - a[1]).slice(0, 5).map(([num]) => num);
+            if(m9.length === 0) m9 = ["53", "08", "86", "27"];
+
+            return { 'Tần Suất': m1, 'Lô Gan': m2, 'Markov': m3, 'Chạm Tổng': m4, 'Thần Học': m5, 'Bạc Nhớ Thứ': m6, 'Delta': m7, 'Bù Gương': m8, 'Bóng Âm Dương': m9 };
+        }
+
         async function chayVaDanhGiaMoHinh(targetBacktestDate = null) {
             const dai = document.getElementById('selectDai').value;
             const limit = parseInt(document.getElementById('selectLimit').value);
@@ -340,136 +484,11 @@
                     return;
                 }
 
-                let allLoList = [], deList = [], rawHundredList = [], allNumRaw = [];
-
-                subset.forEach(item => {
-                    let currentGiais = [item.giai_8, item.giai_7, item.giai_5, item.giai_2, item.giai_1, item.gdb];
-                    if(Array.isArray(item.giai_6)) currentGiais = currentGiais.concat(item.giai_6);
-                    if(Array.isArray(item.giai_4)) currentGiais = currentGiais.concat(item.giai_4);
-                    if(Array.isArray(item.giai_3)) currentGiais = currentGiais.concat(item.giai_3);
-
-                    currentGiais.forEach(g => {
-                        let strG = g ? g.toString() : "";
-                        if(strG.length >= 2) {
-                            allLoList.push(strG.slice(-2));
-                            allNumRaw.push(strG.slice(-2));
-                        }
-                        if(strG.length >= 3) {
-                            rawHundredList.push(strG.slice(-3, -2));
-                        }
-                    });
-
-                    let gdbStr = item.gdb ? item.gdb.toString() : "";
-                    if(gdbStr.length >= 2) deList.push(gdbStr.slice(-2));
-                });
-
-                // --- 9 MÔ HÌNH PHÂN TÍCH ĐỘC LẬP ---
-                let freqMap = {};
-                allLoList.forEach(num => freqMap[num] = (freqMap[num] || 0) + 1);
-                let sortedHot = Object.entries(freqMap).sort((a, b) => b[1] - a[1]);
-                let m1Preds = sortedHot.slice(0, 10).map(([n]) => n);
-
-                let lastSeen = {};
-                allLoList.forEach((num, idx) => { if (!(num in lastSeen)) lastSeen[num] = idx; });
-                let allNumbers = [];
-                for(let i=0; i<100; i++) {
-                    let s = i < 10 ? '0' + i : '' + i;
-                    allNumbers.push({num: s, pos: lastSeen[s] !== undefined ? lastSeen[s] : 999});
-                }
-                allNumbers.sort((a, b) => b.pos - a.pos);
-                let m2Preds = allNumbers.slice(0, 10).map(item => item.num);
-
-                let transitionMap = {};
-                for(let i = 0; i < deList.length - 1; i++) {
-                    let curr = deList[i+1], next = deList[i];
-                    if(!transitionMap[curr]) transitionMap[curr] = {};
-                    transitionMap[curr][next] = (transitionMap[curr][next] || 0) + 1;
-                }
-                let latestNum = deList[0] || "53";
-                let markovPreds = transitionMap[latestNum] ? Object.entries(transitionMap[latestNum]).sort((a,b) => b[1] - a[1]) : [];
-                let m3Preds = markovPreds.slice(0, 5).map(([n]) => n);
-
-                let dauCount = {}, tongCount = {};
-                deList.forEach(num => {
-                    dauCount[num[0]] = (dauCount[num[0]] || 0) + 1;
-                    tongCount[(parseInt(num[0]) + parseInt(num[1])) % 10] = (tongCount[(parseInt(num[0]) + parseInt(num[1])) % 10] || 0) + 1;
-                });
-                let bestDau = Object.entries(dauCount).sort((a,b) => b[1] - a[1])[0]?.[0] || '0';
-                let bestTong = Object.entries(tongCount).sort((a,b) => b[1] - a[1])[0]?.[0] || '0';
-                let m4Preds = [];
-                for(let i=0; i<100; i++) {
-                    let s = i < 10 ? '0' + i : '' + i;
-                    if(s[0] === bestDau || (parseInt(s[0]) + parseInt(s[1])) % 10 === parseInt(bestTong)) m4Preds.push(s);
-                }
-
-                let lastDateStr = subset[0].ngay;
-                let nextDate = new Date(lastDateStr);
-                nextDate.setDate(nextDate.getDate() + 7);
-                let sumDigits = (n) => { while(n > 9) n = n.toString().split('').reduce((a,b)=>parseInt(a)+parseInt(b),0); return n; };
-                let lifePath = sumDigits(nextDate.getDate()) + sumDigits(nextDate.getMonth()+1) + sumDigits(sumDigits(nextDate.getFullYear()));
-                lifePath = sumDigits(lifePath);
-                let m5Preds = [(lifePath * 9).toString().padStart(2, '0'), (lifePath * 11).toString().slice(-2), ((lifePath + nextDate.getDate()) % 90).toString().padStart(2, '0')];
-
-                let targetThu = subset[0].thu || "Chủ Nhật";
-                let sameDayHistory = lichSuQuay.filter(item => item.thu === targetThu);
-                let dayFreqMap = {};
-                sameDayHistory.forEach(item => {
-                    let dbVal = item.gdb ? item.gdb.toString().slice(-2) : "";
-                    if(dbVal.length === 2) dayFreqMap[dbVal] = (dayFreqMap[dbVal] || 0) + 1;
-                });
-                let m6Preds = Object.entries(dayFreqMap).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([num]) => num);
-                if(m6Preds.length === 0) m6Preds = ["12", "38", "79", "86", "45"];
-
-                let deltaList = [];
-                for(let i = 0; i < deList.length - 1; i++) deltaList.push((parseInt(deList[i]) - parseInt(deList[i+1]) + 100) % 100);
-                let avgDelta = deltaList.length > 0 ? Math.round(deltaList.reduce((a,b)=>a+b, 0) / deltaList.length) : 15;
-                let predDelta = (parseInt(deList[0] || "50") + avgDelta) % 100;
-                let m7Preds = [predDelta < 10 ? '0' + predDelta : '' + predDelta, (100 - predDelta).toString().padStart(2, '0')];
-
-                let d1 = parseInt((deList[0] || "26")[0]), d2 = parseInt((deList[0] || "26")[1]);
-                let m8Preds = [''+d2+d1, ''+(9-d1)+(9-d2), ''+((10-d1)%10)+((10-d2)%10)];
-
-                const bongDuongMap = {'0':'5', '5':'0', '1':'6', '6':'1', '2':'7', '7':'2', '3':'8', '8':'3', '4':'9', '9':'4'};
-                const bongAmMap = {'0':'7', '7':'0', '1':'4', '4':'1', '2':'9', '9':'2', '3':'6', '6':'3', '5':'8', '8':'5'};
-                
-                let bongFreq = {};
-                allNumRaw.forEach(num => {
-                    let d1_b = bongDuongMap[num[0]] || num[0];
-                    let d2_b = bongDuongMap[num[1]] || num[1];
-                    let bongNum = d1_b + d2_b;
-                    bongFreq[bongNum] = (bongFreq[bongNum] || 0) + 1;
-                });
-                let sortedBong = Object.entries(bongFreq).sort((a,b) => b[1] - a[1]).slice(0, 5).map(([num]) => num);
-                let m9Preds = sortedBong.length > 0 ? sortedBong : ["53", "08", "86", "27"];
-
-                // --- HỆ THỐNG CHẤM ĐIỂM ĐỘNG (DYNAMIC SCORING & TỰ HỌC) ---
-                if (!currentLoadedJson.model_scores) {
-                    currentLoadedJson.model_scores = { 
-                        'Tần Suất': 50, 'Lô Gan': 50, 'Markov': 50, 'Chạm Tổng': 50, 
-                        'Thần Học': 50, 'Bạc Nhớ Thứ': 50, 'Delta': 50, 'Bù Gương': 50, 'Bóng Âm Dương': 50 
-                    };
-                }
-                let scores = currentLoadedJson.model_scores;
-
-                // Nếu có actualDrawData, kiểm tra xem mô hình nào đã đoán đúng để thưởng/phạt điểm khách quan
-                if (actualDrawData) {
-                    let actual2D = actualDrawData.gdb ? actualDrawData.gdb.toString().slice(-2) : "";
-                    let checkHit = (preds) => preds.includes(actual2D);
-
-                    let modelMapCheck = {
-                        'Tần Suất': checkHit(m1Preds), 'Lô Gan': checkHit(m2Preds), 'Markov': checkHit(m3Preds),
-                        'Chạm Tổng': checkHit(m4Preds), 'Thần Học': checkHit(m5Preds), 'Bạc Nhớ Thứ': checkHit(m6Preds),
-                        'Delta': checkHit(m7Preds), 'Bù Gương': checkHit(m8Preds), 'Bóng Âm Dương': checkHit(m9Preds)
-                    };
-
-                    Object.keys(modelMapCheck).forEach(mName => {
-                        if (modelMapCheck[mName]) {
-                            scores[mName] = (scores[mName] || 50) + 5; // Thưởng +5đ nếu đoán trúng
-                        } else {
-                            scores[mName] = Math.max(30, (scores[mName] || 50) - 2); // Phạt -2đ nếu trượt
-                        }
-                    });
-                }
+                let results = chay9MoHinhNoiBo(subset);
+                let scores = currentLoadedJson.model_scores || { 
+                    'Tần Suất': 50, 'Lô Gan': 50, 'Markov': 50, 'Chạm Tổng': 50, 
+                    'Thần Học': 50, 'Bạc Nhớ Thứ': 50, 'Delta': 50, 'Bù Gương': 50, 'Bóng Âm Dương': 50 
+                };
 
                 // --- HỢP LỰC 9 MÔ HÌNH VỚI TRỌNG SỐ ĐỘNG ---
                 let scoreBoard = {};
@@ -478,31 +497,27 @@
                 let addScore = (preds, weightMultiplier) => {
                     preds.forEach((num, idx) => {
                         if(scoreBoard[num] !== undefined) {
-                            scoreBoard[num] += (preds.length - idx) * weightMultiplier;
+                            scoreBoard[num] += (preds.length - idx) * (weightMultiplier / 50);
                         }
                     });
                 };
 
-                addScore(m1Preds, (scores['Tần Suất'] / 50));
-                addScore(m2Preds, (scores['Lô Gan'] / 50));
-                addScore(m3Preds, (scores['Markov'] / 50));
-                m4Preds.forEach(num => { if(scoreBoard[num] !== undefined) scoreBoard[num] += (scores['Chạm Tổng'] / 50); });
-                m5Preds.forEach(num => { if(scoreBoard[num] !== undefined) scoreBoard[num] += (scores['Thần Học'] / 50); });
-                addScore(m6Preds, (scores['Bạc Nhớ Thứ'] / 50));
-                m7Preds.forEach(num => { if(scoreBoard[num] !== undefined) scoreBoard[num] += (scores['Delta'] / 50); });
-                m8Preds.forEach(num => { if(scoreBoard[num] !== undefined) scoreBoard[num] += (scores['Bù Gương'] / 50); });
-                addScore(m9Preds, (scores['Bóng Âm Dương'] / 50));
+                Object.keys(results).forEach(mName => {
+                    addScore(results[mName], scores[mName] || 50);
+                });
 
                 let sortedConsensus = Object.entries(scoreBoard).sort((a, b) => b[1] - a[1]);
                 let final2DNum = sortedConsensus[0][0];
 
-                // --- 3 CÀNG BÓNG ÂM DƯƠNG HÀNG TRĂM ---
-                let latestDe = deList[0] || "53";
+                // 3 CÀNG BÓNG ÂM DƯƠNG
+                let allDeList = subset.map(item => item.gdb ? item.gdb.toString().slice(-2) : "").filter(Boolean);
+                let latestDe = allDeList[0] || "53";
                 let sumDe = (parseInt(latestDe[0]) + parseInt(latestDe[1])) % 10;
                 let hBase = sumDe.toString();
+                const bongDuongMap = {'0':'5', '5':'0', '1':'6', '6':'1', '2':'7', '7':'2', '3':'8', '8':'3', '4':'9', '9':'4'};
+                const bongAmMap = {'0':'7', '7':'0', '1':'4', '4':'1', '2':'9', '9':'2', '3':'6', '6':'3', '5':'8', '8':'5'};
                 let hDuong = bongDuongMap[hBase] || hBase;
                 let hAm = bongAmMap[hBase] || hBase;
-                
                 let topHundreds = [...new Set([hBase, hDuong, hAm])].slice(0, 3);
                 let list3D = topHundreds.map(h => h + final2DNum);
 
@@ -511,7 +526,7 @@
                 document.getElementById('final3DList').innerHTML = html3D;
                 document.getElementById('detail3DHint').innerText = `(Hàng trăm dịch bóng từ tổng ${latestDe}: ${topHundreds.join(', ')})`;
 
-                // Đối chiếu kết quả & Tô đỏ khi trúng
+                // ĐỐI CHÍNH XÁC KẾT QUẢ VÀ TÔ ĐỎ NẾU ĐÚNG
                 if (actualDrawData) {
                     let actualDBVal = actualDrawData.gdb ? actualDrawData.gdb.toString() : "";
                     let actual2D = actualDBVal.slice(-2);
@@ -529,39 +544,26 @@
                     
                     document.getElementById('actualCompareNote').innerHTML = compareText;
                 } else {
-                    document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH & 3 CÀNG BÓNG ÂM DƯƠNG";
-                    document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình toàn cục)";
+                    document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH (ĐÃ TỰ HỌC)";
+                    document.getElementById('actualCompareNote').innerText = "(Trọng số tối ưu hóa tự động từ lịch sử)";
                 }
 
-                // Hiển thị giao diện 9 mô hình
-                document.getElementById('resultHot').innerHTML = sortedHot.slice(0, 6).map(([n, c]) => `<span class="bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded font-bold text-xs border border-indigo-100 dark:border-indigo-800">${n} (${c})</span>`).join('');
-                document.getElementById('resultCold').innerHTML = allNumbers.slice(0, 6).map(item => `<span class="bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 px-2 py-0.5 rounded font-bold text-xs border border-cyan-100 dark:border-cyan-800">${item.num} (ẩn ${item.pos})</span>`).join('');
-                document.getElementById('resultMarkov').innerHTML = markovPreds.length > 0 ? markovPreds.slice(0, 5).map(([n, c]) => `<span class="bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded font-bold text-xs border border-purple-100 dark:border-purple-800">${n} (${c})</span>`).join('') : '<span class="text-slate-400 text-xs italic">Chưa đủ dữ liệu</span>';
-                document.getElementById('resultCham').innerHTML = `
-                    <div class="flex justify-between bg-slate-50 dark:bg-slate-800/50 p-1 rounded border dark:border-slate-700"><span>Chạm đầu:</span><strong>${bestDau}</strong></div>
-                    <div class="flex justify-between bg-slate-50 dark:bg-slate-800/50 p-1 rounded border dark:border-slate-700"><span>Tổng đề:</span><strong>${bestTong}</strong></div>
-                `;
-                document.getElementById('resultThanHoc').innerHTML = m5Preds.map(n => `<span class="bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 px-2 py-0.5 rounded font-bold text-xs border border-amber-100 dark:border-amber-800">${n}</span>`).join('');
-                document.getElementById('resultBacNho').innerHTML = m6Preds.map(n => `<span class="bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 px-2 py-0.5 rounded font-bold text-xs border border-rose-100 dark:border-rose-800">${n}</span>`).join('');
-                document.getElementById('resultDelta').innerHTML = m7Preds.map(n => `<span class="bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 px-2 py-0.5 rounded font-bold text-xs border border-teal-100 dark:border-teal-800">${n}</span>`).join('');
-                document.getElementById('resultMirror').innerHTML = m8Preds.map(n => `<span class="bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded font-bold text-xs border border-emerald-100 dark:border-emerald-800">${n}</span>`).join('');
-                document.getElementById('resultBong').innerHTML = m9Preds.map(n => `<span class="bg-violet-50 dark:bg-violet-950/60 text-violet-700 dark:text-violet-300 px-2 py-0.5 rounded font-bold text-xs border border-violet-100 dark:border-violet-800">${n}</span>`).join('');
+                // Hiển thị chi tiết mô hình
+                document.getElementById('resultHot').innerHTML = results['Tần Suất'].slice(0, 6).map(n => `<span class="bg-indigo-50 dark:bg-indigo-950/60 text-indigo-300 px-2 py-0.5 rounded font-bold text-xs border border-indigo-800">${n}</span>`).join('');
+                document.getElementById('resultCold').innerHTML = results['Lô Gan'].slice(0, 6).map(n => `<span class="bg-cyan-50 dark:bg-cyan-950/60 text-cyan-300 px-2 py-0.5 rounded font-bold text-xs border border-cyan-800">${n}</span>`).join('');
+                document.getElementById('resultMarkov').innerHTML = results['Markov'].length > 0 ? results['Markov'].slice(0, 5).map(n => `<span class="bg-purple-50 dark:bg-purple-950/60 text-purple-300 px-2 py-0.5 rounded font-bold text-xs border border-purple-800">${n}</span>`).join('') : '<span class="text-slate-400 text-xs italic">Chưa đủ dữ liệu</span>';
+                document.getElementById('resultCham').innerHTML = `<div class="flex justify-between bg-slate-800/50 p-1 rounded border border-slate-700"><span>Chạm/Tổng:</span><strong>Đã học</strong></div>`;
+                document.getElementById('resultThanHoc').innerHTML = results['Thần Học'].map(n => `<span class="bg-amber-50 dark:bg-amber-950/60 text-amber-300 px-2 py-0.5 rounded font-bold text-xs border border-amber-800">${n}</span>`).join('');
+                document.getElementById('resultBacNho').innerHTML = results['Bạc Nhớ Thứ'].map(n => `<span class="bg-rose-50 dark:bg-rose-950/60 text-rose-300 px-2 py-0.5 rounded font-bold text-xs border border-rose-800">${n}</span>`).join('');
+                document.getElementById('resultDelta').innerHTML = results['Delta'].map(n => `<span class="bg-teal-50 dark:bg-teal-950/60 text-teal-300 px-2 py-0.5 rounded font-bold text-xs border border-teal-800">${n}</span>`).join('');
+                document.getElementById('resultMirror').innerHTML = results['Bù Gương'].map(n => `<span class="bg-emerald-50 dark:bg-emerald-950/60 text-emerald-300 px-2 py-0.5 rounded font-bold text-xs border border-emerald-800">${n}</span>`).join('');
+                document.getElementById('resultBong').innerHTML = results['Bóng Âm Dương'].map(n => `<span class="bg-violet-50 dark:bg-violet-950/60 text-violet-300 px-2 py-0.5 rounded font-bold text-xs border border-violet-800">${n}</span>`).join('');
 
-                let models = [
-                    { name: 'Tần Suất', score: Math.round(scores['Tần Suất']) },
-                    { name: 'Lô Gan', score: Math.round(scores['Lô Gan']) },
-                    { name: 'Markov', score: Math.round(scores['Markov']) },
-                    { name: 'Chạm Tổng', score: Math.round(scores['Chạm Tổng']) },
-                    { name: 'Thần Học', score: Math.round(scores['Thần Học']) },
-                    { name: 'Bạc Nhớ Thứ', score: Math.round(scores['Bạc Nhớ Thứ']) },
-                    { name: 'Delta', score: Math.round(scores['Delta']) },
-                    { name: 'Bù Gương', score: Math.round(scores['Bù Gương']) },
-                    { name: 'Bóng Âm Dương', score: Math.round(scores['Bóng Âm Dương']) }
-                ];
-                models.sort((a, b) => b.score - a.score);
+                let modelArr = Object.keys(scores).map(name => ({ name, score: Math.round(scores[name]) }));
+                modelArr.sort((a, b) => b.score - a.score);
 
                 let lbHtml = "";
-                models.forEach((m, idx) => {
+                modelArr.forEach((m, idx) => {
                     let badge = idx === 0 ? "👑 TỐI ƯU" : `Top ${idx+1}`;
                     let color = idx === 0 ? "bg-indigo-600 border-indigo-400 ring-1 ring-indigo-400" : "bg-white/5 border-white/10";
                     lbHtml += `
@@ -573,8 +575,7 @@
                     `;
                 });
                 document.getElementById('modelLeaderboard').innerHTML = lbHtml;
-
-                veBieuDoDanhGia(models);
+                veBieuDoDanhGia(modelArr);
 
             } catch (err) {
                 console.warn("Vui lòng bấm 'Chạy Phân Tích' để hệ thống nạp dữ liệu.", err.message);
@@ -590,7 +591,7 @@
                 backgroundColor: 'transparent',
                 tooltip: { trigger: 'axis' },
                 xAxis: { type: 'category', data: models.map(m => m.name), axisLabel: { color: isDark ? '#cbd5e1' : '#334155', interval: 0, rotate: 15, fontSize: 10 } },
-                yAxis: { type: 'value', max: 120, axisLabel: { color: isDark ? '#cbd5e1' : '#334155' }, splitLine: { lineStyle: { color: isDark ? '#334155' : '#e2e8f0' } } },
+                yAxis: { type: 'value', max: 150, axisLabel: { color: isDark ? '#cbd5e1' : '#334155' }, splitLine: { lineStyle: { color: isDark ? '#334155' : '#e2e8f0' } } },
                 series: [{
                     data: models.map(m => m.score), type: 'bar',
                     itemStyle: { color: (params) => params.dataIndex === 0 ? '#6366f1' : (isDark ? '#334155' : '#cbd5e1') },
@@ -599,12 +600,13 @@
             });
         }
 
-        function taiJsonCapNhat() {
-            if (!currentLoadedJson) { alert("Vui lòng chạy phân tích để nạp dữ liệu trước!"); return; }
+        function taiJsonThongMinh() {
+            if (!currentLoadedJson) { alert("Vui lòng thực hiện tự học trước khi tải!"); return; }
+            const dai = document.getElementById('selectDai').value;
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentLoadedJson, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", document.getElementById('selectDai').value + ".json");
+            downloadAnchor.setAttribute("download", dai + "Hoc.json");
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
