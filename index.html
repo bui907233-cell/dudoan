@@ -37,9 +37,9 @@
         <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div>
                 <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Chọn Đài Miền Trung:</label>
+                <!-- Khôi phục đúng thứ tự các đài chuẩn -->
                 <select id="selectDai" onchange="onDaiChange()" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
-                    <option value="kontum" selected>Chủ Nhật - Kon Tum</option>
-                    <option value="phuyen">Thứ 2 - Phú Yên</option>
+                    <option value="phuyen" selected>Thứ 2 - Phú Yên</option>
                     <option value="hue">Thứ 2 - Thừa Thiên Huế</option>
                     <option value="daklak">Thứ 3 - Đắk Lắk</option>
                     <option value="quangnam">Thứ 3 - Quảng Nam</option>
@@ -53,6 +53,7 @@
                     <option value="danang">Thứ 7 - Đà Nẵng</option>
                     <option value="quangngai">Thứ 7 - Quảng Ngãi</option>
                     <option value="daknong">Thứ 7 - Đắk Nông</option>
+                    <option value="kontum">Chủ Nhật - Kon Tum</option>
                     <option value="khanhhoa_cn">Chủ Nhật - Khánh Hòa</option>
                     <option value="hue_cn">Chủ Nhật - Thừa Thiên Huế</option>
                 </select>
@@ -200,7 +201,6 @@
             }
         }
 
-        // KHI ĐỔI ĐÀI -> RESET SẠCH TOÀN BỘ GIAO DIỆN
         function onDaiChange() {
             currentLoadedJson = null;
             resetUI();
@@ -261,7 +261,42 @@
             });
         }
 
+        // --- HÀM TỰ ĐỘNG QUÉT HỌC NGẦM KHI BẤM CHẠY PHÂN TÍCH ---
         function thucHienPhanTichHoacBacktesting() {
+            if (!currentLoadedJson) return;
+            // Tự động kích hoạt quét toàn bộ lịch sử nếu chưa có model_scores để đảm bảo độ chuẩn xác
+            if (!currentLoadedJson.model_scores) {
+                chayQuaTrinhTuHocSilently();
+            } else {
+                const ngayChon = document.getElementById('selectTraCuuNgay').value;
+                chayVaDanhGiaMoHinh(ngayChon ? ngayChon : null);
+            }
+        }
+
+        function chayQuaTrinhTuHocSilently() {
+            const lichSuQuay = currentLoadedJson.lich_su_quay || currentLoadedJson;
+            let scores = { 
+                'Tần Suất': 50, 'Lô Gan': 50, 'Markov': 50, 'Chạm Tổng': 50, 
+                'Thần Học': 50, 'Bạc Nhớ Thứ': 50, 'Delta': 50, 'Bù Gương': 50, 'Bóng Âm Dương': 50 
+            };
+
+            for (let i = lichSuQuay.length - 1; i >= 1; i--) {
+                let targetDraw = lichSuQuay[i];
+                let actualDraw = lichSuQuay[i - 1];
+                let subset = lichSuQuay.slice(i);
+                let results = chay9MoHinhNoiBo(subset);
+                let actual2D = actualDraw.gdb ? actualDraw.gdb.toString().slice(-2) : "";
+
+                Object.keys(results).forEach(mName => {
+                    let preds = results[mName];
+                    if (preds.includes(actual2D)) {
+                        scores[mName] = (scores[mName] || 50) + 4;
+                    } else {
+                        scores[mName] = Math.max(20, (scores[mName] || 50) - 2);
+                    }
+                });
+            }
+            currentLoadedJson.model_scores = scores;
             const ngayChon = document.getElementById('selectTraCuuNgay').value;
             chayVaDanhGiaMoHinh(ngayChon ? ngayChon : null);
         }
@@ -306,7 +341,7 @@
             document.getElementById('panelBody').innerHTML = html;
         }
 
-        // --- CƠ CHẾ TỰ HỌC TỰ ĐỘNG (QUÉT TOÀN BỘ LỊCH SỬ) ---
+        // --- CƠ CHẾ TỰ HỌC CHỦ ĐỘNG QUA NÚT BẤM ---
         async function chayQuaTrinhTuHoc() {
             if (!currentLoadedJson) {
                 await taiDuLieuDai(false);
@@ -314,12 +349,12 @@
             }
 
             const lichSuQuay = currentLoadedJson.lich_su_quay || currentLoadedJson;
-            if (!Array.isArray(lichSuQuay) || lichSuQuay.length < 10) {
+            if (!Array.isArray(lichSuQuay) || lichSuQuay.length < 5) {
                 alert("Dữ liệu lịch sử quá ngắn để tiến hành tự học tự động!");
                 return;
             }
 
-            let scores = currentLoadedJson.model_scores || { 
+            let scores = { 
                 'Tần Suất': 50, 'Lô Gan': 50, 'Markov': 50, 'Chạm Tổng': 50, 
                 'Thần Học': 50, 'Bạc Nhớ Thứ': 50, 'Delta': 50, 'Bù Gương': 50, 'Bóng Âm Dương': 50 
             };
@@ -327,7 +362,8 @@
             let auditLogs = [];
             let totalTrained = 0;
 
-            for (let i = lichSuQuay.length - 1; i >= 5; i--) {
+            // Quét triệt để toàn bộ lịch sử từ kỳ cũ đến kỳ mới (i >= 1)
+            for (let i = lichSuQuay.length - 1; i >= 1; i--) {
                 let targetDraw = lichSuQuay[i];
                 let actualDraw = lichSuQuay[i - 1];
                 let subset = lichSuQuay.slice(i);
@@ -339,14 +375,14 @@
                 Object.keys(results).forEach(mName => {
                     let preds = results[mName];
                     if (preds.includes(actual2D)) {
-                        scores[mName] = (scores[mName] || 50) + 4; // Thưởng điểm khi đúng
+                        scores[mName] = (scores[mName] || 50) + 4;
                         hitAny = true;
                     } else {
-                        scores[mName] = Math.max(20, (scores[mName] || 50) - 2); // Phạt điểm khi sai
+                        scores[mName] = Math.max(20, (scores[mName] || 50) - 2);
                     }
                 });
 
-                if (hitAny && totalTrained < 25) {
+                if (hitAny) {
                     auditLogs.push(`🤖 Kỳ ${targetDraw.ngay} ➔ Thực tế ${actualDraw.ngay} về [${actual2D}]`);
                 }
                 totalTrained++;
@@ -355,7 +391,7 @@
             currentLoadedJson.model_scores = scores;
 
             document.getElementById('auditLogContainer').innerHTML = auditLogs.length > 0 ? auditLogs.map(l => `<p class="border-b border-slate-800 pb-1">${l}</p>`).join('') : '<p class="text-green-400">Hoàn tất tự học!</p>';
-            alert(`Tự học hoàn tất qua ${totalTrained} kỳ! Trọng số đã được cập nhật tối ưu.`);
+            alert(`Tự học hoàn tất qua ${totalTrained} kỳ lịch sử! Trọng số đã được tối ưu.`);
             
             thucHienPhanTichHoacBacktesting();
         }
@@ -526,7 +562,7 @@
                 document.getElementById('final3DList').innerHTML = html3D;
                 document.getElementById('detail3DHint').innerText = `(Hàng trăm dịch bóng từ tổng ${latestDe}: ${topHundreds.join(', ')})`;
 
-                // ĐỐI CHÍNH XÁC KẾT QUẢ VÀ TÔ ĐỎ NẾU ĐÚNG
+                // ĐỐI CHIẾU KẾT QUẢ VÀ TÔ ĐỎ NẾU ĐÚNG
                 if (actualDrawData) {
                     let actualDBVal = actualDrawData.gdb ? actualDrawData.gdb.toString() : "";
                     let actual2D = actualDBVal.slice(-2);
