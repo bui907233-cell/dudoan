@@ -13,7 +13,7 @@
 </head>
 <body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen p-6 transition-colors duration-300">
 
-    <div class="max-w-6xl mx-auto">
+    <div class="max-w-7xl mx-auto">
         <!-- Header -->
         <header class="mb-6 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
             <div>
@@ -73,34 +73,35 @@
 
             <div>
                 <button onclick="chayVaDanhGiaMoHinh()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-all shadow-md text-sm">
-                    🚀 Chạy Phân Tích
+                    🚀 Chạy Phân Tích (9 Mô Hình)
                 </button>
             </div>
         </div>
 
         <!-- KHUNG KẾT QUẢ CHỐT SỐ TOÀN DIỆN -->
         <div class="bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-xl mb-6 text-center border border-indigo-500/30">
-            <h3 class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4">🎯 KẾT QUẢ HỢP LỰC 8 MÔ HÌNH & 3 CÀNG TẦN SUẤT TOÀN CỤC</h3>
+            <h3 class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4">🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH & 3 CÀNG TOÀN CỤC</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-xl mx-auto">
                 <div class="bg-white/5 backdrop-blur px-5 py-4 rounded-xl border border-white/10">
                     <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp 2 Chữ Số Tối Ưu</p>
                     <span id="final2D" class="text-5xl font-extrabold tracking-wider text-yellow-400 mt-2 block">--</span>
-                    <span class="text-[10px] text-slate-300 mt-1 block">(Đồng thuận từ 8 mô hình toàn cục)</span>
+                    <span class="text-[10px] text-slate-300 mt-1 block">(Đồng thuận từ 9 mô hình toàn cục)</span>
                 </div>
                 <div class="bg-white/5 backdrop-blur px-5 py-4 rounded-xl border border-white/10">
                     <p class="text-[11px] text-indigo-200 uppercase font-semibold">Top 3 Càng Tần Suất Cao</p>
                     <div id="final3DList" class="flex justify-center gap-2 mt-2">
                         <span class="text-3xl font-extrabold tracking-wider text-yellow-400">---</span>
                     </div>
-                    <span id="detail3DHint" class="text-[10px] text-indigo-300 mt-1 block">(Quét từ tần suất hàng trăm toàn cục)</span>
+                    <span id="detail3DHint" class="text-[10px] text-indigo-300 mt-1 block">(Quét từ hàng trăm phổ biến)</span>
                 </div>
             </div>
         </div>
 
-        <!-- CHI TIẾT PHÂN TÍCH TỪNG MÔ HÌNH -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <!-- CHI TIẾT PHÂN TÍCH 9 MÔ HÌNH -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <!-- Cột 1 -->
             <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
-                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2">🔥 1. Tần Suất 2 Số (Toàn Cục Giải)</h3>
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2">🔥 1. Tần Suất 2 Số</h3>
                 <div id="resultHot" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
 
                 <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">🧊 2. Lô Gan 2 Số</h3>
@@ -108,35 +109,41 @@
 
                 <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">🔄 3. Chuỗi Markov</h3>
                 <div id="resultMarkov" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
-
-                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">⚡ 4. Chạm & Tổng Đề</h3>
-                <div id="resultCham" class="text-xs space-y-1"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
             </div>
 
+            <!-- Cột 2 -->
             <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
-                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2">🔮 5. Thần Số Học & Ngũ Hành</h3>
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2">⚡ 4. Chạm & Tổng Đề</h3>
+                <div id="resultCham" class="text-xs space-y-1"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
+
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">🔮 5. Thần Số Học</h3>
                 <div id="resultThanHoc" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
 
                 <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">🎯 6. Bạc Nhớ Theo Thứ</h3>
                 <div id="resultBacNho" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
+            </div>
 
-                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">📈 7. Khoảng Cách Nhịp (Delta)</h3>
+            <!-- Cột 3 -->
+            <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2">📈 7. Khoảng Cách Nhịp (Delta)</h3>
                 <div id="resultDelta" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
 
                 <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">🪞 8. Tổng Bù & Gương</h3>
                 <div id="resultMirror" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
+
+                <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">☯️ 9. Bóng Âm Dương Toàn Cục</h3>
+                <div id="resultBong" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
             </div>
         </div>
 
-        <!-- BẢNG XẾP HẠNG 8 MÔ HÌNH -->
+        <!-- BẢNG XẾP HẠNG 9 MÔ HÌNH -->
         <div class="bg-slate-900 text-white p-5 rounded-xl shadow-lg mb-6 border border-slate-800">
             <h2 class="text-sm font-bold mb-3 flex items-center gap-2 text-indigo-300">
-                🏆 Bảng Xếp Hạng Trọng Số & Hiệu Quả 8 Mô Hình
+                🏆 Bảng Xếp Hạng Trọng Số & Hiệu Quả 9 Mô Hình
             </h2>
-            <div id="modelLeaderboard" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2.5">
-                <div class="bg-white/5 p-2.5 rounded-lg border border-white/10 text-center">
-                    <p class="text-[10px] text-slate-400">Trạng thái</p>
-                    <p class="text-xs font-bold mt-1">Đang chờ...</p>
+            <div id="modelLeaderboard" class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-2">
+                <div class="bg-white/5 p-2 rounded-lg border border-white/10 text-center col-span-full">
+                    <p class="text-xs text-slate-400">Đang chờ...</p>
                 </div>
             </div>
         </div>
@@ -153,8 +160,8 @@
 
         <!-- BIỂU ĐỒ TRỰC QUAN -->
         <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
-            <h3 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">Biểu Đồ Uy Tín 8 Mô Hình</h3>
-            <div id="evalChart" style="width: 100%; height: 260px;"></div>
+            <h3 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">Biểu Đồ Uy Tín 9 Mô Hình</h3>
+            <div id="evalChart" style="width: 100%; height: 280px;"></div>
         </div>
     </div>
 
@@ -202,15 +209,12 @@
             document.getElementById('final2D').innerText = "--";
             document.getElementById('final3DList').innerHTML = '<span class="text-3xl font-extrabold tracking-wider text-yellow-400">---</span>';
             document.getElementById('detail3DHint').innerText = "(Quét từ tần suất hàng trăm toàn cục)";
-            document.getElementById('resultHot').innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
-            document.getElementById('resultCold').innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
-            document.getElementById('resultMarkov').innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
-            document.getElementById('resultCham').innerHTML = '<span class="text-slate-400 italic">Chưa có dữ liệu</span>';
-            document.getElementById('resultThanHoc').innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
-            document.getElementById('resultBacNho').innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
-            document.getElementById('resultDelta').innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
-            document.getElementById('resultMirror').innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
-            document.getElementById('modelLeaderboard').innerHTML = '<div class="bg-white/5 p-2.5 rounded-lg border border-white/10 text-center col-span-full"><p class="text-xs text-slate-400">Vui lòng bấm "Chạy Phân Tích"</p></div>';
+            
+            ['resultHot', 'resultCold', 'resultMarkov', 'resultCham', 'resultThanHoc', 'resultBacNho', 'resultDelta', 'resultMirror', 'resultBong'].forEach(id => {
+                document.getElementById(id).innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
+            });
+
+            document.getElementById('modelLeaderboard').innerHTML = '<div class="bg-white/5 p-2 rounded-lg border border-white/10 text-center col-span-full"><p class="text-xs text-slate-400">Vui lòng bấm "Chạy Phân Tích"</p></div>';
             document.getElementById('auditLogContainer').innerHTML = '<p class="italic text-slate-500">Chưa có dữ liệu nhật ký đối chiếu...</p>';
             document.getElementById('selectTraCuuNgay').innerHTML = '<option value="">-- Chọn ngày xem kết quả --</option>';
 
@@ -298,7 +302,7 @@
                 if (!Array.isArray(lichSuQuay)) throw new Error("Cấu trúc file JSON thiếu mảng lich_su_quay.");
 
                 const subset = lichSuQuay.slice(0, limit);
-                let allLoList = [], deList = [], hundredList = [];
+                let allLoList = [], deList = [], hundredList = [], allNumRaw = [];
 
                 subset.forEach(item => {
                     let currentGiais = [item.giai_8, item.giai_7, item.giai_5, item.giai_2, item.giai_1, item.gdb];
@@ -308,11 +312,12 @@
 
                     currentGiais.forEach(g => {
                         let strG = g ? g.toString() : "";
-                        if(strG.length >= 2) allLoList.push(strG.slice(-2));
-                        // Thu thập chữ số hàng trăm từ tất cả các giải có từ 3 chữ số trở lên
+                        if(strG.length >= 2) {
+                            allLoList.push(strG.slice(-2));
+                            allNumRaw.push(strG.slice(-2));
+                        }
                         if(strG.length >= 3) {
-                            let hDigit = strG.slice(-3, -2);
-                            hundredList.push(hDigit);
+                            hundredList.push(strG.slice(-3, -2));
                         }
                     });
 
@@ -320,11 +325,14 @@
                     if(gdbStr.length >= 2) deList.push(gdbStr.slice(-2));
                 });
 
-                // --- 8 MÔ HÌNH TOÀN CỤC CHO 2 SỐ ---
+                // --- 9 MÔ HÌNH TOÀN CỤC ---
+                
+                // 1. Tần suất 2 số
                 let freqMap = {};
                 allLoList.forEach(num => freqMap[num] = (freqMap[num] || 0) + 1);
                 let sortedHot = Object.entries(freqMap).sort((a, b) => b[1] - a[1]);
 
+                // 2. Lô gan
                 let lastSeen = {};
                 allLoList.forEach((num, idx) => { if (!(num in lastSeen)) lastSeen[num] = idx; });
                 let allNumbers = [];
@@ -334,6 +342,7 @@
                 }
                 allNumbers.sort((a, b) => b.pos - a.pos);
 
+                // 3. Markov
                 let transitionMap = {};
                 for(let i = 0; i < deList.length - 1; i++) {
                     let curr = deList[i+1], next = deList[i];
@@ -343,6 +352,7 @@
                 let latestNum = deList[0] || "53";
                 let markovPreds = transitionMap[latestNum] ? Object.entries(transitionMap[latestNum]).sort((a,b) => b[1] - a[1]) : [];
 
+                // 4. Chạm & Tổng
                 let dauCount = {}, tongCount = {};
                 deList.forEach(num => {
                     dauCount[num[0]] = (dauCount[num[0]] || 0) + 1;
@@ -356,6 +366,7 @@
                     if(s[0] === bestDau || (parseInt(s[0]) + parseInt(s[1])) % 10 === parseInt(bestTong)) model4Preds.push(s);
                 }
 
+                // 5. Thần số học
                 let lastDateStr = subset[0].ngay;
                 let nextDate = new Date(lastDateStr);
                 nextDate.setDate(nextDate.getDate() + 7);
@@ -365,6 +376,7 @@
                 lifePath = sumDigits(lifePath);
                 let model5Preds = [(lifePath * 9).toString().padStart(2, '0'), (lifePath * 11).toString().slice(-2), ((lifePath + nextDate.getDate()) % 90).toString().padStart(2, '0')];
 
+                // 6. Bạc nhớ theo thứ
                 let targetThu = subset[0].thu || "Chủ Nhật";
                 let sameDayHistory = lichSuQuay.filter(item => item.thu === targetThu);
                 let dayFreqMap = {};
@@ -375,20 +387,41 @@
                 let model6Preds = Object.entries(dayFreqMap).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([num]) => num);
                 if(model6Preds.length === 0) model6Preds = ["12", "38", "79", "86", "45"];
 
+                // 7. Delta
                 let deltaList = [];
                 for(let i = 0; i < deList.length - 1; i++) deltaList.push((parseInt(deList[i]) - parseInt(deList[i+1]) + 100) % 100);
                 let avgDelta = deltaList.length > 0 ? Math.round(deltaList.reduce((a,b)=>a+b, 0) / deltaList.length) : 15;
                 let predDelta = (parseInt(deList[0] || "50") + avgDelta) % 100;
                 let model7Preds = [predDelta < 10 ? '0' + predDelta : '' + predDelta, (100 - predDelta).toString().padStart(2, '0')];
 
+                // 8. Bù gương
                 let d1 = parseInt((deList[0] || "26")[0]), d2 = parseInt((deList[0] || "26")[1]);
                 let model8Preds = [''+d2+d1, ''+(9-d1)+(9-d2), ''+((10-d1)%10)+((10-d2)%10)];
+
+                // 9. MÔ HÌNH BÓNG ÂM DƯƠNG TOÀN CỤC (Quét tất cả giải)
+                const bongDuongMap = {'0':'5', '5':'0', '1':'6', '6':'1', '2':'7', '7':'2', '3':'8', '8':'3', '4':'9', '9':'4'};
+                const bongAmMap = {'0':'7', '7':'0', '1':'4', '4':'1', '2':'9', '9':'2', '3':'6', '6':'3', '5':'8', '8':'5'};
+                
+                let bongFreq = {};
+                allNumRaw.forEach(num => {
+                    let d1_b = bongDuongMap[num[0]] || num[0];
+                    let d2_b = bongDuongMap[num[1]] || num[1];
+                    let bongNum = d1_b + d2_b;
+                    bongFreq[bongNum] = (bongFreq[bongNum] || 0) + 1;
+
+                    let a1_b = bongAmMap[num[0]] || num[0];
+                    let a2_b = bongAmMap[num[1]] || num[1];
+                    let bongAnmNum = a1_b + a2_b;
+                    bongFreq[bongAnmNum] = (bongFreq[bongAnmNum] || 0) + 1;
+                });
+                let sortedBong = Object.entries(bongFreq).sort((a,b) => b[1] - a[1]).slice(0, 5).map(([num]) => num);
+                let model9Preds = sortedBong.length > 0 ? sortedBong : ["53", "08", "86", "27"];
 
                 // --- CHẤM ĐIỂM TỰ HỌC (BACKTESTING) ---
                 let auditLogs = [];
                 let modelScoreTracker = { 
                     'Tần Suất': 75, 'Lô Gan': 70, 'Markov': 72, 'Chạm Tổng': 78, 
-                    'Thần Học': 74, 'Bạc Nhớ Thứ': 78, 'Khoảng Cách Nhịp': 76, 'Bù Gương': 75 
+                    'Thần Học': 74, 'Bạc Nhớ Thứ': 78, 'Khoảng Cách Nhịp': 76, 'Bù Gương': 75, 'Bóng Âm Dương': 77 
                 };
 
                 if (!currentLoadedJson.nhat_ky_tu_hoc) currentLoadedJson.nhat_ky_tu_hoc = [];
@@ -414,7 +447,7 @@
 
                 document.getElementById('auditLogContainer').innerHTML = auditLogs.length > 0 ? auditLogs.map(l => `<p class="border-b border-slate-800 pb-1">${l}.</p>`).join('') : '<span class="italic text-slate-500">Chưa có nhật ký ghi nhận.</span>';
 
-                // --- HỢP LỰC 8 MÔ HÌNH TÌM 2 CHỮ SỐ ---
+                // --- HỢP LỰC 9 MÔ HÌNH TÌM 2 CHỮ SỐ ---
                 let scoreBoard = {};
                 for(let i=0; i<100; i++) scoreBoard[i < 10 ? '0' + i : '' + i] = 0;
 
@@ -426,21 +459,19 @@
                 model6Preds.forEach((num, idx) => { if(scoreBoard[num] !== undefined) scoreBoard[num] += (6 - idx) * 5; });
                 model7Preds.forEach(num => { if(scoreBoard[num] !== undefined) scoreBoard[num] += 7; });
                 model8Preds.forEach(num => { if(scoreBoard[num] !== undefined) scoreBoard[num] += 6; });
+                model9Preds.forEach((num, idx) => { if(scoreBoard[num] !== undefined) scoreBoard[num] += (5 - idx) * 4; });
 
                 let sortedConsensus = Object.entries(scoreBoard).sort((a, b) => b[1] - a[1]);
                 let final2DNum = sortedConsensus[0][0];
 
-                // --- QUÉT TẦN SUẤT HÀNG TRĂM TOÀN CỤC (Lấy Top 3 chữ số hàng trăm xuất hiện nhiều nhất) ---
+                // --- QUÉT HÀNG TRĂM 3 CÀNG TOÀN CỤC ---
                 let hFreqMap = {};
                 hundredList.forEach(h => hFreqMap[h] = (hFreqMap[h] || 0) + 1);
                 let sortedH = Object.entries(hFreqMap).sort((a, b) => b[1] - a[1]);
-                
-                // Nếu dữ liệu đủ, lấy top 3 chữ số hàng trăm xuất hiện nhiều nhất; nếu chưa đủ, mặc định lấy ['0', '5', '2']
                 let topHundreds = sortedH.length >= 3 ? [sortedH[0][0], sortedH[1][0], sortedH[2][0]] : ['0', '5', '2'];
                 let list3D = topHundreds.map(h => h + final2DNum);
 
                 document.getElementById('final2D').innerText = final2DNum;
-                
                 let html3D = list3D.map((val, idx) => `<span class="${idx === 0 ? 'text-yellow-400 font-extrabold' : 'text-indigo-200 font-bold'} text-2xl px-2 py-1 bg-black/20 rounded border border-white/10">${val}</span>`).join('');
                 document.getElementById('final3DList').innerHTML = html3D;
                 document.getElementById('detail3DHint').innerText = `(Quét từ hàng trăm phổ biến: ${topHundreds.join(', ')})`;
@@ -451,21 +482,23 @@
                 if (existingLogIndex >= 0) currentLoadedJson.nhat_ky_tu_hoc[existingLogIndex] = newLogEntry;
                 else currentLoadedJson.nhat_ky_tu_hoc.unshift(newLogEntry);
 
-                // Hiển thị chi tiết giao diện
-                document.getElementById('resultHot').innerHTML = sortedHot.slice(0, 6).map(([n, c]) => `<span class="bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 px-2.5 py-1 rounded-md font-bold text-xs border border-indigo-100 dark:border-indigo-800">${n} (${c} lần)</span>`).join('');
-                document.getElementById('resultCold').innerHTML = allNumbers.slice(0, 6).map(item => `<span class="bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 px-2.5 py-1 rounded-md font-bold text-xs border border-cyan-100 dark:border-cyan-800">${item.num} (ẩn ${item.pos} kỳ)</span>`).join('');
-                document.getElementById('resultMarkov').innerHTML = markovPreds.length > 0 ? markovPreds.slice(0, 5).map(([n, c]) => `<span class="bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 px-2.5 py-1 rounded-md font-bold text-xs border border-purple-100 dark:border-purple-800">${n} (xs: ${c})</span>`).join('') : '<span class="text-slate-400 text-xs italic">Chưa đủ dữ liệu</span>';
+                // Hiển thị chi tiết 9 mô hình giao diện
+                document.getElementById('resultHot').innerHTML = sortedHot.slice(0, 6).map(([n, c]) => `<span class="bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded font-bold text-xs border border-indigo-100 dark:border-indigo-800">${n} (${c})</span>`).join('');
+                document.getElementById('resultCold').innerHTML = allNumbers.slice(0, 6).map(item => `<span class="bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 px-2 py-0.5 rounded font-bold text-xs border border-cyan-100 dark:border-cyan-800">${item.num} (ẩn ${item.pos})</span>`).join('');
+                document.getElementById('resultMarkov').innerHTML = markovPreds.length > 0 ? markovPreds.slice(0, 5).map(([n, c]) => `<span class="bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded font-bold text-xs border border-purple-100 dark:border-purple-800">${n} (${c})</span>`).join('') : '<span class="text-slate-400 text-xs italic">Chưa đủ dữ liệu</span>';
                 document.getElementById('resultCham').innerHTML = `
-                    <div class="flex justify-between bg-slate-50 dark:bg-slate-800/50 p-1.5 rounded border dark:border-slate-700"><span>Chạm đầu mạnh:</span><strong>${bestDau}</strong></div>
-                    <div class="flex justify-between bg-slate-50 dark:bg-slate-800/50 p-1.5 rounded border dark:border-slate-700"><span>Tổng đề mạnh:</span><strong>${bestTong}</strong></div>
+                    <div class="flex justify-between bg-slate-50 dark:bg-slate-800/50 p-1 rounded border dark:border-slate-700"><span>Chạm đầu:</span><strong>${bestDau}</strong></div>
+                    <div class="flex justify-between bg-slate-50 dark:bg-slate-800/50 p-1 rounded border dark:border-slate-700"><span>Tổng đề:</span><strong>${bestTong}</strong></div>
                 `;
-                document.getElementById('resultThanHoc').innerHTML = model5Preds.map(n => `<span class="bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 px-2.5 py-1 rounded-md font-bold text-xs border border-amber-100 dark:border-amber-800">${n}</span>`).join('');
-                document.getElementById('resultBacNho').innerHTML = model6Preds.map(n => `<span class="bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 px-2.5 py-1 rounded-md font-bold text-xs border border-rose-100 dark:border-rose-800">${n}</span>`).join('');
-                document.getElementById('resultDelta').innerHTML = model7Preds.map(n => `<span class="bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 px-2.5 py-1 rounded-md font-bold text-xs border border-teal-100 dark:border-teal-800">${n}</span>`).join('');
-                document.getElementById('resultMirror').innerHTML = model8Preds.map(n => `<span class="bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 px-2.5 py-1 rounded-md font-bold text-xs border border-emerald-100 dark:border-emerald-800">${n}</span>`).join('');
+                document.getElementById('resultThanHoc').innerHTML = model5Preds.map(n => `<span class="bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 px-2 py-0.5 rounded font-bold text-xs border border-amber-100 dark:border-amber-800">${n}</span>`).join('');
+                document.getElementById('resultBacNho').innerHTML = model6Preds.map(n => `<span class="bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 px-2 py-0.5 rounded font-bold text-xs border border-rose-100 dark:border-rose-800">${n}</span>`).join('');
+                document.getElementById('resultDelta').innerHTML = model7Preds.map(n => `<span class="bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 px-2 py-0.5 rounded font-bold text-xs border border-teal-100 dark:border-teal-800">${n}</span>`).join('');
+                document.getElementById('resultMirror').innerHTML = model8Preds.map(n => `<span class="bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded font-bold text-xs border border-emerald-100 dark:border-emerald-800">${n}</span>`).join('');
+                document.getElementById('resultBong').innerHTML = model9Preds.map(n => `<span class="bg-violet-50 dark:bg-violet-950/60 text-violet-700 dark:text-violet-300 px-2 py-0.5 rounded font-bold text-xs border border-violet-100 dark:border-violet-800">${n}</span>`).join('');
 
                 let models = [
                     { name: 'Bạc Nhớ Thứ', score: modelScoreTracker['Bạc Nhớ Thứ'] },
+                    { name: 'Bóng Âm Dương', score: modelScoreTracker['Bóng Âm Dương'] },
                     { name: 'Khoảng Cách Nhịp', score: modelScoreTracker['Khoảng Cách Nhịp'] },
                     { name: 'Markov', score: modelScoreTracker['Markov'] },
                     { name: 'Chạm Tổng', score: modelScoreTracker['Chạm Tổng'] },
@@ -482,9 +515,9 @@
                     let color = idx === 0 ? "bg-indigo-600 border-indigo-400 ring-1 ring-indigo-400" : "bg-white/5 border-white/10";
                     lbHtml += `
                         <div class="${color} p-2 rounded-lg border text-center">
-                            <span class="text-[9px] font-semibold px-1 py-0.2 rounded bg-black/30 text-white">${badge}</span>
-                            <p class="text-xs font-bold mt-1">${m.name}</p>
-                            <p class="text-xs text-indigo-200 mt-0.5"><strong>${m.score}đ</strong></p>
+                            <span class="text-[8px] font-semibold px-1 py-0.1 rounded bg-black/30 text-white">${badge}</span>
+                            <p class="text-[11px] font-bold mt-1 truncate">${m.name}</p>
+                            <p class="text-[11px] text-indigo-200 mt-0.5"><strong>${m.score}đ</strong></p>
                         </div>
                     `;
                 });
@@ -505,7 +538,7 @@
             myChart.setOption({
                 backgroundColor: 'transparent',
                 tooltip: { trigger: 'axis' },
-                xAxis: { type: 'category', data: models.map(m => m.name), axisLabel: { color: isDark ? '#cbd5e1' : '#334155', interval: 0, rotate: 10, fontSize: 10 } },
+                xAxis: { type: 'category', data: models.map(m => m.name), axisLabel: { color: isDark ? '#cbd5e1' : '#334155', interval: 0, rotate: 15, fontSize: 10 } },
                 yAxis: { type: 'value', max: 130, axisLabel: { color: isDark ? '#cbd5e1' : '#334155' }, splitLine: { lineStyle: { color: isDark ? '#334155' : '#e2e8f0' } } },
                 series: [{
                     data: models.map(m => m.score), type: 'bar',
