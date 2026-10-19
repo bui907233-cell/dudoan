@@ -31,8 +31,8 @@
         <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div>
                 <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Chọn Đài Miền Trung:</label>
+                <!-- Sắp xếp đúng thứ tự các đài từ Thứ 2 đến Chủ Nhật -->
                 <select id="selectDai" onchange="onDaiChange()" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
-                    <option value="kontum" selected>Chủ Nhật - Kon Tum</option>
                     <option value="phuyen">Thứ 2 - Phú Yên</option>
                     <option value="hue">Thứ 2 - Thừa Thiên Huế</option>
                     <option value="daklak">Thứ 3 - Đắk Lắk</option>
@@ -47,6 +47,7 @@
                     <option value="danang">Thứ 7 - Đà Nẵng</option>
                     <option value="quangngai">Thứ 7 - Quảng Ngãi</option>
                     <option value="daknong">Thứ 7 - Đắk Nông</option>
+                    <option value="kontum" selected>Chủ Nhật - Kon Tum</option>
                     <option value="khanhhoa_cn">Chủ Nhật - Khánh Hòa</option>
                     <option value="hue_cn">Chủ Nhật - Thừa Thiên Huế</option>
                 </select>
@@ -148,7 +149,7 @@
         <!-- BẢNG XẾP HẠNG 9 MÔ HÌNH -->
         <div class="bg-slate-900 text-white p-5 rounded-xl shadow-lg mb-6 border border-slate-800">
             <h2 class="text-sm font-bold mb-3 flex items-center gap-2 text-indigo-300">
-                🏆 Bảng Xếp Hạng Trọng Số 9 Mô Hình
+                🏆 Bảng Xếp Hạng Trọng Số Động 9 Mô Hình (Qua Phân Tích Lịch Sử)
             </h2>
             <div id="modelLeaderboard" class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-2">
                 <div class="bg-white/5 p-2 rounded-lg border border-white/10 text-center col-span-full">
@@ -159,7 +160,7 @@
 
         <!-- BIỂU ĐỒ TRỰC QUAN -->
         <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
-            <h3 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">Biểu Đồ Trọng Số 9 Mô Hình</h3>
+            <h3 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">Biểu Đồ Trọng Số Động 9 Mô Hình</h3>
             <div id="evalChart" style="width: 100%; height: 280px;"></div>
         </div>
     </div>
@@ -288,6 +289,7 @@
             document.getElementById('panelBody').innerHTML = html;
         }
 
+        // --- HÀM PHÂN TÍCH ĐỘC LẬP 9 MÔ HÌNH ---
         function chay9MoHinhNoiBo(subset, lichSuQuay) {
             let allLoList = [], deList = [], allNumRaw = [];
             subset.forEach(item => {
@@ -374,6 +376,35 @@
             return { 'Tần Suất': m1, 'Lô Gan': m2, 'Markov': m3, 'Chạm Tổng': m4, 'Thần Học': m5, 'Bạc Nhớ Thứ': m6, 'Delta': m7, 'Bù Gương': m8, 'Bóng Âm Dương': m9 };
         }
 
+        // --- HÀM TỰ ĐỘNG CHẤM ĐIỂM DỰA TRÊN LỊCH SỬ THỰC TẾ (DYNAMIC SCORING) ---
+        function tinhDiemDongTuLichSu(lichSuQuay) {
+            let scores = { 
+                'Tần Suất': 50, 'Lô Gan': 50, 'Markov': 50, 'Chạm Tổng': 50, 
+                'Thần Học': 50, 'Bạc Nhớ Thứ': 50, 'Delta': 50, 'Bù Gương': 50, 'Bóng Âm Dương': 50 
+            };
+
+            if (!Array.isArray(lichSuQuay) || lichSuQuay.length < 5) return scores;
+
+            // Quét qua các kỳ trong quá khứ để phân tích xem mô hình nào khớp thực tế nhiều hơn
+            for (let i = lichSuQuay.length - 1; i >= 1; i--) {
+                let targetDraw = lichSuQuay[i];
+                let actualDraw = lichSuQuay[i - 1];
+                let subset = lichSuQuay.slice(i);
+                let results = chay9MoHinhNoiBo(subset, lichSuQuay);
+                let actual2D = actualDraw.gdb ? actualDraw.gdb.toString().slice(-2) : "";
+
+                Object.keys(results).forEach(mName => {
+                    let preds = results[mName];
+                    if (preds.includes(actual2D)) {
+                        scores[mName] = (scores[mName] || 50) + 3; // Thưởng điểm khi dự đoán đúng trong quá khứ
+                    } else {
+                        scores[mName] = Math.max(20, (scores[mName] || 50) - 1.5); // Trừ nhẹ khi lệch
+                    }
+                });
+            }
+            return scores;
+        }
+
         async function chayVaDanhGiaMoHinh(targetBacktestDate = null) {
             const dai = document.getElementById('selectDai').value;
             const limit = parseInt(document.getElementById('selectLimit').value);
@@ -413,12 +444,11 @@
                 }
 
                 let results = chay9MoHinhNoiBo(subset, lichSuQuay);
-                let scores = currentLoadedJson.model_scores || { 
-                    'Tần Suất': 50, 'Lô Gan': 50, 'Markov': 50, 'Chạm Tổng': 50, 
-                    'Thần Học': 50, 'Bạc Nhớ Thứ': 50, 'Delta': 50, 'Bù Gương': 50, 'Bóng Âm Dương': 50 
-                };
+                
+                // GỌI HÀM PHÂN TÍCH ĐIỂM SỐ ĐỘNG TỪ HTML THAY VÌ LẤY CỐ ĐỊNH 50
+                let scores = tinhDiemDongTuLichSu(lichSuQuay);
 
-                // --- HỢP LỰC 9 MÔ HÌNH VỚI TRỌNG SỐ ---
+                // --- HỢP LỰC 9 MÔ HÌNH VỚI TRỌNG SỐ THỰC TẾ ---
                 let scoreBoard = {};
                 for(let i=0; i<100; i++) scoreBoard[i < 10 ? '0' + i : '' + i] = 0;
 
@@ -473,14 +503,14 @@
                     document.getElementById('actualCompareNote').innerHTML = compareText;
                 } else {
                     document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH";
-                    document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình toàn cục)";
+                    document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình đã phân tích lịch sử)";
                 }
 
                 // Hiển thị chi tiết mô hình
                 document.getElementById('resultHot').innerHTML = results['Tần Suất'].slice(0, 6).map(n => `<span class="bg-indigo-50 dark:bg-indigo-950/60 text-indigo-300 px-2 py-0.5 rounded font-bold text-xs border border-indigo-800">${n}</span>`).join('');
                 document.getElementById('resultCold').innerHTML = results['Lô Gan'].slice(0, 6).map(n => `<span class="bg-cyan-50 dark:bg-cyan-950/60 text-cyan-300 px-2 py-0.5 rounded font-bold text-xs border border-cyan-800">${n}</span>`).join('');
                 document.getElementById('resultMarkov').innerHTML = results['Markov'].length > 0 ? results['Markov'].slice(0, 5).map(n => `<span class="bg-purple-50 dark:bg-purple-950/60 text-purple-300 px-2 py-0.5 rounded font-bold text-xs border border-purple-800">${n}</span>`).join('') : '<span class="text-slate-400 text-xs italic">Chưa đủ dữ liệu</span>';
-                document.getElementById('resultCham').innerHTML = `<div class="flex justify-between bg-slate-800/50 p-1 rounded border border-slate-700"><span>Chạm/Tổng:</span><strong>Đang phân tích</strong></div>`;
+                document.getElementById('resultCham').innerHTML = `<div class="flex justify-between bg-slate-800/50 p-1 rounded border border-slate-700"><span>Chạm/Tổng:</span><strong>Đã phân tích</strong></div>`;
                 document.getElementById('resultThanHoc').innerHTML = results['Thần Học'].map(n => `<span class="bg-amber-50 dark:bg-amber-950/60 text-amber-300 px-2 py-0.5 rounded font-bold text-xs border border-amber-800">${n}</span>`).join('');
                 document.getElementById('resultBacNho').innerHTML = results['Bạc Nhớ Thứ'].map(n => `<span class="bg-rose-50 dark:bg-rose-950/60 text-rose-300 px-2 py-0.5 rounded font-bold text-xs border border-rose-800">${n}</span>`).join('');
                 document.getElementById('resultDelta').innerHTML = results['Delta'].map(n => `<span class="bg-teal-50 dark:bg-teal-950/60 text-teal-300 px-2 py-0.5 rounded font-bold text-xs border border-teal-800">${n}</span>`).join('');
@@ -519,7 +549,7 @@
                 backgroundColor: 'transparent',
                 tooltip: { trigger: 'axis' },
                 xAxis: { type: 'category', data: models.map(m => m.name), axisLabel: { color: isDark ? '#cbd5e1' : '#334155', interval: 0, rotate: 15, fontSize: 10 } },
-                yAxis: { type: 'value', max: 100, axisLabel: { color: isDark ? '#cbd5e1' : '#334155' }, splitLine: { lineStyle: { color: isDark ? '#334155' : '#e2e8f0' } } },
+                yAxis: { type: 'value', max: 120, axisLabel: { color: isDark ? '#cbd5e1' : '#334155' }, splitLine: { lineStyle: { color: isDark ? '#334155' : '#e2e8f0' } } },
                 series: [{
                     data: models.map(m => m.score), type: 'bar',
                     itemStyle: { color: (params) => params.dataIndex === 0 ? '#6366f1' : (isDark ? '#334155' : '#cbd5e1') },
