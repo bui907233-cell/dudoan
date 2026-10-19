@@ -8,6 +8,7 @@
     <script>
         tailwind.config = { darkMode: 'class' }
     </script>
+    <!-- Thư viện ECharts để vẽ biểu đồ -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
 </head>
 <body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen p-6 transition-colors duration-300">
@@ -29,11 +30,12 @@
             </div>
         </header>
 
-        <!-- Bảng điều khiển (Đã bỏ lọc theo thứ, tối ưu 4 cột) -->
+        <!-- Bảng điều khiển -->
         <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div>
                 <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Chọn Đài Miền Trung:</label>
-                <select id="selectDai" onchange="taiDuLieuDai()" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
+                <!-- Khi đổi đài, reset biến dữ liệu cũ và tự động tải + phân tích lại ngay lập tức -->
+                <select id="selectDai" onchange="currentLoadedJson = null; taiDuLieuDai();" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
                     <option value="phuyen" selected>Thứ 2 - Phú Yên</option>
                     <option value="hue">Thứ 2 - Thừa Thiên Huế</option>
                     <option value="daklak">Thứ 3 - Đắk Lắk</option>
@@ -64,7 +66,7 @@
 
             <div>
                 <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Biên độ phân tích:</label>
-                <select id="selectLimit" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
+                <select id="selectLimit" onchange="chayVaDanhGiaMoHinh()" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
                     <option value="10" selected>10 kỳ gần nhất</option>
                     <option value="20">20 kỳ gần nhất</option>
                     <option value="50">50 kỳ gần nhất</option>
@@ -148,6 +150,12 @@
                 <p class="italic text-slate-500">Chưa có dữ liệu nhật ký đối chiếu...</p>
             </div>
         </div>
+
+        <!-- BIỂU ĐỒ TRỰC QUAN -->
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
+            <h3 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">Biểu Đồ Uy Tín 8 Mô Hình</h3>
+            <div id="evalChart" style="width: 100%; height: 260px;"></div>
+        </div>
     </div>
 
     <!-- POPUP MODAL XEM CHI TIẾT KẾT QUẢ QUAY -->
@@ -177,7 +185,7 @@
             const text = document.getElementById('darkModeText');
             if (html.classList.contains('dark')) {
                 html.classList.remove('dark');
-                icon.innerText = '🌙'; text.innerText = 'Giao Diện Tối';
+                icon.innerText = '🌙'; text.innerText = 'Giao Diện Sáng';
             } else {
                 html.classList.add('dark');
                 icon.innerText = '☀️'; text.innerText = 'Giao Diện Sáng';
@@ -193,7 +201,7 @@
                 currentLoadedJson = await response.json();
                 
                 capNhatDropdownNgay();
-                chayVaDanhGiaMoHinh();
+                chayVaDanhGiaMoHinh(); // Tự động chạy phân tích ngay sau khi tải xong dữ liệu đài mới
             } catch (err) {
                 console.warn("Chưa tải được file JSON tự động:", err.message);
             }
@@ -262,7 +270,6 @@
                 const lichSuQuay = currentLoadedJson.lich_su_quay || currentLoadedJson; 
                 if (!Array.isArray(lichSuQuay)) throw new Error("Cấu trúc file JSON thiếu mảng lich_su_quay.");
 
-                // Lấy toàn bộ dữ liệu của đài mà không cần lọc theo thứ nữa vì file JSON của đài nào đã cố định chuẩn đài đó
                 const subset = lichSuQuay.slice(0, limit);
                 let allLoList = [], deList = [];
 
@@ -448,9 +455,30 @@
                 });
                 document.getElementById('modelLeaderboard').innerHTML = lbHtml;
 
+                // --- VẼ BIỂU ĐỒ TRỰC QUAN ---
+                veBieuDoDanhGia(models);
+
             } catch (err) {
                 console.warn("Đang chờ dữ liệu thực tế...", err.message);
             }
+        }
+
+        function veBieuDoDanhGia(models) {
+            const chartDom = document.getElementById('evalChart');
+            if (!chartDom) return;
+            const myChart = echarts.init(chartDom);
+            const isDark = document.documentElement.classList.contains('dark');
+            myChart.setOption({
+                backgroundColor: 'transparent',
+                tooltip: { trigger: 'axis' },
+                xAxis: { type: 'category', data: models.map(m => m.name), axisLabel: { color: isDark ? '#cbd5e1' : '#334155', interval: 0, rotate: 10, fontSize: 10 } },
+                yAxis: { type: 'value', max: 130, axisLabel: { color: isDark ? '#cbd5e1' : '#334155' }, splitLine: { lineStyle: { color: isDark ? '#334155' : '#e2e8f0' } } },
+                series: [{
+                    data: models.map(m => m.score), type: 'bar',
+                    itemStyle: { color: (params) => params.dataIndex === 0 ? '#6366f1' : (isDark ? '#334155' : '#cbd5e1') },
+                    label: { show: true, position: 'top', formatter: '{c}đ', color: isDark ? '#f8fafc' : '#1e293b', fontSize: 10 }
+                }]
+            });
         }
 
         function taiJsonCapNhat() {
