@@ -18,7 +18,7 @@
         <header class="mb-6 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
             <div>
                 <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis</h1>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Phân tích...</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Phân tích.</p>
             </div>
             <div class="flex items-center gap-2">
                 <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 p-2 rounded-lg transition-all shadow-sm text-xs flex items-center gap-1.5">
@@ -85,12 +85,12 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
             <div class="lg:col-span-2 bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-xl border border-indigo-500/30 flex flex-col justify-between">
                 <div>
-                    <h3 id="resultTitleBanner" class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4 text-center">🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH & 3 CÀNG BÓNG ÂM DƯƠNG</h3>
+                    <h3 id="resultTitleBanner" class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4 text-center">🎯 KẾT QUẢ GIAO THOA CHỦ LỰC & 3 CÀNG BÓNG ÂM DƯƠNG</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto mb-4">
                         <div class="bg-white/5 backdrop-blur px-4 py-3 rounded-xl border border-white/10 text-center">
                             <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp 2 Chữ Số Tối Ưu</p>
                             <span id="final2D" class="text-4xl font-extrabold tracking-wider text-yellow-400 mt-1 block">--</span>
-                            <span id="actualCompareNote" class="text-[11px] text-slate-300 mt-2 block">(Đồng thuận từ 9 mô hình)</span>
+                            <span id="actualCompareNote" class="text-[11px] text-slate-300 mt-2 block">(Đồng thuận từ vùng giao thoa)</span>
                         </div>
                         <div class="bg-white/5 backdrop-blur px-4 py-3 rounded-xl border border-white/10 text-center">
                             <p class="text-[11px] text-indigo-200 uppercase font-semibold">Top 3 Càng Bóng Âm Dương</p>
@@ -217,8 +217,8 @@
             document.getElementById('final2D').innerText = "--";
             document.getElementById('final3DList').innerHTML = '<span class="text-2xl font-extrabold tracking-wider text-yellow-400">---</span>';
             document.getElementById('detail3DHint').innerText = "(Hàng trăm dịch bóng)";
-            document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình)";
-            document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH & 3 CÀNG BÓNG ÂM DƯƠNG";
+            document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ vùng giao thoa)";
+            document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ GIAO THOA CHỦ LỰC & 3 CÀNG BÓNG ÂM DƯƠNG";
             document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA (Đã lọc qua Tầng Định Lượng Nhịp Rơi & Trọng Số)";
             document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị danh sách giao thoa...</span>';
             
@@ -476,6 +476,7 @@
                     if (targetIndex > 0) {
                         actualDrawData = lichSuQuay[targetIndex - 1]; 
                         targetDisplayDate = actualDrawData.ngay;
+                        // CHỐNG RÒ RỈ TƯƠNG LAI TUỆT ĐỐI: Cắt bỏ hoàn toàn dữ liệu từ targetIndex trở lên
                         activeSubset = lichSuQuay.slice(targetIndex); 
                     } else if (targetIndex === 0) {
                         actualDrawData = null;
@@ -497,23 +498,42 @@
                 let scores = tinhDiemDongTuLichSu(lichSuQuay);
                 window.lastModelScores = scores;
 
-                let scoreBoard = {};
-                for(let i=0; i<100; i++) scoreBoard[i < 10 ? '0' + i : '' + i] = 0;
-
-                let addScore = (preds, weightMultiplier) => {
-                    preds.forEach((num, idx) => {
-                        if(scoreBoard[num] !== undefined) {
-                            scoreBoard[num] += (preds.length - idx) * (weightMultiplier / 50);
-                        }
-                    });
-                };
-
+                // --- ĐỒNG BỘ HÓA: TÍNH TOÁN GIAO THOA VÀ CHẤM ĐIỂM G8/GDB CHO BANNER ---
+                let scoreMap = {};
+                let countMap = {};
                 Object.keys(results).forEach(mName => {
-                    addScore(results[mName], scores[mName] || 50);
+                    let preds = [...new Set(results[mName])];
+                    let modelWeight = scores[mName] || 50;
+                    preds.forEach(num => {
+                        countMap[num] = (countMap[num] || 0) + 1;
+                        scoreMap[num] = (scoreMap[num] || 0) + modelWeight;
+                    });
                 });
 
-                let sortedConsensus = Object.entries(scoreBoard).sort((a, b) => b[1] - a[1]);
-                let final2DNum = sortedConsensus[0][0];
+                // Lọc điều kiện giao thoa từ 2 mô hình trở lên
+                let filteredIntersection = Object.entries(scoreMap).filter(([num, score]) => countMap[num] >= 2);
+
+                // Lấy thông tin Giải 8 và ĐB kỳ trước để chấm điểm cộng thêm cho vùng giao thoa
+                let latestDraw = subset[0];
+                let giai8Pre = latestDraw && latestDraw.giai_8 ? latestDraw.giai_8.toString().slice(-2) : "00";
+                let gdbPre = latestDraw && latestDraw.gdb ? latestDraw.gdb.toString().slice(-2) : "00";
+                
+                let dauG8 = giai8Pre[0], duoiG8 = giai8Pre[1];
+                let dauGDB = gdbPre[0], duoiGDB = gdbPre[1];
+
+                // Chấm điểm ưu tiên thực chiến dựa trên Đầu/Đuôi Giải 8 & GDB
+                filteredIntersection.forEach(item => {
+                    let num = item[0];
+                    let d1 = num[0], d2 = num[1];
+                    if (d1 === dauG8 || d2 === duoiG8 || d1 === dauGDB || d2 === duoiGDB) {
+                        item[1] += 35; // Thưởng điểm cho số dính dáng biên độ G8/GDB
+                    }
+                });
+
+                // Sắp xếp giảm dần theo trọng số để lấy số Top 1 chuẩn nhất cho Banner
+                filteredIntersection.sort((a, b) => b[1] - a[1]);
+
+                let final2DNum = filteredIntersection.length > 0 ? filteredIntersection[0][0] : "50";
 
                 let allDeList = subset.map(item => item.gdb ? item.gdb.toString().slice(-2) : "").filter(Boolean);
                 let latestDe = allDeList[0] || "53";
@@ -548,8 +568,8 @@
                     
                     document.getElementById('actualCompareNote').innerHTML = compareText;
                 } else {
-                    document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH";
-                    document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình đã phân tích lịch sử)";
+                    document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ GIAO THOA CHỦ LỰC & 3 CÀNG BÓNG ÂM DƯƠNG";
+                    document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ vùng giao thoa)";
                 }
 
                 // Hiển thị kết quả gốc 9 mô hình
@@ -622,7 +642,7 @@
             // 1. Lọc điều kiện giao thoa từ 2 mô hình trở lên
             let filteredIntersection = Object.entries(scoreMap).filter(([num, score]) => countMap[num] >= 2);
 
-            // 2. TẦNG LỌC ĐỊNH LƯỢNG (Quantitative Meta-Filter): Loại bỏ các con số đang bị kẹt gan sâu bất thường (gan > 25 kỳ mà mô hình yếu đề xuất)
+            // 2. TẦNG LỌC ĐỊNH LƯỢNG (Quantitative Meta-Filter): Loại bỏ các con số đang bị kẹt gan sâu bất thường
             if (lastCachedSubset && lastCachedLichSu) {
                 let allLoList = [];
                 lastCachedSubset.forEach(item => {
@@ -639,11 +659,9 @@
                 let lastSeen = {};
                 allLoList.forEach((num, idx) => { if (!(num in lastSeen)) lastSeen[num] = idx; });
 
-                // Lọc tinh chỉnh định lượng
                 filteredIntersection = filteredIntersection.filter(([num, score]) => {
                     let ganValue = lastSeen[num] !== undefined ? lastSeen[num] : 99;
                     let count = countMap[num];
-                    // Nếu gan quá sâu (>25 kỳ) nhưng chỉ có 2 mô hình yếu đề xuất ➔ Loại bỏ bớt để tránh rủi ro
                     if (ganValue > 25 && count < 3 && score < 120) return false;
                     return true;
                 });
