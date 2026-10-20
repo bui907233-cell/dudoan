@@ -18,7 +18,7 @@
         <header class="mb-6 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
             <div>
                 <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis</h1>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Phân tích...</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">VS</p>
             </div>
             <div class="flex items-center gap-2">
                 <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 p-2 rounded-lg transition-all shadow-sm text-xs flex items-center gap-1.5">
@@ -88,9 +88,9 @@
                     <h3 class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4 text-center">🎯 KẾT QUẢ GIAO THOA CHỦ LỰC & 3 CÀNG BÓNG ÂM DƯƠNG</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto mb-4">
                         <div class="bg-white/5 backdrop-blur px-4 py-3 rounded-xl border border-white/10 text-center">
-                            <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp 2 Chữ Số Tối Ưu</p>
+                            <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp 2 Chữ Số Chủ Lực</p>
                             <span id="final2D" class="text-4xl font-extrabold tracking-wider text-yellow-400 mt-1 block">--</span>
-                            <span class="text-[11px] text-slate-300 mt-2 block">(Gợi ý đồng thuận cao nhất)</span>
+                            <span class="text-[11px] text-slate-300 mt-2 block">(Top 1 Dàn 3 Số Vàng Cam)</span>
                         </div>
                         <div class="bg-white/5 backdrop-blur px-4 py-3 rounded-xl border border-white/10 text-center">
                             <p class="text-[11px] text-indigo-200 uppercase font-semibold">Top 3 Càng Bóng Âm Dương</p>
@@ -115,13 +115,13 @@
             </div>
         </div>
 
-        <!-- KHU VỰC TÂM ĐIỂM GIAO THOA & LỌC BỎ NHIỄU -->
+        <!-- KHU VỰC TÂM ĐIỂM GIAO THOA VÀNG CAM (DÀN 3 SỐ) -->
         <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6">
-            <h3 id="sectionTitleSuggest" class="text-xs font-bold uppercase tracking-wider text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">
-                🔗 TÂM ĐIỂM GIAO THOA VÀNG (Đã lọc bỏ số rủi ro / gan sâu)
+            <h3 id="sectionTitleSuggest" class="text-xs font-bold uppercase tracking-wider text-amber-400 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">
+                🔥 DÀN 3 SỐ VÀNG CAM CHIẾN LƯỢC (Đã lọc bỏ rủi ro / gan sâu)
             </h3>
-            <div id="suggestedNumbersList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                <span class="text-slate-400 text-xs italic col-span-full">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị danh sách vàng...</span>
+            <div id="suggestedNumbersList" class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto">
+                <span class="text-slate-400 text-xs italic col-span-full text-center py-4">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị dàn 3 số...</span>
             </div>
         </div>
 
@@ -217,8 +217,8 @@
             document.getElementById('final2D').innerText = "--";
             document.getElementById('final3DList').innerHTML = '<span class="text-2xl font-extrabold tracking-wider text-yellow-400">---</span>';
             document.getElementById('detail3DHint').innerText = "(Hàng trăm dịch bóng)";
-            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA VÀNG (Đã lọc bỏ số rủi ro / gan sâu)";
-            document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic col-span-full">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị danh sách vàng...</span>';
+            document.getElementById('sectionTitleSuggest').innerText = "🔥 DÀN 3 SỐ VÀNG CAM CHIẾN LƯỢC (Đã lọc bỏ rủi ro / gan sâu)";
+            document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic col-span-full text-center py-4">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị dàn 3 số...</span>';
             
             document.getElementById('panelTitle').innerText = "📋 Chi Tiết Giải Ngày Đã Chọn";
             document.getElementById('panelBody').innerHTML = '<p class="text-slate-400 italic text-center py-6">Vui lòng chọn ngày ở ô tra cứu bên trên để xem kết quả chi tiết tại đây.</p>';
@@ -545,7 +545,7 @@
             }
         }
 
-        // --- TẦNG LỌC VÀNG: TỰ ĐỘNG BỎ SỐ RỦI RO, CHỈ HIỂN THỊ SỐ SÁNG GIÁ ---
+        // --- TẦNG RÚT GỌN ĐÚNG 3 SỐ VÀNG CAM CHIẾN LƯỢC ---
         function layPhanGiaoCacMoHinh() {
             if (!lastCachedResults) {
                 alert("Vui lòng bấm 'Chạy Phân Tích' trước!");
@@ -590,43 +590,37 @@
             let lastSeen = {};
             allLoList.forEach((num, idx) => { if (!(num in lastSeen)) lastSeen[num] = idx; });
 
-            // 🛑 LỌC BỎ HOÀN TOÀN CÁC SỐ BỊ GAN SÂU (GAN > 30 KỲ) ĐỂ TRÁNH MA TRẬN RÁC
+            // Lọc bỏ số có gan quá sâu (> 30 kỳ)
             filteredIntersection = filteredIntersection.filter(([num, score]) => {
                 let ganVal = lastSeen[num] !== undefined ? lastSeen[num] : 99;
-                return ganVal <= 30; // Chỉ giữ lại các số có nhịp gan an toàn từ 30 kỳ trở xuống
+                return ganVal <= 30;
             });
 
             filteredIntersection.sort((a, b) => b[1] - a[1]);
 
-            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA VÀNG (Đã lọc bỏ số rủi ro / gan sâu)";
+            // 🛑 CỐ ĐỊNH CHỈ LẤY ĐÚNG TOP 3 CON SỐ HÀNG ĐẦU
+            filteredIntersection = filteredIntersection.slice(0, 3);
+
+            document.getElementById('sectionTitleSuggest').innerText = "🔥 DÀN 3 SỐ VÀNG CAM CHIẾN LƯỢC";
             
             let intersectionHtml = filteredIntersection.map(([num, totalScore], idx) => {
                 let count = countMap[num];
                 let modelsList = modelSourceMap[num].join(', ');
                 let ganVal = lastSeen[num] !== undefined ? lastSeen[num] : 0;
 
-                let recommendation = "";
-                let cardStyle = "";
-
-                if (count >= 3 && ganVal <= 15) {
-                    recommendation = '<span class="mt-1 px-2 py-0.5 bg-emerald-500 text-slate-950 font-bold text-[9px] rounded-full">⭐ RẤT SÁNG (NÊN CHỌN)</span>';
-                    cardStyle = "bg-gradient-to-b from-amber-500/20 to-slate-900 border-amber-500/60 ring-2 ring-amber-400/50 shadow-lg";
-                } else {
-                    recommendation = '<span class="mt-1 px-2 py-0.5 bg-blue-500 text-white font-semibold text-[9px] rounded-full">👍 CÂN NHẮC (ĐÁNH NHẸ)</span>';
-                    cardStyle = "bg-slate-900/80 border-slate-700";
-                }
+                // Đồng bộ thiết kế màu vàng cam hoàn toàn, không phân loại nhãn rườm rà
+                let cardStyle = "bg-gradient-to-b from-amber-500/20 to-slate-900 border-amber-500/60 ring-2 ring-amber-400/40 shadow-lg";
                 
-                return `<div title="Đề xuất: ${modelsList} | Trọng số: ${Math.round(totalScore)}đ | Nhịp gan: ${ganVal} kỳ" class="${cardStyle} p-3 rounded-xl border text-center flex flex-col items-center justify-between cursor-help transition-transform hover:scale-105">
-                    <span class="text-2xl font-extrabold text-yellow-400 tracking-wider">${num}</span>
-                    <div class="flex flex-col items-center gap-0.5 mt-1">
-                        <span class="text-[10px] text-slate-300 font-medium">⚡ ${count} mô hình (${Math.round(totalScore)}đ)</span>
-                        <span class="text-[9px] text-slate-400">Gan: ${ganVal} kỳ</span>
-                        ${recommendation}
+                return `<div title="Đề xuất: ${modelsList} | Trọng số: ${Math.round(totalScore)}đ | Nhịp gan: ${ganVal} kỳ" class="${cardStyle} p-4 rounded-xl border text-center flex flex-col items-center justify-between cursor-help transition-transform hover:scale-105">
+                    <span class="text-3xl font-extrabold text-amber-400 tracking-wider">${num}</span>
+                    <div class="flex flex-col items-center gap-1 mt-2">
+                        <span class="text-[11px] text-slate-300 font-medium">⚡ ${count} mô hình (${Math.round(totalScore)}đ)</span>
+                        <span class="text-[10px] text-amber-200/80">Nhịp gan: ${ganVal} kỳ</span>
                     </div>
                 </div>`;
             }).join('');
 
-            document.getElementById('suggestedNumbersList').innerHTML = intersectionHtml || '<span class="text-slate-400 text-xs italic col-span-full">Không tìm thấy con số nào đạt chuẩn an toàn trong kỳ này.</span>';
+            document.getElementById('suggestedNumbersList').innerHTML = intersectionHtml || '<span class="text-slate-400 text-xs italic col-span-full text-center py-4">Không tìm thấy con số nào đạt chuẩn an toàn trong kỳ này.</span>';
         }
 
         function veBieuDoDanhGia(models) {
