@@ -18,7 +18,7 @@
         <header class="mb-6 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
             <div>
                 <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis</h1>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">9999</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Lọc thông minh qua Trọng số Phong độ Ngắn hạn & Chống rò rỉ tương lai.</p>
             </div>
             <div class="flex items-center gap-2">
                 <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 p-2 rounded-lg transition-all shadow-sm text-xs flex items-center gap-1.5">
@@ -76,7 +76,7 @@
 
             <div>
                 <button onclick="layPhanGiaoCacMoHinh()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 px-4 rounded-lg transition-all shadow-md text-sm">
-                    🔗 Lấy Phần Giao
+                    🔗 Chắt Lọc Giao Thoa
                 </button>
             </div>
         </div>
@@ -85,14 +85,12 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
             <div class="lg:col-span-2 bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-xl border border-indigo-500/30 flex flex-col justify-between">
                 <div>
-                    <h3 id="resultTitleBanner" class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4 text-center">🎯 TỔ HỢP TOP 3 GIAO THOA & SONG THỦ CHỦ LỰC</h3>
+                    <h3 id="resultTitleBanner" class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4 text-center">🎯 KẾT QUẢ TÂM ĐIỂM ĐỘNG & 3 CÀNG BÓNG ÂM DƯƠNG</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto mb-4">
                         <div class="bg-white/5 backdrop-blur px-4 py-3 rounded-xl border border-white/10 text-center">
-                            <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp Song Thủ (Từ Top 3 Giao Thoa)</p>
-                            <div id="final2D" class="flex justify-center gap-2 mt-1">
-                                <span class="text-3xl font-extrabold tracking-wider text-yellow-400">--</span>
-                            </div>
-                            <span id="actualCompareNote" class="text-[11px] text-slate-300 mt-2 block">(Đồng thuận từ 9 mô hình)</span>
+                            <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp 2 Chữ Số Chủ Lực</p>
+                            <span id="final2D" class="text-4xl font-extrabold tracking-wider text-yellow-400 mt-1 block">--</span>
+                            <span id="actualCompareNote" class="text-[11px] text-slate-300 mt-2 block">(Đồng thuận trọng số ngắn hạn)</span>
                         </div>
                         <div class="bg-white/5 backdrop-blur px-4 py-3 rounded-xl border border-white/10 text-center">
                             <p class="text-[11px] text-indigo-200 uppercase font-semibold">Top 3 Càng Bóng Âm Dương</p>
@@ -117,13 +115,13 @@
             </div>
         </div>
 
-        <!-- KHU VỰC TÂM ĐIỂM GIAO THOA & ĐỊNH LƯỢNG -->
+        <!-- KHU VỰC TÂM ĐIỂM GIAO THOA ĐỘNG -->
         <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6">
             <h3 id="sectionTitleSuggest" class="text-xs font-bold uppercase tracking-wider text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">
-                🔗 TÂM ĐIỂM GIAO THOA (Đã lọc qua Tầng Định Lượng Nhịp Rơi & Trọng Số)
+                🔗 TÂM ĐIỂM CHẮT LỌC ĐỘNG (Đã lọc qua Trọng số Phong độ Ngắn hạn)
             </h3>
             <div id="suggestedNumbersList" class="flex flex-wrap gap-2">
-                <span class="text-slate-400 text-xs italic">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị danh sách giao thoa...</span>
+                <span class="text-slate-400 text-xs italic">Bấm "Chạy Phân Tích" hoặc "Chắt Lọc Giao Thoa" để hiển thị...</span>
             </div>
         </div>
 
@@ -216,13 +214,13 @@
         }
 
         function resetUI() {
-            document.getElementById('final2D').innerHTML = '<span class="text-3xl font-extrabold tracking-wider text-yellow-400">--</span>';
+            document.getElementById('final2D').innerText = "--";
             document.getElementById('final3DList').innerHTML = '<span class="text-2xl font-extrabold tracking-wider text-yellow-400">---</span>';
             document.getElementById('detail3DHint').innerText = "(Hàng trăm dịch bóng)";
-            document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình)";
-            document.getElementById('resultTitleBanner').innerText = "🎯 TỔ HỢP TOP 3 GIAO THOA & SONG THỦ CHỦ LỰC";
-            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA (Đã lọc qua Tầng Định Lượng Nhịp Rơi & Trọng Số)";
-            document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị danh sách giao thoa...</span>';
+            document.getElementById('actualCompareNote').innerText = "(Đồng thuận trọng số ngắn hạn)";
+            document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ TÂM ĐIỂM ĐỘNG & 3 CÀNG BÓNG ÂM DƯƠNG";
+            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM CHẮT LỌC ĐỘNG (Đã lọc qua Trọng số Phong độ Ngắn hạn)";
+            document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic">Bấm "Chạy Phân Tích" hoặc "Chắt Lọc Giao Thoa" để hiển thị...</span>';
             
             document.getElementById('panelTitle').innerText = "📋 Chi Tiết Giải Ngày Đã Chọn";
             document.getElementById('panelBody').innerHTML = '<p class="text-slate-400 italic text-center py-6">Vui lòng chọn ngày ở ô "Tra cứu nhanh" bên trên để xem kết quả chi tiết tại đây.</p>';
@@ -500,36 +498,25 @@
                 let scores = tinhDiemDongTuLichSu(lichSuQuay);
                 window.lastModelScores = scores;
 
-                // --- TÍNH TOÁN TOP 3 GIAO THOA VÀ TẠO CẶP SONG THỦ CHỦ LỰC ---
-                let scoreMap = {};
-                let countMap = {};
-                Object.keys(results).forEach(mName => {
-                    let preds = [...new Set(results[mName])];
-                    let modelWeight = scores[mName] || 50;
-                    preds.forEach(num => {
-                        countMap[num] = (countMap[num] || 0) + 1;
-                        scoreMap[num] = (scoreMap[num] || 0) + modelWeight;
+                // TÍNH TOÁN KẾT QUẢ CHỦ LỰC DỰA TRÊN THUẬT TOÁN MỚI
+                let scoreBoard = {};
+                for(let i=0; i<100; i++) scoreBoard[i < 10 ? '0' + i : '' + i] = 0;
+
+                let addScore = (preds, weightMultiplier) => {
+                    preds.forEach((num, idx) => {
+                        if(scoreBoard[num] !== undefined) {
+                            scoreBoard[num] += (preds.length - idx) * (weightMultiplier / 50);
+                        }
                     });
+                };
+
+                Object.keys(results).forEach(mName => {
+                    addScore(results[mName], scores[mName] || 50);
                 });
 
-                let intersectionSorted = Object.entries(scoreMap).filter(([num, score]) => countMap[num] >= 2);
-                intersectionSorted.sort((a, b) => b[1] - a[1]);
+                let sortedConsensus = Object.entries(scoreBoard).sort((a, b) => b[1] - a[1]);
+                let final2DNum = sortedConsensus[0][0];
 
-                // Lấy Top 3 số giao thoa mạnh nhất
-                let top3 = intersectionSorted.slice(0, 3).map(([num]) => num);
-                
-                // Ghép cặp Song Thủ từ Top 3 (Ví dụ: Lấy 2 số sáng giá nhất làm Song Thủ)
-                let songThu1 = top3[0] || "50";
-                let songThu2 = top3[1] || "05";
-
-                // Hiển thị cặp song thủ lên Banner lớn
-                document.getElementById('final2D').innerHTML = `
-                    <span class="bg-yellow-500 text-slate-950 px-3 py-1 rounded-xl text-2xl font-extrabold shadow">${songThu1}</span>
-                    <span class="text-indigo-300 text-xl font-bold">-</span>
-                    <span class="bg-amber-500 text-slate-950 px-3 py-1 rounded-xl text-2xl font-extrabold shadow">${songThu2}</span>
-                `;
-
-                // Tính toán 3 Càng
                 let allDeList = subset.map(item => item.gdb ? item.gdb.toString().slice(-2) : "").filter(Boolean);
                 let latestDe = allDeList[0] || "53";
                 let sumDe = (parseInt(latestDe[0]) + parseInt(latestDe[1])) % 10;
@@ -539,35 +526,32 @@
                 let hDuong = bongDuongMap[hBase] || hBase;
                 let hAm = bongAmMap[hBase] || hBase;
                 let topHundreds = [...new Set([hBase, hDuong, hAm])].slice(0, 3);
-                let list3D = topHundreds.map(h => h + songThu1);
+                let list3D = topHundreds.map(h => h + final2DNum);
 
+                document.getElementById('final2D').innerText = final2DNum;
                 let html3D = list3D.map((val, idx) => `<span class="${idx === 0 ? 'text-yellow-400 font-extrabold' : 'text-indigo-200 font-bold'} text-xl px-2 py-0.5 bg-black/20 rounded border border-white/10">${val}</span>`).join('');
                 document.getElementById('final3DList').innerHTML = html3D;
                 document.getElementById('detail3DHint').innerText = `(Hàng trăm dịch bóng từ tổng ${latestDe}: ${topHundreds.join(', ')})`;
 
-                // Đối chiếu backtest thực tế (nếu có)
-                let compareHtml = `
-                    <div class="mt-2 text-left border-t border-white/10 pt-2 text-[11px] text-slate-200">
-                        <p class="font-bold text-indigo-300 uppercase mb-0.5">🎯 Top 3 Giao Thoa Kỳ Này:</p>
-                        <span class="text-yellow-300 font-bold">${top3.join(', ')}</span> (Đề xuất Song thủ: <strong class="text-amber-400">${songThu1}, ${songThu2}</strong>)
-                    </div>
-                `;
-
                 if (actualDrawData) {
                     let actualDBVal = actualDrawData.gdb ? actualDrawData.gdb.toString() : "";
                     let actual2D = actualDBVal.slice(-2);
-                    let isHitSongThu = (actual2D === songThu1 || actual2D === songThu2);
-                    let isHitTop3 = top3.includes(actual2D);
+                    let isMatch2D = (final2DNum === actual2D);
+                    let isMatch3D = list3D.includes(actualDBVal);
 
                     document.getElementById('resultTitleBanner').innerText = `🔍 TỪ NGÀY ${targetBacktestDate} ➔ ĐỐI CHIẾU KỲ ${targetDisplayDate}`;
                     
-                    let hitColor = isHitSongThu ? "text-emerald-400 font-bold" : (isHitTop3 ? "text-yellow-400 font-bold" : "text-rose-400 font-bold");
-                    let matchText = `Thực tế ngày ${targetDisplayDate} về ĐB: <strong class="text-yellow-300">${actualDBVal}</strong> | <span class="${hitColor}">${isHitSongThu ? `✅ TRÚNG SONG THỦ (${actual2D})` : (isHitTop3 ? `⚡ TRÚNG TOP 3 GIAO THOA (${actual2D})` : `❌ TRƯỢT (${actual2D})`)}</span><br>`;
+                    let colorClass = (isMatch2D || isMatch3D) ? "text-emerald-400 font-bold" : "text-rose-400 font-bold";
+                    let compareText = `Thực tế ngày ${targetDisplayDate} về ĐB: <strong class="text-yellow-300">${actualDBVal}</strong><br>`;
+                    compareText += `<span class="${colorClass}">`;
+                    compareText += isMatch2D ? `✅ Khớp 2S (${actual2D})` : `❌ Lệch 2S (Thực tế: ${actual2D})`;
+                    if(isMatch3D) compareText += ` | 👑 TRÚNG 3 CÀNG!`;
+                    compareText += `</span>`;
                     
-                    document.getElementById('actualCompareNote').innerHTML = matchText + compareHtml;
+                    document.getElementById('actualCompareNote').innerHTML = compareText;
                 } else {
-                    document.getElementById('resultTitleBanner').innerText = "🎯 TỔ HỢP TOP 3 GIAO THOA & SONG THỦ CHỦ LỰC";
-                    document.getElementById('actualCompareNote').innerHTML = compareHtml;
+                    document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ TÂM ĐIỂM ĐỘNG & 3 CÀNG BÓNG ÂM DƯƠNG";
+                    document.getElementById('actualCompareNote').innerText = "(Đồng thuận trọng số ngắn hạn)";
                 }
 
                 // Hiển thị 9 mô hình gốc
@@ -581,6 +565,7 @@
                 document.getElementById('resultMirror').innerHTML = results['Bù Gương'].map(n => `<span class="bg-emerald-50 dark:bg-emerald-950/65 text-emerald-300 px-2 py-0.5 rounded font-bold text-xs border border-emerald-800">${n}</span>`).join('');
                 document.getElementById('resultBong').innerHTML = results['Bóng Âm Dương'].map(n => `<span class="bg-violet-50 dark:bg-violet-950/65 text-violet-300 px-2 py-0.5 rounded font-bold text-xs border border-violet-800">${n}</span>`).join('');
 
+                // Gọi hàm chắt lọc giao thoa động mới
                 layPhanGiaoCacMoHinh();
 
                 let modelArr = Object.keys(scores).map(name => ({ name, score: Math.round(scores[name]) }));
@@ -606,8 +591,9 @@
             }
         }
 
+        // --- HÀM CHẮT LỌC THÔNG MINH TỪ TOÀN BỘ SỐ GIAO THOA (TRỌNG SỐ NGẮN HẠN) ---
         function layPhanGiaoCacMoHinh() {
-            if (!lastCachedResults) {
+            if (!lastCachedResults || !lastCachedSubset) {
                 alert("Vui lòng bấm 'Chạy Phân Tích' trước!");
                 thucHienPhanTichHoacBacktesting();
                 if (!lastCachedResults) return;
@@ -617,44 +603,71 @@
             let countMap = {};
             let modelSourceMap = {}; 
 
-            let currentScores = window.lastModelScores || { 
+            let shortTermScores = {
                 'Tần Suất': 50, 'Lô Gan': 50, 'Markov': 50, 'Chạm Tổng': 50, 
                 'Thần Học': 50, 'Bạc Nhớ Thứ': 50, 'Delta': 50, 'Bù Gương': 50, 'Bóng Âm Dương': 50 
             };
 
+            if (lastCachedLichSu && lastCachedLichSu.length >= 5) {
+                for (let i = 5; i >= 1; i--) {
+                    let targetDraw = lastCachedLichSu[i];
+                    let actualDraw = lastCachedLichSu[i - 1];
+                    if (!targetDraw || !actualDraw) continue;
+                    
+                    let pastSubset = lastCachedLichSu.slice(i);
+                    let pastResults = chay9MoHinhNoiBo(pastSubset, lastCachedLichSu);
+                    let actual2D = actualDraw.gdb ? actualDraw.gdb.toString().slice(-2) : "";
+
+                    Object.keys(pastResults).forEach(mName => {
+                        if (pastResults[mName].includes(actual2D)) {
+                            shortTermScores[mName] = (shortTermScores[mName] || 50) + 5;
+                        } else {
+                            shortTermScores[mName] = Math.max(20, (shortTermScores[mName] || 50) - 2);
+                        }
+                    });
+                }
+            }
+
             Object.keys(lastCachedResults).forEach(mName => {
                 let preds = [...new Set(lastCachedResults[mName])];
-                let modelWeight = currentScores[mName] || 50;
+                let momentumWeight = shortTermScores[mName] || 50;
 
-                preds.forEach(num => {
-                    countMap[num] = (countMap[num] || 0) + 1;
-                    scoreMap[num] = (scoreMap[num] || 0) + modelWeight; 
+                if (momentumWeight >= 45) {
+                    preds.forEach(num => {
+                        countMap[num] = (countMap[num] || 0) + 1;
+                        scoreMap[num] = (scoreMap[num] || 0) + momentumWeight; 
 
-                    if (!modelSourceMap[num]) modelSourceMap[num] = [];
-                    modelSourceMap[num].push(mName);
-                });
+                        if (!modelSourceMap[num]) modelSourceMap[num] = [];
+                        modelSourceMap[num].push(`${mName} (${Math.round(momentumWeight)}đ)`);
+                    });
+                }
             });
 
             let filteredIntersection = Object.entries(scoreMap).filter(([num, score]) => countMap[num] >= 2);
             filteredIntersection.sort((a, b) => b[1] - a[1]);
 
-            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA (Đã lọc qua Tầng Định Lượng Nhịp Rơi & Trọng Số)";
+            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM CHẮT LỌC ĐỘNG (Đã lọc qua Trọng số Phong độ Ngắn hạn)";
             
             let intersectionHtml = filteredIntersection.map(([num, totalScore], idx) => {
                 let count = countMap[num];
                 let modelsList = modelSourceMap[num].join(', ');
-                let badgeColor = "";
-                if (idx === 0) badgeColor = "bg-yellow-500 text-slate-950 font-extrabold ring-4 ring-yellow-300 scale-110 shadow-lg z-10";
-                else if (idx <= 2) badgeColor = "bg-amber-500 text-slate-950 font-extrabold ring-2 ring-amber-300";
-                else badgeColor = "bg-emerald-600 text-white font-bold";
                 
-                return `<div title="Đề xuất bởi: ${modelsList} | Điểm: ${Math.round(totalScore)}" class="${badgeColor} px-3.5 py-2.5 rounded-xl text-center text-sm flex flex-col items-center cursor-help transition-transform hover:scale-110">
+                let badgeColor = "";
+                if (idx === 0) {
+                    badgeColor = "bg-yellow-500 text-slate-950 font-extrabold ring-4 ring-yellow-300 scale-110 shadow-lg z-10";
+                } else if (idx <= 2) {
+                    badgeColor = "bg-amber-500 text-slate-950 font-extrabold ring-2 ring-amber-300";
+                } else {
+                    badgeColor = "bg-emerald-600 text-white font-bold";
+                }
+                
+                return `<div title="Đề xuất bởi: ${modelsList}" class="${badgeColor} px-3.5 py-2.5 rounded-xl text-center text-sm flex flex-col items-center cursor-help transition-transform hover:scale-110">
                     <span class="text-xl tracking-wider">${num}</span>
-                    <span class="text-[9px] opacity-90 font-semibold mt-0.5">⚡ ${count} mô hình (${Math.round(totalScore)}đ)</span>
+                    <span class="text-[9px] opacity-90 font-semibold mt-0.5">🔥 Điểm Động: ${Math.round(totalScore)}đ</span>
                 </div>`;
             }).join('');
 
-            document.getElementById('suggestedNumbersList').innerHTML = intersectionHtml || '<span class="text-slate-400 text-xs italic">Không tìm thấy con số nào đạt chuẩn.</span>';
+            document.getElementById('suggestedNumbersList').innerHTML = intersectionHtml || '<span class="text-slate-400 text-xs italic">Không tìm thấy con số nào vượt qua tầng lọc phong độ ngắn hạn.</span>';
         }
 
         function veBieuDoDanhGia(models) {
@@ -666,7 +679,7 @@
                 backgroundColor: 'transparent',
                 tooltip: { trigger: 'axis' },
                 xAxis: { type: 'category', data: models.map(m => m.name), axisLabel: { color: isDark ? '#cbd5e1' : '#334155', interval: 0, rotate: 15, fontSize: 10 } },
-                yAxis: { type: 'value', max: 120, axisLabel: { color: isDark ? '#cbd5e1' : '#334155' }, splitLine: { lineStyle: { color: isDark ? '#334155' : '#e2e8f0' } } },
+                yAxis: { type: 'value', max: 120, axisLabel: { color: isDark ? '#cbd5e1' : '#334155' }, splitLine: { lineStyle: { color: isDark ? '#cbd5e1' : '#e2e8f0' } } },
                 series: [{
                     data: models.map(m => m.score), type: 'bar',
                     itemStyle: { color: (params) => params.dataIndex === 0 ? '#6366f1' : (isDark ? '#334155' : '#cbd5e1') },
