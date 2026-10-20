@@ -30,11 +30,11 @@
         <!-- Bảng điều khiển -->
         <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6 grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
             <div>
-                <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Chọn Đài:</label>
+                <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Chọn Đài Miền Trung:</label>
                 <select id="selectDai" onchange="onDaiChange()" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none text-sm focus:ring-2 focus:ring-indigo-500">
                     <option value="phuyen">Thứ 2 - Phú Yên</option>
                     <option value="hue">Thứ 2 - Thừa Thiên Huế</option>
-                    <option value="daklak">Thứ 3 - Đắk Lắk</option>
+                    <option value="daklak" selected>Thứ 3 - Đắk Lắk</option>
                     <option value="quangnam">Thứ 3 - Quảng Nam</option>
                     <option value="khanhhoa">Thứ 4 - Khánh Hòa</option>
                     <option value="danang_t4">Thứ 4 - Đà Nẵng</option>
@@ -46,7 +46,7 @@
                     <option value="danang">Thứ 7 - Đà Nẵng</option>
                     <option value="quangngai">Thứ 7 - Quảng Ngãi</option>
                     <option value="daknong">Thứ 7 - Đắk Nông</option>
-                    <option value="kontum" selected>Chủ Nhật - Kon Tum</option>
+                    <option value="kontum">Chủ Nhật - Kon Tum</option>
                     <option value="khanhhoa_cn">Chủ Nhật - Khánh Hòa</option>
                     <option value="hue_cn">Chủ Nhật - Thừa Thiên Huế</option>
                 </select>
@@ -118,7 +118,7 @@
         <!-- KHU VỰC TÂM ĐIỂM GIAO THOA -->
         <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6">
             <h3 id="sectionTitleSuggest" class="text-xs font-bold uppercase tracking-wider text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">
-                🔗 TÂM ĐIỂM GIAO THOA (Chỉ lọc các số xuất hiện từ 2 mô hình trở lên)
+                🔗 TÂM ĐIỂM GIAO THOA (Sắp xếp theo độ uy tín mô hình & Đồng thuận từ 2+)
             </h3>
             <div id="suggestedNumbersList" class="flex flex-wrap gap-2">
                 <span class="text-slate-400 text-xs italic">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị danh sách giao thoa...</span>
@@ -183,6 +183,7 @@
     <script>
         let currentLoadedJson = null;
         let lastCachedResults = null; 
+        window.lastModelScores = null;
 
         window.onload = function() {
             resetUI();
@@ -204,6 +205,7 @@
         function onDaiChange() {
             currentLoadedJson = null;
             lastCachedResults = null;
+            window.lastModelScores = null;
             resetUI();
         }
 
@@ -213,7 +215,7 @@
             document.getElementById('detail3DHint').innerText = "(Hàng trăm dịch bóng)";
             document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình)";
             document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH & 3 CÀNG BÓNG ÂM DƯƠNG";
-            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA (Chỉ lọc các số xuất hiện từ 2 mô hình trở lên)";
+            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA (Sắp xếp theo độ uy tín mô hình & Đồng thuận từ 2+)";
             document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị danh sách giao thoa...</span>';
             
             document.getElementById('panelTitle').innerText = "📋 Chi Tiết Giải Ngày Đã Chọn";
@@ -310,7 +312,7 @@
             document.getElementById('panelBody').innerHTML = html;
         }
 
-        // --- HÀM PHÂN TÍCH ĐỘC LẬP 9 MÔ HÌNH ---
+        // --- HÀM PHÂN TÍCH ĐỘC LẬP 9 MÔ HÌNH (MIỀN TRUNG) ---
         function chay9MoHinhNoiBo(subset, lichSuQuay) {
             let allLoList = [], deList = [], allNumRaw = [];
             subset.forEach(item => {
@@ -350,7 +352,7 @@
             let latestNum = deList[0] || "53";
             let m3 = transitionMap[latestNum] ? Object.entries(transitionMap[latestNum]).sort((a,b) => b[1] - a[1]).slice(0, 5).map(([n]) => n) : [];
 
-            // 4. Chạm & Tổng Đề (Tự động bung số cụ thể)
+            // 4. Chạm & Tổng Đề (Tự động bung danh sách số cụ thể)
             let dauCount = {}, tongCount = {};
             deList.forEach(num => {
                 if(num.length === 2) {
@@ -486,6 +488,7 @@
                 let results = chay9MoHinhNoiBo(subset, lichSuQuay);
                 lastCachedResults = results; 
                 let scores = tinhDiemDongTuLichSu(lichSuQuay);
+                window.lastModelScores = scores; // Lưu lại để dùng cho hàm giao thoa trọng số
 
                 let scoreBoard = {};
                 for(let i=0; i<100; i++) scoreBoard[i < 10 ? '0' + i : '' + i] = 0;
@@ -556,7 +559,7 @@
                 document.getElementById('resultMirror').innerHTML = results['Bù Gương'].map(n => `<span class="bg-emerald-50 dark:bg-emerald-950/65 text-emerald-300 px-2 py-0.5 rounded font-bold text-xs border border-emerald-800">${n}</span>`).join('');
                 document.getElementById('resultBong').innerHTML = results['Bóng Âm Dương'].map(n => `<span class="bg-violet-50 dark:bg-violet-950/65 text-violet-300 px-2 py-0.5 rounded font-bold text-xs border border-violet-800">${n}</span>`).join('');
 
-                // 2. Tự động quét và đẩy các số giao thoa từ 2 mô hình trở lên lên ô "Tâm điểm giao thoa" phía trên
+                // 2. Tự động quét và đẩy các số giao thoa lên ô phía trên (sắp xếp theo trọng số điểm)
                 layPhanGiaoCacMoHinh();
 
                 let modelArr = Object.keys(scores).map(name => ({ name, score: Math.round(scores[name]) }));
@@ -582,7 +585,7 @@
             }
         }
 
-        // --- HÀM LẤY PHẦN GIAO (QUÉT CÁC SỐ TRÙNG LẶP TỪ 2 MÔ HÌNH TRỞ LÊN) ---
+        // --- HÀM LẤY PHẦN GIAO THÔNG MINH (SẮP XẾP THEO TRỌNG SỐ MÔ HÌNH) ---
         function layPhanGiaoCacMoHinh() {
             if (!lastCachedResults) {
                 alert("Vui lòng bấm 'Chạy Phân Tích' trước để hệ thống sinh dữ liệu các mô hình!");
@@ -590,37 +593,54 @@
                 if (!lastCachedResults) return;
             }
 
+            let scoreMap = {};
             let countMap = {};
             let modelSourceMap = {}; 
 
+            let currentScores = window.lastModelScores || { 
+                'Tần Suất': 50, 'Lô Gan': 50, 'Markov': 50, 'Chạm Tổng': 50, 
+                'Thần Học': 50, 'Bạc Nhớ Thứ': 50, 'Delta': 50, 'Bù Gương': 50, 'Bóng Âm Dương': 50 
+            };
+
             Object.keys(lastCachedResults).forEach(mName => {
                 let preds = [...new Set(lastCachedResults[mName])];
+                let modelWeight = currentScores[mName] || 50;
+
                 preds.forEach(num => {
                     countMap[num] = (countMap[num] || 0) + 1;
+                    scoreMap[num] = (scoreMap[num] || 0) + modelWeight; 
+
                     if (!modelSourceMap[num]) modelSourceMap[num] = [];
                     modelSourceMap[num].push(mName);
                 });
             });
 
-            // Chỉ lấy các số xuất hiện từ 2 mô hình trở lên
-            let filteredIntersection = Object.entries(countMap).filter(([num, count]) => count >= 2);
+            // Vẫn lấy từ 2 mô hình trở lên để không bỏ sót số, nhưng sắp xếp theo tổng điểm trọng số uy tín
+            let filteredIntersection = Object.entries(scoreMap).filter(([num, score]) => countMap[num] >= 2);
             filteredIntersection.sort((a, b) => b[1] - a[1]);
 
-            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA (Chỉ lọc các số xuất hiện từ 2 mô hình trở lên)";
+            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA (Sắp xếp theo độ uy tín mô hình & Đồng thuận từ 2+)";
             
-            let intersectionHtml = filteredIntersection.map(([num, count]) => {
+            let intersectionHtml = filteredIntersection.map(([num, totalScore], idx) => {
+                let count = countMap[num];
                 let modelsList = modelSourceMap[num].join(', ');
-                let badgeColor = count >= 3 
-                    ? "bg-amber-500 text-slate-950 font-extrabold ring-2 ring-amber-300 scale-105" 
-                    : "bg-emerald-600 text-white font-bold ring-2 ring-emerald-400";
                 
-                return `<div title="Được đề xuất bởi các mô hình: ${modelsList}" class="${badgeColor} px-3 py-2 rounded-xl text-center text-sm flex flex-col items-center shadow-md cursor-help transition-transform hover:scale-110">
-                    <span class="text-lg tracking-wider">${num}</span>
-                    <span class="text-[10px] opacity-90 font-semibold">⚡ ${count} mô hình</span>
+                let badgeColor = "";
+                if (idx === 0) {
+                    badgeColor = "bg-yellow-500 text-slate-950 font-extrabold ring-4 ring-yellow-300 scale-110 shadow-lg z-10";
+                } else if (idx <= 2) {
+                    badgeColor = "bg-amber-500 text-slate-950 font-extrabold ring-2 ring-amber-300";
+                } else {
+                    badgeColor = "bg-emerald-600 text-white font-bold";
+                }
+                
+                return `<div title="Được đề xuất bởi: ${modelsList} | Tổng điểm uy tín: ${Math.round(totalScore)}" class="${badgeColor} px-3.5 py-2.5 rounded-xl text-center text-sm flex flex-col items-center cursor-help transition-transform hover:scale-110">
+                    <span class="text-xl tracking-wider">${num}</span>
+                    <span class="text-[9px] opacity-90 font-semibold mt-0.5">⚡ ${count} mô hình (${Math.round(totalScore)}đ)</span>
                 </div>`;
             }).join('');
 
-            document.getElementById('suggestedNumbersList').innerHTML = intersectionHtml || '<span class="text-slate-400 text-xs italic">Không tìm thấy con số nào có từ 2 mô hình đồng thuận trở lên trong kỳ này.</span>';
+            document.getElementById('suggestedNumbersList').innerHTML = intersectionHtml || '<span class="text-slate-400 text-xs italic">Không tìm thấy con số nào đạt điều kiện giao thoa trong kỳ này.</span>';
         }
 
         function veBieuDoDanhGia(models) {
