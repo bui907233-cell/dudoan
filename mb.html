@@ -18,7 +18,7 @@
         <header class="mb-6 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
             <div>
                 <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis</h1>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Phân tích...</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">VSS</p>
             </div>
             <div class="flex items-center gap-2">
                 <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 p-2 rounded-lg transition-all shadow-sm text-xs flex items-center gap-1.5">
@@ -78,9 +78,9 @@
                     <h3 id="resultTitleBanner" class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4 text-center">🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH & 3 CÀNG BÓNG ÂM DƯƠNG</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto mb-4">
                         <div class="bg-white/5 backdrop-blur px-4 py-3 rounded-xl border border-white/10 text-center">
-                            <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp 2 Chữ Số Tối Ưu</p>
+                            <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp 2 Chữ Số Chủ Lực</p>
                             <span id="final2D" class="text-4xl font-extrabold tracking-wider text-yellow-400 mt-1 block">--</span>
-                            <span id="actualCompareNote" class="text-[11px] text-slate-300 mt-2 block">(Đồng thuận từ 9 mô hình)</span>
+                            <span id="actualCompareNote" class="text-[11px] text-slate-300 mt-2 block">(Top 1 Dàn 3 Số Vàng Cam)</span>
                         </div>
                         <div class="bg-white/5 backdrop-blur px-4 py-3 rounded-xl border border-white/10 text-center">
                             <p class="text-[11px] text-indigo-200 uppercase font-semibold">Top 3 Càng Bóng Âm Dương</p>
@@ -105,13 +105,13 @@
             </div>
         </div>
 
-        <!-- KHU VỰC TÂM ĐIỂM GIAO THOA -->
+        <!-- KHU VỰC TÂM ĐIỂM GIAO THOA VÀNG CAM (DÀN 3 SỐ) -->
         <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6">
-            <h3 id="sectionTitleSuggest" class="text-xs font-bold uppercase tracking-wider text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">
-                🔗 TÂM ĐIỂM GIAO THOA (Chỉ lọc các số xuất hiện từ 2 mô hình trở lên)
+            <h3 id="sectionTitleSuggest" class="text-xs font-bold uppercase tracking-wider text-amber-400 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">
+                🔥 DÀN 3 SỐ VÀNG CAM CHIẾN LƯỢC (Đã lọc bỏ rủi ro / gan sâu)
             </h3>
-            <div id="suggestedNumbersList" class="flex flex-wrap gap-2">
-                <span class="text-slate-400 text-xs italic">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị danh sách giao thoa...</span>
+            <div id="suggestedNumbersList" class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto">
+                <span class="text-slate-400 text-xs italic col-span-full text-center py-4">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị dàn 3 số...</span>
             </div>
         </div>
 
@@ -173,6 +173,9 @@
     <script>
         let currentLoadedJson = null;
         let lastCachedResults = null; 
+        let lastCachedSubset = null;
+        let lastCachedLichSu = null;
+        window.lastModelScores = null;
 
         window.onload = function() {
             resetUI();
@@ -194,6 +197,9 @@
         function onDaiChange() {
             currentLoadedJson = null;
             lastCachedResults = null;
+            lastCachedSubset = null;
+            lastCachedLichSu = null;
+            window.lastModelScores = null;
             resetUI();
         }
 
@@ -201,10 +207,10 @@
             document.getElementById('final2D').innerText = "--";
             document.getElementById('final3DList').innerHTML = '<span class="text-2xl font-extrabold tracking-wider text-yellow-400">---</span>';
             document.getElementById('detail3DHint').innerText = "(Hàng trăm dịch bóng)";
-            document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình)";
+            document.getElementById('actualCompareNote').innerText = "(Top 1 Dàn 3 Số Vàng Cam)";
             document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH & 3 CÀNG BÓNG ÂM DƯƠNG";
-            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA (Chỉ lọc các số xuất hiện từ 2 mô hình trở lên)";
-            document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị danh sách giao thoa...</span>';
+            document.getElementById('sectionTitleSuggest').innerText = "🔥 DÀN 3 SỐ VÀNG CAM CHIẾN LƯỢC (Đã lọc bỏ rủi ro / gan sâu)";
+            document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic col-span-full text-center py-4">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị dàn 3 số...</span>';
             
             document.getElementById('panelTitle').innerText = "📋 Chi Tiết Giải Ngày Đã Chọn";
             document.getElementById('panelBody').innerHTML = '<p class="text-slate-400 italic text-center py-6">Vui lòng chọn ngày ở ô "Tra cứu nhanh" bên trên để xem kết quả chi tiết tại đây.</p>';
@@ -346,7 +352,7 @@
             let latestNum = deList[0] || "53";
             let m3 = transitionMap[latestNum] ? Object.entries(transitionMap[latestNum]).sort((a,b) => b[1] - a[1]).slice(0, 5).map(([n]) => n) : [];
 
-            // 4. Chạm & Tổng Đề (Tự động bung danh sách số cụ thể)
+            // 4. Chạm & Tổng Đề
             let dauCount = {}, tongCount = {};
             deList.forEach(num => {
                 if(num.length === 2) {
@@ -479,9 +485,13 @@
                     return;
                 }
 
+                lastCachedSubset = subset;
+                lastCachedLichSu = lichSuQuay;
+
                 let results = chay9MoHinhNoiBo(subset, lichSuQuay);
                 lastCachedResults = results; 
                 let scores = tinhDiemDongTuLichSu(lichSuQuay);
+                window.lastModelScores = scores;
 
                 let scoreBoard = {};
                 for(let i=0; i<100; i++) scoreBoard[i < 10 ? '0' + i : '' + i] = 0;
@@ -535,24 +545,21 @@
                     document.getElementById('actualCompareNote').innerHTML = compareText;
                 } else {
                     document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH";
-                    document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình đã phân tích lịch sử)";
+                    document.getElementById('actualCompareNote').innerText = "(Top 1 Dàn 3 Số Vàng Cam)";
                 }
 
-                // 1. Hiển thị đầy đủ kết quả gốc của 9 mô hình ở phía dưới
+                // Hiển thị kết quả 9 mô hình ở phía dưới
                 document.getElementById('resultHot').innerHTML = results['Tần Suất'].slice(0, 6).map(n => `<span class="bg-indigo-50 dark:bg-indigo-950/60 text-indigo-300 px-2 py-0.5 rounded font-bold text-xs border border-indigo-800">${n}</span>`).join('');
                 document.getElementById('resultCold').innerHTML = results['Lô Gan'].slice(0, 6).map(n => `<span class="bg-cyan-50 dark:bg-cyan-950/60 text-cyan-300 px-2 py-0.5 rounded font-bold text-xs border border-cyan-800">${n}</span>`).join('');
                 document.getElementById('resultMarkov').innerHTML = results['Markov'].length > 0 ? results['Markov'].slice(0, 5).map(n => `<span class="bg-purple-50 dark:bg-purple-950/60 text-purple-300 px-2 py-0.5 rounded font-bold text-xs border border-purple-800">${n}</span>`).join('') : '<span class="text-slate-400 text-xs italic">Chưa đủ dữ liệu</span>';
-                
-                // Hiển thị danh sách số cụ thể của Chạm & Tổng
                 document.getElementById('resultCham').innerHTML = results['Chạm Tổng'].slice(0, 6).map(n => `<span class="bg-amber-50 dark:bg-amber-950/60 text-amber-300 px-2 py-0.5 rounded font-bold text-xs border border-amber-800">${n}</span>`).join('') || '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
-                
                 document.getElementById('resultThanHoc').innerHTML = results['Thần Học'].map(n => `<span class="bg-amber-50 dark:bg-amber-950/60 text-amber-300 px-2 py-0.5 rounded font-bold text-xs border border-amber-800">${n}</span>`).join('');
                 document.getElementById('resultBacNho').innerHTML = results['Bạc Nhớ Thứ'].map(n => `<span class="bg-rose-50 dark:bg-rose-950/60 text-rose-300 px-2 py-0.5 rounded font-bold text-xs border border-rose-800">${n}</span>`).join('');
                 document.getElementById('resultDelta').innerHTML = results['Delta'].map(n => `<span class="bg-teal-50 dark:bg-teal-950/60 text-teal-300 px-2 py-0.5 rounded font-bold text-xs border border-teal-800">${n}</span>`).join('');
                 document.getElementById('resultMirror').innerHTML = results['Bù Gương'].map(n => `<span class="bg-emerald-50 dark:bg-emerald-950/60 text-emerald-300 px-2 py-0.5 rounded font-bold text-xs border border-emerald-800">${n}</span>`).join('');
                 document.getElementById('resultBong').innerHTML = results['Bóng Âm Dương'].map(n => `<span class="bg-violet-50 dark:bg-violet-950/60 text-violet-300 px-2 py-0.5 rounded font-bold text-xs border border-violet-800">${n}</span>`).join('');
 
-                // 2. Tự động quét và đẩy các số giao thoa từ 2 mô hình trở lên lên khung "Tâm điểm giao thoa" phía trên
+                // Tự động gọi hàm trích xuất dàn 3 số vàng cam
                 layPhanGiaoCacMoHinh();
 
                 let modelArr = Object.keys(scores).map(name => ({ name, score: Math.round(scores[name]) }));
@@ -578,7 +585,7 @@
             }
         }
 
-        // --- HÀM LẤY PHẦN GIAO (QUÉT CÁC SỐ TRÙNG LẶP TỪ 2 MÔ HÌNH TRỞ LÊN) ---
+        // --- HÀM RÚT GỌN ĐÚNG 3 SỐ VÀNG CAM CHIẾN LƯỢC ---
         function layPhanGiaoCacMoHinh() {
             if (!lastCachedResults) {
                 alert("Vui lòng bấm 'Chạy Phân Tích' trước để hệ thống sinh dữ liệu các mô hình!");
@@ -586,37 +593,78 @@
                 if (!lastCachedResults) return;
             }
 
+            let scoreMap = {};
             let countMap = {};
             let modelSourceMap = {}; 
+            let currentScores = window.lastModelScores || {};
 
             Object.keys(lastCachedResults).forEach(mName => {
                 let preds = [...new Set(lastCachedResults[mName])];
+                let modelWeight = currentScores[mName] || 50;
+
                 preds.forEach(num => {
                     countMap[num] = (countMap[num] || 0) + 1;
+                    scoreMap[num] = (scoreMap[num] || 0) + modelWeight; 
+
                     if (!modelSourceMap[num]) modelSourceMap[num] = [];
                     modelSourceMap[num].push(mName);
                 });
             });
 
-            // Chỉ lấy các số xuất hiện từ 2 mô hình trở lên
-            let filteredIntersection = Object.entries(countMap).filter(([num, count]) => count >= 2);
+            let filteredIntersection = Object.entries(scoreMap).filter(([num, score]) => countMap[num] >= 2);
+
+            let allLoList = [];
+            if (lastCachedSubset) {
+                lastCachedSubset.forEach(item => {
+                    let currentGiais = [
+                        item.gdb, item.g1, 
+                        ...(Array.isArray(item.g2) ? item.g2 : [item.g2]),
+                        ...(Array.isArray(item.g3) ? item.g3 : [item.g3]),
+                        ...(Array.isArray(item.g4) ? item.g4 : [item.g4]),
+                        ...(Array.isArray(item.g5) ? item.g5 : [item.g5]),
+                        ...(Array.isArray(item.g6) ? item.g6 : [item.g6]),
+                        ...(Array.isArray(item.g7) ? item.g7 : [item.g7])
+                    ].filter(Boolean);
+
+                    currentGiais.forEach(g => {
+                        let strG = g.toString();
+                        if(strG.length >= 2) allLoList.push(strG.slice(-2));
+                    });
+                });
+            }
+            let lastSeen = {};
+            allLoList.forEach((num, idx) => { if (!(num in lastSeen)) lastSeen[num] = idx; });
+
+            // Lọc bỏ số có nhịp gan quá sâu (> 30 kỳ)
+            filteredIntersection = filteredIntersection.filter(([num, score]) => {
+                let ganVal = lastSeen[num] !== undefined ? lastSeen[num] : 99;
+                return ganVal <= 30;
+            });
+
             filteredIntersection.sort((a, b) => b[1] - a[1]);
 
-            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA (Chỉ lọc các số xuất hiện từ 2 mô hình trở lên)";
+            // 🛑 CỐ ĐỊNH CHỈ LẤY ĐÚNG TOP 3 CON SỐ HÀNG ĐẦU
+            filteredIntersection = filteredIntersection.slice(0, 3);
+
+            document.getElementById('sectionTitleSuggest').innerText = "🔥 DÀN 3 SỐ VÀNG CAM CHIẾN LƯỢC";
             
-            let intersectionHtml = filteredIntersection.map(([num, count]) => {
+            let intersectionHtml = filteredIntersection.map(([num, totalScore], idx) => {
+                let count = countMap[num];
                 let modelsList = modelSourceMap[num].join(', ');
-                let badgeColor = count >= 3 
-                    ? "bg-amber-500 text-slate-950 font-extrabold ring-2 ring-amber-300 scale-105" 
-                    : "bg-emerald-600 text-white font-bold ring-2 ring-emerald-400";
+                let ganVal = lastSeen[num] !== undefined ? lastSeen[num] : 0;
+
+                let cardStyle = "bg-gradient-to-b from-amber-500/20 to-slate-900 border-amber-500/60 ring-2 ring-amber-400/40 shadow-lg";
                 
-                return `<div title="Được đề xuất bởi các mô hình: ${modelsList}" class="${badgeColor} px-3 py-2 rounded-xl text-center text-sm flex flex-col items-center shadow-md cursor-help transition-transform hover:scale-110">
-                    <span class="text-lg tracking-wider">${num}</span>
-                    <span class="text-[10px] opacity-90 font-semibold">⚡ ${count} mô hình</span>
+                return `<div title="Đề xuất: ${modelsList} | Trọng số: ${Math.round(totalScore)}đ | Nhịp gan: ${ganVal} kỳ" class="${cardStyle} p-4 rounded-xl border text-center flex flex-col items-center justify-between cursor-help transition-transform hover:scale-105">
+                    <span class="text-3xl font-extrabold text-amber-400 tracking-wider">${num}</span>
+                    <div class="flex flex-col items-center gap-1 mt-2">
+                        <span class="text-[11px] text-slate-300 font-medium">⚡ ${count} mô hình (${Math.round(totalScore)}đ)</span>
+                        <span class="text-[10px] text-amber-200/80">Nhịp gan: ${ganVal} kỳ</span>
+                    </div>
                 </div>`;
             }).join('');
 
-            document.getElementById('suggestedNumbersList').innerHTML = intersectionHtml || '<span class="text-slate-400 text-xs italic">Không tìm thấy con số nào có từ 2 mô hình đồng thuận trở lên trong kỳ này.</span>';
+            document.getElementById('suggestedNumbersList').innerHTML = intersectionHtml || '<span class="text-slate-400 text-xs italic col-span-full text-center py-4">Không tìm thấy con số nào đạt chuẩn an toàn trong kỳ này.</span>';
         }
 
         function veBieuDoDanhGia(models) {
