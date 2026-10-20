@@ -125,7 +125,7 @@
             </div>
         </div>
 
-        <!-- CHI TIẾT PHÂN TÍCH 9 MÔ HÌNH (HIỂN THỊ ĐỦ KẾT QUẢ GỐC) -->
+        <!-- CHI TIẾT PHÂN TÍCH 9 MÔ HÌNH -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
                 <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2">🔥 1. Tần Suất 2 Số</h3>
@@ -140,7 +140,7 @@
 
             <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
                 <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2">⚡ 4. Chạm & Tổng Đề</h3>
-                <div id="resultCham" class="text-xs space-y-1"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
+                <div id="resultCham" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
 
                 <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">🔮 5. Thần Số Học</h3>
                 <div id="resultThanHoc" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
@@ -327,10 +327,12 @@
                 if(gdbStr.length >= 2) deList.push(gdbStr.slice(-2));
             });
 
+            // 1. Tần suất 2 số
             let freqMap = {};
             allLoList.forEach(num => freqMap[num] = (freqMap[num] || 0) + 1);
             let m1 = Object.entries(freqMap).sort((a, b) => b[1] - a[1]).slice(0, 10).map(([n]) => n);
 
+            // 2. Lô gan 2 số
             let lastSeen = {};
             allLoList.forEach((num, idx) => { if (!(num in lastSeen)) lastSeen[num] = idx; });
             let allNumArr = [];
@@ -338,6 +340,7 @@
             allNumArr.sort((a, b) => b.pos - a.pos);
             let m2 = allNumArr.slice(0, 10).map(item => item.num);
 
+            // 3. Chuỗi Markov
             let transitionMap = {};
             for(let i = 0; i < deList.length - 1; i++) {
                 let curr = deList[i+1], next = deList[i];
@@ -347,16 +350,25 @@
             let latestNum = deList[0] || "53";
             let m3 = transitionMap[latestNum] ? Object.entries(transitionMap[latestNum]).sort((a,b) => b[1] - a[1]).slice(0, 5).map(([n]) => n) : [];
 
+            // 4. Chạm & Tổng Đề (Tự động bung số cụ thể)
             let dauCount = {}, tongCount = {};
             deList.forEach(num => {
-                dauCount[num[0]] = (dauCount[num[0]] || 0) + 1;
-                tongCount[(parseInt(num[0]) + parseInt(num[1])) % 10] = (tongCount[(parseInt(num[0]) + parseInt(num[1])) % 10] || 0) + 1;
+                if(num.length === 2) {
+                    dauCount[num[0]] = (dauCount[num[0]] || 0) + 1;
+                    tongCount[(parseInt(num[0]) + parseInt(num[1])) % 10] = (tongCount[(parseInt(num[0]) + parseInt(num[1])) % 10] || 0) + 1;
+                }
             });
             let bestDau = Object.entries(dauCount).sort((a,b) => b[1] - a[1])[0]?.[0] || '0';
             let bestTong = Object.entries(tongCount).sort((a,b) => b[1] - a[1])[0]?.[0] || '0';
             let m4 = [];
-            for(let i=0; i<100; i++) { let s = i < 10 ? '0' + i : '' + i; if(s[0] === bestDau || (parseInt(s[0]) + parseInt(s[1])) % 10 === parseInt(bestTong)) m4.push(s); }
+            for(let i=0; i<100; i++) { 
+                let s = i < 10 ? '0' + i : '' + i; 
+                if(s[0] === bestDau || (parseInt(s[0]) + parseInt(s[1])) % 10 === parseInt(bestTong)) {
+                    m4.push(s); 
+                }
+            }
 
+            // 5. Thần số học
             let dateParts = subset[0].ngay.split('-');
             let nextDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
             nextDate.setDate(nextDate.getDate() + 7);
@@ -366,6 +378,7 @@
             lifePath = sumDigits(lifePath);
             let m5 = [(lifePath * 9).toString().padStart(2, '0'), (lifePath * 11).toString().slice(-2), ((lifePath + nextDate.getDate()) % 90).toString().padStart(2, '0')];
 
+            // 6. Bạc nhớ theo thứ
             let targetThu = subset[0].thu || "Thứ Hai";
             let sameDayHistory = lichSuQuay.filter(item => item.thu === targetThu);
             let dayFreqMap = {};
@@ -379,15 +392,18 @@
             let m6 = Object.entries(dayFreqMap).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([num]) => num);
             if(m6.length === 0) m6 = ["12", "38", "79", "86", "45"];
 
+            // 7. Delta
             let deltaList = [];
             for(let i = 0; i < deList.length - 1; i++) deltaList.push((parseInt(deList[i]) - parseInt(deList[i+1]) + 100) % 100);
             let avgDelta = deltaList.length > 0 ? Math.round(deltaList.reduce((a,b)=>a+b, 0) / deltaList.length) : 15;
             let predDelta = (parseInt(deList[0] || "50") + avgDelta) % 100;
             let m7 = [predDelta < 10 ? '0' + predDelta : '' + predDelta, (100 - predDelta).toString().padStart(2, '0')];
 
+            // 8. Bù gương
             let d1 = parseInt((deList[0] || "26")[0]), d2 = parseInt((deList[0] || "26")[1]);
             let m8 = [''+d2+d1, ''+(9-d1)+(9-d2), ''+((10-d1)%10)+((10-d2)%10)];
 
+            // 9. Bóng âm dương toàn cục
             const bongDuongMap = {'0':'5', '5':'0', '1':'6', '6':'1', '2':'7', '7':'2', '3':'8', '8':'3', '4':'9', '9':'4'};
             let bongFreq = {};
             allNumRaw.forEach(num => {
@@ -530,7 +546,10 @@
                 document.getElementById('resultHot').innerHTML = results['Tần Suất'].slice(0, 6).map(n => `<span class="bg-indigo-50 dark:bg-indigo-950/65 text-indigo-300 px-2 py-0.5 rounded font-bold text-xs border border-indigo-800">${n}</span>`).join('');
                 document.getElementById('resultCold').innerHTML = results['Lô Gan'].slice(0, 6).map(n => `<span class="bg-cyan-50 dark:bg-cyan-950/65 text-cyan-300 px-2 py-0.5 rounded font-bold text-xs border border-cyan-800">${n}</span>`).join('');
                 document.getElementById('resultMarkov').innerHTML = results['Markov'].length > 0 ? results['Markov'].slice(0, 5).map(n => `<span class="bg-purple-50 dark:bg-purple-950/65 text-purple-300 px-2 py-0.5 rounded font-bold text-xs border border-purple-800">${n}</span>`).join('') : '<span class="text-slate-400 text-xs italic">Chưa đủ dữ liệu</span>';
-                document.getElementById('resultCham').innerHTML = `<div class="flex justify-between bg-slate-800/50 p-1 rounded border border-slate-700 text-xs"><span>Đồng thuận Chạm/Tổng:</span><strong class="text-amber-400">Đã phân tích</strong></div>`;
+                
+                // Hiển thị danh sách số cụ thể của Chạm & Tổng
+                document.getElementById('resultCham').innerHTML = results['Chạm Tổng'].slice(0, 6).map(n => `<span class="bg-amber-50 dark:bg-amber-950/65 text-amber-300 px-2 py-0.5 rounded font-bold text-xs border border-amber-800">${n}</span>`).join('') || '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
+                
                 document.getElementById('resultThanHoc').innerHTML = results['Thần Học'].map(n => `<span class="bg-amber-50 dark:bg-amber-950/65 text-amber-300 px-2 py-0.5 rounded font-bold text-xs border border-amber-800">${n}</span>`).join('');
                 document.getElementById('resultBacNho').innerHTML = results['Bạc Nhớ Thứ'].map(n => `<span class="bg-rose-50 dark:bg-rose-950/65 text-rose-300 px-2 py-0.5 rounded font-bold text-xs border border-rose-800">${n}</span>`).join('');
                 document.getElementById('resultDelta').innerHTML = results['Delta'].map(n => `<span class="bg-teal-50 dark:bg-teal-950/65 text-teal-300 px-2 py-0.5 rounded font-bold text-xs border border-teal-800">${n}</span>`).join('');
