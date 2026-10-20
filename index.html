@@ -125,7 +125,7 @@
             </div>
         </div>
 
-        <!-- CHI TIẾT PHÂN TÍCH 9 MÔ HÌNH -->
+        <!-- CHI TIẾT PHÂN TÍCH 9 MÔ HÌNH (ĐÃ LỌC GIAO THOA >= 2 MÔ HÌNH) -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
                 <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2">🔥 1. Tần Suất 2 Số</h3>
@@ -366,7 +366,6 @@
             lifePath = sumDigits(lifePath);
             let m5 = [(lifePath * 9).toString().padStart(2, '0'), (lifePath * 11).toString().slice(-2), ((lifePath + nextDate.getDate()) % 90).toString().padStart(2, '0')];
 
-            // 6. BẠC NHỚ THEO THỨ (Tích hợp trọng số thời gian)
             let targetThu = subset[0].thu || "Thứ Hai";
             let sameDayHistory = lichSuQuay.filter(item => item.thu === targetThu);
             let dayFreqMap = {};
@@ -472,6 +471,20 @@
                 lastCachedResults = results; 
                 let scores = tinhDiemDongTuLichSu(lichSuQuay);
 
+                // --- BƯỚC LỌC GIAO THOA (CHỈ GIỮ LẠI CÁC SỐ XUẤT HIỆN TỪ 2 MÔ HÌNH TRỞ LÊN CHO TỪNG THẺ) ---
+                let globalCountMap = {};
+                Object.keys(results).forEach(mName => {
+                    let uniquePreds = [...new Set(results[mName])];
+                    uniquePreds.forEach(num => {
+                        globalCountMap[num] = (globalCountMap[num] || 0) + 1;
+                    });
+                });
+
+                let filterByIntersection = (preds) => {
+                    let filtered = preds.filter(n => (globalCountMap[n] || 0) >= 2);
+                    return filtered.length > 0 ? filtered : preds; 
+                };
+
                 let scoreBoard = {};
                 for(let i=0; i<100; i++) scoreBoard[i < 10 ? '0' + i : '' + i] = 0;
 
@@ -538,15 +551,16 @@
                     document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình đã phân tích lịch sử)";
                 }
 
-                document.getElementById('resultHot').innerHTML = results['Tần Suất'].slice(0, 6).map(n => `<span class="bg-indigo-50 dark:bg-indigo-950/60 text-indigo-300 px-2 py-0.5 rounded font-bold text-xs border border-indigo-800">${n}</span>`).join('');
-                document.getElementById('resultCold').innerHTML = results['Lô Gan'].slice(0, 6).map(n => `<span class="bg-cyan-50 dark:bg-cyan-950/60 text-cyan-300 px-2 py-0.5 rounded font-bold text-xs border border-cyan-800">${n}</span>`).join('');
-                document.getElementById('resultMarkov').innerHTML = results['Markov'].length > 0 ? results['Markov'].slice(0, 5).map(n => `<span class="bg-purple-50 dark:bg-purple-950/60 text-purple-300 px-2 py-0.5 rounded font-bold text-xs border border-purple-800">${n}</span>`).join('') : '<span class="text-slate-400 text-xs italic">Chưa đủ dữ liệu</span>';
-                document.getElementById('resultCham').innerHTML = `<div class="flex justify-between bg-slate-800/50 p-1 rounded border border-slate-700"><span>Chạm/Tổng:</span><strong>Đã phân tích</strong></div>`;
-                document.getElementById('resultThanHoc').innerHTML = results['Thần Học'].map(n => `<span class="bg-amber-50 dark:bg-amber-950/60 text-amber-300 px-2 py-0.5 rounded font-bold text-xs border border-amber-800">${n}</span>`).join('');
-                document.getElementById('resultBacNho').innerHTML = results['Bạc Nhớ Thứ'].map(n => `<span class="bg-rose-50 dark:bg-rose-950/60 text-rose-300 px-2 py-0.5 rounded font-bold text-xs border border-rose-800">${n}</span>`).join('');
-                document.getElementById('resultDelta').innerHTML = results['Delta'].map(n => `<span class="bg-teal-50 dark:bg-teal-950/60 text-teal-300 px-2 py-0.5 rounded font-bold text-xs border border-teal-800">${n}</span>`).join('');
-                document.getElementById('resultMirror').innerHTML = results['Bù Gương'].map(n => `<span class="bg-emerald-50 dark:bg-emerald-950/60 text-emerald-300 px-2 py-0.5 rounded font-bold text-xs border border-emerald-800">${n}</span>`).join('');
-                document.getElementById('resultBong').innerHTML = results['Bóng Âm Dương'].map(n => `<span class="bg-violet-50 dark:bg-violet-950/60 text-violet-300 px-2 py-0.5 rounded font-bold text-xs border border-violet-800">${n}</span>`).join('');
+                // Render dữ liệu đã lọc giao thoa vào các thẻ mô hình
+                document.getElementById('resultHot').innerHTML = filterByIntersection(results['Tần Suất']).slice(0, 6).map(n => `<span class="bg-indigo-50 dark:bg-indigo-950/65 text-indigo-300 px-2 py-0.5 rounded font-bold text-xs border border-indigo-800">${n}</span>`).join('') || '<span class="text-slate-500 text-xs italic">Không có giao thoa</span>';
+                document.getElementById('resultCold').innerHTML = filterByIntersection(results['Lô Gan']).slice(0, 6).map(n => `<span class="bg-cyan-50 dark:bg-cyan-950/65 text-cyan-300 px-2 py-0.5 rounded font-bold text-xs border border-cyan-800">${n}</span>`).join('') || '<span class="text-slate-500 text-xs italic">Không có giao thoa</span>';
+                document.getElementById('resultMarkov').innerHTML = results['Markov'].length > 0 ? filterByIntersection(results['Markov']).slice(0, 5).map(n => `<span class="bg-purple-50 dark:bg-purple-950/65 text-purple-300 px-2 py-0.5 rounded font-bold text-xs border border-purple-800">${n}</span>`).join('') : '<span class="text-slate-400 text-xs italic">Chưa đủ dữ liệu</span>';
+                document.getElementById('resultCham').innerHTML = `<div class="flex justify-between bg-slate-800/50 p-1 rounded border border-slate-700 text-xs"><span>Đồng thuận Chạm/Tổng:</span><strong class="text-amber-400">Đã lọc giao</strong></div>`;
+                document.getElementById('resultThanHoc').innerHTML = filterByIntersection(results['Thần Học']).map(n => `<span class="bg-amber-50 dark:bg-amber-950/65 text-amber-300 px-2 py-0.5 rounded font-bold text-xs border border-amber-800">${n}</span>`).join('') || '<span class="text-slate-500 text-xs italic">Không có giao thoa</span>';
+                document.getElementById('resultBacNho').innerHTML = filterByIntersection(results['Bạc Nhớ Thứ']).map(n => `<span class="bg-rose-50 dark:bg-rose-950/65 text-rose-300 px-2 py-0.5 rounded font-bold text-xs border border-rose-800">${n}</span>`).join('') || '<span class="text-slate-500 text-xs italic">Không có giao thoa</span>';
+                document.getElementById('resultDelta').innerHTML = filterByIntersection(results['Delta']).map(n => `<span class="bg-teal-50 dark:bg-teal-950/65 text-teal-300 px-2 py-0.5 rounded font-bold text-xs border border-teal-800">${n}</span>`).join('') || '<span class="text-slate-500 text-xs italic">Không có giao thoa</span>';
+                document.getElementById('resultMirror').innerHTML = filterByIntersection(results['Bù Gương']).map(n => `<span class="bg-emerald-50 dark:bg-emerald-950/65 text-emerald-300 px-2 py-0.5 rounded font-bold text-xs border border-emerald-800">${n}</span>`).join('') || '<span class="text-slate-500 text-xs italic">Không có giao thoa</span>';
+                document.getElementById('resultBong').innerHTML = filterByIntersection(results['Bóng Âm Dương']).map(n => `<span class="bg-violet-50 dark:bg-violet-950/65 text-violet-300 px-2 py-0.5 rounded font-bold text-xs border border-violet-800">${n}</span>`).join('') || '<span class="text-slate-500 text-xs italic">Không có giao thoa</span>';
 
                 let modelArr = Object.keys(scores).map(name => ({ name, score: Math.round(scores[name]) }));
                 modelArr.sort((a, b) => b.score - a.score);
@@ -571,7 +585,7 @@
             }
         }
 
-        // --- HÀM XỬ LÝ LẤY PHẦN GIAO THÔNG MINH (LỌC TỪ 2 MÔ HÌNH TRỞ LÊN) ---
+        // --- HÀM XỬ LÝ LẤY PHẦN GIAO THÔNG MINH ---
         function layPhanGiaoCacMoHinh() {
             if (!lastCachedResults) {
                 alert("Vui lòng bấm 'Chạy Phân Tích' trước để hệ thống sinh dữ liệu các mô hình!");
