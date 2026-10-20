@@ -18,7 +18,7 @@
         <header class="mb-6 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
             <div>
                 <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis</h1>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Phân tích...</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Ver01</p>
             </div>
             <div class="flex items-center gap-2">
                 <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 p-2 rounded-lg transition-all shadow-sm text-xs flex items-center gap-1.5">
@@ -316,7 +316,7 @@
             document.getElementById('panelBody').innerHTML = html;
         }
 
-        // --- HÀM PHÂN TÍCH ĐỘC LẬP 9 MÔ HÌNH (ĐÃ CHUẨN HÓA ĐẦU RA TOP 8-10 SỐ) ---
+        // --- HÀM PHÂN TÍCH ĐỘC LẬP 9 MÔ HÌNH (CHUẨN HÓA TOP SỐ) ---
         function chay9MoHinhNoiBo(subset, lichSuQuay) {
             let allLoList = [], deList = [], allNumRaw = [];
             subset.forEach(item => {
@@ -356,7 +356,7 @@
             let latestNum = deList[0] || "53";
             let m3 = transitionMap[latestNum] ? Object.entries(transitionMap[latestNum]).sort((a,b) => b[1] - a[1]).slice(0, 8).map(([n]) => n) : ["12", "38", "79", "86"];
 
-            // 4. Chạm & Tổng Đề (Giới hạn Top 10 số xuất sắc nhất thay vì xả tràn lan)
+            // 4. Chạm & Tổng Đề (Top 10)
             let dauCount = {}, tongCount = {};
             deList.forEach(num => {
                 if(num.length === 2) {
@@ -373,7 +373,7 @@
                     m4Temp.push(s); 
                 }
             }
-            let m4 = m4Temp.slice(0, 10); // Chuẩn hóa chỉ lấy Top 10
+            let m4 = m4Temp.slice(0, 10);
 
             // 5. Thần số học (Top 6)
             let dateParts = subset[0].ngay.split('-');
@@ -452,6 +452,7 @@
             return scores;
         }
 
+        // --- HÀM CHẠY VÀ BACKTEST ĐÃ CHỈNH SỬA CHUẨN XÁC ---
         async function chayVaDanhGiaMoHinh(targetBacktestDate = null) {
             const dai = document.getElementById('selectDai').value;
             const limit = parseInt(document.getElementById('selectLimit').value);
@@ -474,11 +475,14 @@
 
                 if (targetBacktestDate) {
                     let targetIndex = lichSuQuay.findIndex(i => i.ngay === targetBacktestDate);
-                    if (targetIndex > 0) {
-                        actualDrawData = lichSuQuay[targetIndex - 1]; 
+                    if (targetIndex !== -1 && targetIndex < lichSuQuay.length - 1) {
+                        // 1. Kết quả thực tế cần đối chiếu chính là ngày người dùng chọn
+                        actualDrawData = lichSuQuay[targetIndex]; 
                         targetDisplayDate = actualDrawData.ngay;
-                        activeSubset = lichSuQuay.slice(targetIndex); 
-                    } else if (targetIndex === 0) {
+                        
+                        // 2. Chống rò rỉ tương lai tuyệt đối: Chỉ lấy dữ liệu từ sau ngày đó trở về quá khứ (index lớn hơn)
+                        activeSubset = lichSuQuay.slice(targetIndex + 1); 
+                    } else {
                         actualDrawData = null;
                         activeSubset = lichSuQuay;
                     }
@@ -486,7 +490,7 @@
 
                 const subset = activeSubset.slice(0, limit);
                 if (subset.length === 0) {
-                    alert("Không đủ dữ liệu lịch sử để phân tích!");
+                    alert("Không đủ dữ liệu lịch sử phía trước ngày này để phân tích!");
                     return;
                 }
 
@@ -512,7 +516,6 @@
 
                 let filteredIntersection = Object.entries(scoreMap).filter(([num, score]) => countMap[num] >= 2);
 
-                // Chấm điểm ưu tiên thực chiến dựa trên biên độ Giải 8 & GDB kỳ trước
                 let latestDraw = subset[0];
                 let giai8Pre = latestDraw && latestDraw.giai_8 ? latestDraw.giai_8.toString().slice(-2) : "00";
                 let gdbPre = latestDraw && latestDraw.gdb ? latestDraw.gdb.toString().slice(-2) : "00";
@@ -554,9 +557,9 @@
                     let isMatch2D = (final2DNum === actual2D);
                     let isMatch3D = list3D.includes(actualDBVal);
 
-                    document.getElementById('resultTitleBanner').innerText = `🔍 TỪ NGÀY ${targetBacktestDate} ➔ ĐỐI CHIẾU KỲ ${targetDisplayDate}`;
+                    document.getElementById('resultTitleBanner').innerText = `🔍 KẾT QUẢ BACKTEST NGÀY ${targetDisplayDate}`;
                     
-                    let colorClass = (isMatch2D || isMatch3D) ? "text-red-500 font-bold" : "text-slate-200";
+                    let colorClass = (isMatch2D || isMatch3D) ? "text-emerald-400 font-bold" : "text-rose-400 font-bold";
                     let compareText = `Thực tế ngày ${targetDisplayDate} về ĐB: <strong class="text-yellow-300">${actualDBVal}</strong><br>`;
                     compareText += `<span class="${colorClass}">`;
                     compareText += isMatch2D ? `✅ Khớp 2S (${actual2D})` : `❌ Lệch 2S (Thực tế: ${actual2D})`;
@@ -636,7 +639,6 @@
 
             let filteredIntersection = Object.entries(scoreMap).filter(([num, score]) => countMap[num] >= 2);
 
-            // Tầng lọc định lượng thông minh (giữ lại biên độ an toàn cho Lô Gan)
             if (lastCachedSubset && lastCachedLichSu) {
                 let allLoList = [];
                 lastCachedSubset.forEach(item => {
@@ -656,7 +658,6 @@
                 filteredIntersection = filteredIntersection.filter(([num, score]) => {
                     let ganValue = lastSeen[num] !== undefined ? lastSeen[num] : 99;
                     let count = countMap[num];
-                    // Nới lỏng điều kiện hơn để không bóp nghẹt mô hình Lô Gan và Bạc Nhớ
                     if (ganValue > 35 && count < 2 && score < 100) return false;
                     return true;
                 });
