@@ -105,13 +105,13 @@
             </div>
         </div>
 
-        <!-- KHU VỰC GỢI Ý 2 CHỮ SỐ TỪ TỔNG HỢP 9 MÔ HÌNH -->
+        <!-- KHU VỰC TÂM ĐIỂM GIAO THOA -->
         <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6">
             <h3 id="sectionTitleSuggest" class="text-xs font-bold uppercase tracking-wider text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">
-                💡 Danh Sách Số Gợi Ý 2 Chữ Số Tham Khảo (Tổng Hợp Từ 9 Mô Hình)
+                🔗 TÂM ĐIỂM GIAO THOA (Chỉ lọc các số xuất hiện từ 2 mô hình trở lên)
             </h3>
             <div id="suggestedNumbersList" class="flex flex-wrap gap-2">
-                <span class="text-slate-400 text-xs italic">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị danh sách...</span>
+                <span class="text-slate-400 text-xs italic">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị danh sách giao thoa...</span>
             </div>
         </div>
 
@@ -130,7 +130,7 @@
 
             <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
                 <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2">⚡ 4. Chạm & Tổng Đề</h3>
-                <div id="resultCham" class="text-xs space-y-1"><span class="text-slate-400 italic">Chưa có dữ liệu</span></div>
+                <div id="resultCham" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
 
                 <h3 class="font-bold text-xs uppercase text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">🔮 5. Thần Số Học</h3>
                 <div id="resultThanHoc" class="flex flex-wrap gap-1.5"><span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span></div>
@@ -203,8 +203,8 @@
             document.getElementById('detail3DHint').innerText = "(Hàng trăm dịch bóng)";
             document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình)";
             document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH & 3 CÀNG BÓNG ÂM DƯƠNG";
-            document.getElementById('sectionTitleSuggest').innerText = "💡 Danh Sách Số Gợi Ý 2 Chữ Số Tham Khảo (Tổng Hợp Từ 9 Mô Hình)";
-            document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị danh sách...</span>';
+            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA (Chỉ lọc các số xuất hiện từ 2 mô hình trở lên)";
+            document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị danh sách giao thoa...</span>';
             
             document.getElementById('panelTitle').innerText = "📋 Chi Tiết Giải Ngày Đã Chọn";
             document.getElementById('panelBody').innerHTML = '<p class="text-slate-400 italic text-center py-6">Vui lòng chọn ngày ở ô "Tra cứu nhanh" bên trên để xem kết quả chi tiết tại đây.</p>';
@@ -296,11 +296,10 @@
             document.getElementById('panelBody').innerHTML = html;
         }
 
-        // --- HÀM PHÂN TÍCH ĐỘC LẬP 9 MÔ HÌNH (TƯƠNG THÍCH CẤU TRÚC MIỀN BẮC 27 GIẢI) ---
+        // --- HÀM PHÂN TÍCH ĐỘC LẬP 9 MÔ HÌNH (MIỀN BẮC) ---
         function chay9MoHinhNoiBo(subset, lichSuQuay) {
             let allLoList = [], deList = [], allNumRaw = [];
             subset.forEach(item => {
-                // Gom toàn bộ các giải của Miền Bắc (gdb, g1 -> g7)
                 let currentGiais = [
                     item.gdb, item.g1, 
                     ...(Array.isArray(item.g2) ? item.g2 : [item.g2]),
@@ -324,10 +323,12 @@
                 if(gdbStr.length >= 2) deList.push(gdbStr.slice(-2));
             });
 
+            // 1. Tần suất 2 số
             let freqMap = {};
             allLoList.forEach(num => freqMap[num] = (freqMap[num] || 0) + 1);
             let m1 = Object.entries(freqMap).sort((a, b) => b[1] - a[1]).slice(0, 10).map(([n]) => n);
 
+            // 2. Lô gan 2 số
             let lastSeen = {};
             allLoList.forEach((num, idx) => { if (!(num in lastSeen)) lastSeen[num] = idx; });
             let allNumArr = [];
@@ -335,6 +336,7 @@
             allNumArr.sort((a, b) => b.pos - a.pos);
             let m2 = allNumArr.slice(0, 10).map(item => item.num);
 
+            // 3. Chuỗi Markov
             let transitionMap = {};
             for(let i = 0; i < deList.length - 1; i++) {
                 let curr = deList[i+1], next = deList[i];
@@ -344,26 +346,35 @@
             let latestNum = deList[0] || "53";
             let m3 = transitionMap[latestNum] ? Object.entries(transitionMap[latestNum]).sort((a,b) => b[1] - a[1]).slice(0, 5).map(([n]) => n) : [];
 
+            // 4. Chạm & Tổng Đề (Tự động bung danh sách số cụ thể)
             let dauCount = {}, tongCount = {};
             deList.forEach(num => {
-                dauCount[num[0]] = (dauCount[num[0]] || 0) + 1;
-                tongCount[(parseInt(num[0]) + parseInt(num[1])) % 10] = (tongCount[(parseInt(num[0]) + parseInt(num[1])) % 10] || 0) + 1;
+                if(num.length === 2) {
+                    dauCount[num[0]] = (dauCount[num[0]] || 0) + 1;
+                    tongCount[(parseInt(num[0]) + parseInt(num[1])) % 10] = (tongCount[(parseInt(num[0]) + parseInt(num[1])) % 10] || 0) + 1;
+                }
             });
             let bestDau = Object.entries(dauCount).sort((a,b) => b[1] - a[1])[0]?.[0] || '0';
             let bestTong = Object.entries(tongCount).sort((a,b) => b[1] - a[1])[0]?.[0] || '0';
             let m4 = [];
-            for(let i=0; i<100; i++) { let s = i < 10 ? '0' + i : '' + i; if(s[0] === bestDau || (parseInt(s[0]) + parseInt(s[1])) % 10 === parseInt(bestTong)) m4.push(s); }
+            for(let i=0; i<100; i++) { 
+                let s = i < 10 ? '0' + i : '' + i; 
+                if(s[0] === bestDau || (parseInt(s[0]) + parseInt(s[1])) % 10 === parseInt(bestTong)) {
+                    m4.push(s); 
+                }
+            }
 
+            // 5. Thần số học
             let dateParts = subset[0].ngay.split('-');
             let nextDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
-            nextDate.setDate(nextDate.getDate() + 1); // Miền Bắc quay hàng ngày
+            nextDate.setDate(nextDate.getDate() + 1);
             
             let sumDigits = (n) => { while(n > 9) n = n.toString().split('').reduce((a,b)=>parseInt(a)+parseInt(b),0); return n; };
             let lifePath = sumDigits(nextDate.getDate()) + sumDigits(nextDate.getMonth()+1) + sumDigits(sumDigits(nextDate.getFullYear()));
             lifePath = sumDigits(lifePath);
             let m5 = [(lifePath * 9).toString().padStart(2, '0'), (lifePath * 11).toString().slice(-2), ((lifePath + nextDate.getDate()) % 90).toString().padStart(2, '0')];
 
-            // 6. BẠC NHỚ THEO THỨ (Tích hợp trọng số thời gian)
+            // 6. Bạc nhớ theo thứ
             let targetThu = subset[0].thu || "Thứ Hai";
             let sameDayHistory = lichSuQuay.filter(item => item.thu === targetThu);
             let dayFreqMap = {};
@@ -377,15 +388,18 @@
             let m6 = Object.entries(dayFreqMap).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([num]) => num);
             if(m6.length === 0) m6 = ["12", "38", "79", "86", "45"];
 
+            // 7. Delta
             let deltaList = [];
             for(let i = 0; i < deList.length - 1; i++) deltaList.push((parseInt(deList[i]) - parseInt(deList[i+1]) + 100) % 100);
             let avgDelta = deltaList.length > 0 ? Math.round(deltaList.reduce((a,b)=>a+b, 0) / deltaList.length) : 15;
             let predDelta = (parseInt(deList[0] || "50") + avgDelta) % 100;
             let m7 = [predDelta < 10 ? '0' + predDelta : '' + predDelta, (100 - predDelta).toString().padStart(2, '0')];
 
+            // 8. Bù gương
             let d1 = parseInt((deList[0] || "26")[0]), d2 = parseInt((deList[0] || "26")[1]);
             let m8 = [''+d2+d1, ''+(9-d1)+(9-d2), ''+((10-d1)%10)+((10-d2)%10)];
 
+            // 9. Bóng âm dương toàn cục
             const bongDuongMap = {'0':'5', '5':'0', '1':'6', '6':'1', '2':'7', '7':'2', '3':'8', '8':'3', '4':'9', '9':'4'};
             let bongFreq = {};
             allNumRaw.forEach(num => {
@@ -487,17 +501,6 @@
                 let sortedConsensus = Object.entries(scoreBoard).sort((a, b) => b[1] - a[1]);
                 let final2DNum = sortedConsensus[0][0];
 
-                let topSuggested = sortedConsensus.slice(0, 12).map(([num, score]) => ({ num, score: Math.round(score * 10) / 10 }));
-                document.getElementById('sectionTitleSuggest').innerText = "💡 Danh Sách Số Gợi Ý 2 Chữ Số Tham Khảo (Tổng Hợp Từ 9 Mô Hình)";
-                let suggestedHtml = topSuggested.map((item, idx) => {
-                    let badgeColor = idx === 0 ? "bg-yellow-500 text-slate-950 font-extrabold ring-2 ring-yellow-300" : "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-300 border border-indigo-800";
-                    return `<div class="${badgeColor} px-3 py-1.5 rounded-lg text-center font-bold text-sm flex flex-col items-center shadow-sm">
-                        <span class="text-base tracking-wider">${item.num}</span>
-                        <span class="text-[9px] opacity-75">Điểm: ${item.score}</span>
-                    </div>`;
-                }).join('');
-                document.getElementById('suggestedNumbersList').innerHTML = suggestedHtml;
-
                 let allDeList = subset.map(item => item.gdb ? item.gdb.toString().slice(-2) : "").filter(Boolean);
                 let latestDe = allDeList[0] || "53";
                 let sumDe = (parseInt(latestDe[0]) + parseInt(latestDe[1])) % 10;
@@ -535,15 +538,22 @@
                     document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình đã phân tích lịch sử)";
                 }
 
+                // 1. Hiển thị đầy đủ kết quả gốc của 9 mô hình ở phía dưới
                 document.getElementById('resultHot').innerHTML = results['Tần Suất'].slice(0, 6).map(n => `<span class="bg-indigo-50 dark:bg-indigo-950/60 text-indigo-300 px-2 py-0.5 rounded font-bold text-xs border border-indigo-800">${n}</span>`).join('');
                 document.getElementById('resultCold').innerHTML = results['Lô Gan'].slice(0, 6).map(n => `<span class="bg-cyan-50 dark:bg-cyan-950/60 text-cyan-300 px-2 py-0.5 rounded font-bold text-xs border border-cyan-800">${n}</span>`).join('');
                 document.getElementById('resultMarkov').innerHTML = results['Markov'].length > 0 ? results['Markov'].slice(0, 5).map(n => `<span class="bg-purple-50 dark:bg-purple-950/60 text-purple-300 px-2 py-0.5 rounded font-bold text-xs border border-purple-800">${n}</span>`).join('') : '<span class="text-slate-400 text-xs italic">Chưa đủ dữ liệu</span>';
-                document.getElementById('resultCham').innerHTML = `<div class="flex justify-between bg-slate-800/50 p-1 rounded border border-slate-700"><span>Chạm/Tổng:</span><strong>Đã phân tích</strong></div>`;
+                
+                // Hiển thị danh sách số cụ thể của Chạm & Tổng
+                document.getElementById('resultCham').innerHTML = results['Chạm Tổng'].slice(0, 6).map(n => `<span class="bg-amber-50 dark:bg-amber-950/60 text-amber-300 px-2 py-0.5 rounded font-bold text-xs border border-amber-800">${n}</span>`).join('') || '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
+                
                 document.getElementById('resultThanHoc').innerHTML = results['Thần Học'].map(n => `<span class="bg-amber-50 dark:bg-amber-950/60 text-amber-300 px-2 py-0.5 rounded font-bold text-xs border border-amber-800">${n}</span>`).join('');
                 document.getElementById('resultBacNho').innerHTML = results['Bạc Nhớ Thứ'].map(n => `<span class="bg-rose-50 dark:bg-rose-950/60 text-rose-300 px-2 py-0.5 rounded font-bold text-xs border border-rose-800">${n}</span>`).join('');
                 document.getElementById('resultDelta').innerHTML = results['Delta'].map(n => `<span class="bg-teal-50 dark:bg-teal-950/60 text-teal-300 px-2 py-0.5 rounded font-bold text-xs border border-teal-800">${n}</span>`).join('');
                 document.getElementById('resultMirror').innerHTML = results['Bù Gương'].map(n => `<span class="bg-emerald-50 dark:bg-emerald-950/60 text-emerald-300 px-2 py-0.5 rounded font-bold text-xs border border-emerald-800">${n}</span>`).join('');
                 document.getElementById('resultBong').innerHTML = results['Bóng Âm Dương'].map(n => `<span class="bg-violet-50 dark:bg-violet-950/60 text-violet-300 px-2 py-0.5 rounded font-bold text-xs border border-violet-800">${n}</span>`).join('');
+
+                // 2. Tự động quét và đẩy các số giao thoa từ 2 mô hình trở lên lên khung "Tâm điểm giao thoa" phía trên
+                layPhanGiaoCacMoHinh();
 
                 let modelArr = Object.keys(scores).map(name => ({ name, score: Math.round(scores[name]) }));
                 modelArr.sort((a, b) => b.score - a.score);
@@ -568,7 +578,7 @@
             }
         }
 
-        // --- HÀM XỬ LÝ LẤY PHẦN GIAO THÔNG MINH (LỌC TỪ 2 MÔ HÌNH TRỞ LÊN) ---
+        // --- HÀM LẤY PHẦN GIAO (QUÉT CÁC SỐ TRÙNG LẶP TỪ 2 MÔ HÌNH TRỞ LÊN) ---
         function layPhanGiaoCacMoHinh() {
             if (!lastCachedResults) {
                 alert("Vui lòng bấm 'Chạy Phân Tích' trước để hệ thống sinh dữ liệu các mô hình!");
@@ -588,13 +598,9 @@
                 });
             });
 
+            // Chỉ lấy các số xuất hiện từ 2 mô hình trở lên
             let filteredIntersection = Object.entries(countMap).filter(([num, count]) => count >= 2);
-
-            if (filteredIntersection.length === 0) {
-                filteredIntersection = Object.entries(countMap).sort((a, b) => b[1] - a[1]).slice(0, 5);
-            } else {
-                filteredIntersection.sort((a, b) => b[1] - a[1]);
-            }
+            filteredIntersection.sort((a, b) => b[1] - a[1]);
 
             document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA (Chỉ lọc các số xuất hiện từ 2 mô hình trở lên)";
             
@@ -610,7 +616,7 @@
                 </div>`;
             }).join('');
 
-            document.getElementById('suggestedNumbersList').innerHTML = intersectionHtml || '<span class="text-slate-400 text-xs italic">Không tìm thấy con số nào có từ 2 mô hình đồng thuận trở lên.</span>';
+            document.getElementById('suggestedNumbersList').innerHTML = intersectionHtml || '<span class="text-slate-400 text-xs italic">Không tìm thấy con số nào có từ 2 mô hình đồng thuận trở lên trong kỳ này.</span>';
         }
 
         function veBieuDoDanhGia(models) {
