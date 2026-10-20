@@ -115,10 +115,10 @@
             </div>
         </div>
 
-        <!-- KHU VỰC TÂM ĐIỂM GIAO THOA -->
+        <!-- KHU VỰC TÂM ĐIỂM GIAO THOA & ĐỊNH LƯỢNG -->
         <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6">
             <h3 id="sectionTitleSuggest" class="text-xs font-bold uppercase tracking-wider text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">
-                🔗 TÂM ĐIỂM GIAO THOA (Sắp xếp theo độ uy tín mô hình & Đồng thuận từ 2+)
+                🔗 TÂM ĐIỂM GIAO THOA (Đã lọc qua Tầng Định Lượng Nhịp Rơi & Trọng Số)
             </h3>
             <div id="suggestedNumbersList" class="flex flex-wrap gap-2">
                 <span class="text-slate-400 text-xs italic">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị danh sách giao thoa...</span>
@@ -183,6 +183,8 @@
     <script>
         let currentLoadedJson = null;
         let lastCachedResults = null; 
+        let lastCachedSubset = null;
+        let lastCachedLichSu = null;
         window.lastModelScores = null;
 
         window.onload = function() {
@@ -205,6 +207,8 @@
         function onDaiChange() {
             currentLoadedJson = null;
             lastCachedResults = null;
+            lastCachedSubset = null;
+            lastCachedLichSu = null;
             window.lastModelScores = null;
             resetUI();
         }
@@ -215,7 +219,7 @@
             document.getElementById('detail3DHint').innerText = "(Hàng trăm dịch bóng)";
             document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình)";
             document.getElementById('resultTitleBanner').innerText = "🎯 KẾT QUẢ HỢP LỰC 9 MÔ HÌNH & 3 CÀNG BÓNG ÂM DƯƠNG";
-            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA (Sắp xếp theo độ uy tín mô hình & Đồng thuận từ 2+)";
+            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA (Đã lọc qua Tầng Định Lượng Nhịp Rơi & Trọng Số)";
             document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị danh sách giao thoa...</span>';
             
             document.getElementById('panelTitle').innerText = "📋 Chi Tiết Giải Ngày Đã Chọn";
@@ -352,7 +356,7 @@
             let latestNum = deList[0] || "53";
             let m3 = transitionMap[latestNum] ? Object.entries(transitionMap[latestNum]).sort((a,b) => b[1] - a[1]).slice(0, 5).map(([n]) => n) : [];
 
-            // 4. Chạm & Tổng Đề (Tự động bung danh sách số cụ thể)
+            // 4. Chạm & Tổng Đề
             let dauCount = {}, tongCount = {};
             deList.forEach(num => {
                 if(num.length === 2) {
@@ -485,10 +489,13 @@
                     return;
                 }
 
+                lastCachedSubset = subset;
+                lastCachedLichSu = lichSuQuay;
+
                 let results = chay9MoHinhNoiBo(subset, lichSuQuay);
                 lastCachedResults = results; 
                 let scores = tinhDiemDongTuLichSu(lichSuQuay);
-                window.lastModelScores = scores; // Lưu lại để dùng cho hàm giao thoa trọng số
+                window.lastModelScores = scores;
 
                 let scoreBoard = {};
                 for(let i=0; i<100; i++) scoreBoard[i < 10 ? '0' + i : '' + i] = 0;
@@ -545,21 +552,18 @@
                     document.getElementById('actualCompareNote').innerText = "(Đồng thuận từ 9 mô hình đã phân tích lịch sử)";
                 }
 
-                // 1. Hiển thị đầy đủ kết quả gốc của 9 mô hình ở phía dưới
+                // Hiển thị kết quả gốc 9 mô hình
                 document.getElementById('resultHot').innerHTML = results['Tần Suất'].slice(0, 6).map(n => `<span class="bg-indigo-50 dark:bg-indigo-950/65 text-indigo-300 px-2 py-0.5 rounded font-bold text-xs border border-indigo-800">${n}</span>`).join('');
                 document.getElementById('resultCold').innerHTML = results['Lô Gan'].slice(0, 6).map(n => `<span class="bg-cyan-50 dark:bg-cyan-950/65 text-cyan-300 px-2 py-0.5 rounded font-bold text-xs border border-cyan-800">${n}</span>`).join('');
                 document.getElementById('resultMarkov').innerHTML = results['Markov'].length > 0 ? results['Markov'].slice(0, 5).map(n => `<span class="bg-purple-50 dark:bg-purple-950/65 text-purple-300 px-2 py-0.5 rounded font-bold text-xs border border-purple-800">${n}</span>`).join('') : '<span class="text-slate-400 text-xs italic">Chưa đủ dữ liệu</span>';
-                
-                // Hiển thị danh sách số cụ thể của Chạm & Tổng
                 document.getElementById('resultCham').innerHTML = results['Chạm Tổng'].slice(0, 6).map(n => `<span class="bg-amber-50 dark:bg-amber-950/65 text-amber-300 px-2 py-0.5 rounded font-bold text-xs border border-amber-800">${n}</span>`).join('') || '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
-                
                 document.getElementById('resultThanHoc').innerHTML = results['Thần Học'].map(n => `<span class="bg-amber-50 dark:bg-amber-950/65 text-amber-300 px-2 py-0.5 rounded font-bold text-xs border border-amber-800">${n}</span>`).join('');
                 document.getElementById('resultBacNho').innerHTML = results['Bạc Nhớ Thứ'].map(n => `<span class="bg-rose-50 dark:bg-rose-950/65 text-rose-300 px-2 py-0.5 rounded font-bold text-xs border border-rose-800">${n}</span>`).join('');
                 document.getElementById('resultDelta').innerHTML = results['Delta'].map(n => `<span class="bg-teal-50 dark:bg-teal-950/65 text-teal-300 px-2 py-0.5 rounded font-bold text-xs border border-teal-800">${n}</span>`).join('');
                 document.getElementById('resultMirror').innerHTML = results['Bù Gương'].map(n => `<span class="bg-emerald-50 dark:bg-emerald-950/65 text-emerald-300 px-2 py-0.5 rounded font-bold text-xs border border-emerald-800">${n}</span>`).join('');
                 document.getElementById('resultBong').innerHTML = results['Bóng Âm Dương'].map(n => `<span class="bg-violet-50 dark:bg-violet-950/65 text-violet-300 px-2 py-0.5 rounded font-bold text-xs border border-violet-800">${n}</span>`).join('');
 
-                // 2. Tự động quét và đẩy các số giao thoa lên ô phía trên (sắp xếp theo trọng số điểm)
+                // Giao thoa thông minh qua tầng định lượng
                 layPhanGiaoCacMoHinh();
 
                 let modelArr = Object.keys(scores).map(name => ({ name, score: Math.round(scores[name]) }));
@@ -585,7 +589,7 @@
             }
         }
 
-        // --- HÀM LẤY PHẦN GIAO THÔNG MINH (SẮP XẾP THEO TRỌNG SỐ MÔ HÌNH) ---
+        // --- HÀM TẦNG LỌC ĐỊNH LƯỢNG & GIAO THOA THÔNG MINH ---
         function layPhanGiaoCacMoHinh() {
             if (!lastCachedResults) {
                 alert("Vui lòng bấm 'Chạy Phân Tích' trước để hệ thống sinh dữ liệu các mô hình!");
@@ -615,11 +619,40 @@
                 });
             });
 
-            // Vẫn lấy từ 2 mô hình trở lên để không bỏ sót số, nhưng sắp xếp theo tổng điểm trọng số uy tín
+            // 1. Lọc điều kiện giao thoa từ 2 mô hình trở lên
             let filteredIntersection = Object.entries(scoreMap).filter(([num, score]) => countMap[num] >= 2);
+
+            // 2. TẦNG LỌC ĐỊNH LƯỢNG (Quantitative Meta-Filter): Loại bỏ các con số đang bị kẹt gan sâu bất thường (gan > 25 kỳ mà mô hình yếu đề xuất)
+            if (lastCachedSubset && lastCachedLichSu) {
+                let allLoList = [];
+                lastCachedSubset.forEach(item => {
+                    let currentGiais = [item.giai_8, item.giai_7, item.giai_5, item.giai_2, item.giai_1, item.gdb];
+                    if(Array.isArray(item.giai_6)) currentGiais = currentGiais.concat(item.giai_6);
+                    if(Array.isArray(item.giai_4)) currentGiais = currentGiais.concat(item.giai_4);
+                    if(Array.isArray(item.giai_3)) currentGiais = currentGiais.concat(item.giai_3);
+                    currentGiais.forEach(g => {
+                        let strG = g ? g.toString() : "";
+                        if(strG.length >= 2) allLoList.push(strG.slice(-2));
+                    });
+                });
+
+                let lastSeen = {};
+                allLoList.forEach((num, idx) => { if (!(num in lastSeen)) lastSeen[num] = idx; });
+
+                // Lọc tinh chỉnh định lượng
+                filteredIntersection = filteredIntersection.filter(([num, score]) => {
+                    let ganValue = lastSeen[num] !== undefined ? lastSeen[num] : 99;
+                    let count = countMap[num];
+                    // Nếu gan quá sâu (>25 kỳ) nhưng chỉ có 2 mô hình yếu đề xuất ➔ Loại bỏ bớt để tránh rủi ro
+                    if (ganValue > 25 && count < 3 && score < 120) return false;
+                    return true;
+                });
+            }
+
+            // Sắp xếp theo tổng trọng số uy tín giảm dần
             filteredIntersection.sort((a, b) => b[1] - a[1]);
 
-            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA (Sắp xếp theo độ uy tín mô hình & Đồng thuận từ 2+)";
+            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA (Đã lọc qua Tầng Định Lượng Nhịp Rơi & Trọng Số)";
             
             let intersectionHtml = filteredIntersection.map(([num, totalScore], idx) => {
                 let count = countMap[num];
@@ -634,13 +667,13 @@
                     badgeColor = "bg-emerald-600 text-white font-bold";
                 }
                 
-                return `<div title="Được đề xuất bởi: ${modelsList} | Tổng điểm uy tín: ${Math.round(totalScore)}" class="${badgeColor} px-3.5 py-2.5 rounded-xl text-center text-sm flex flex-col items-center cursor-help transition-transform hover:scale-110">
+                return `<div title="Được đề xuất bởi: ${modelsList} | Trọng số định lượng: ${Math.round(totalScore)}" class="${badgeColor} px-3.5 py-2.5 rounded-xl text-center text-sm flex flex-col items-center cursor-help transition-transform hover:scale-110">
                     <span class="text-xl tracking-wider">${num}</span>
                     <span class="text-[9px] opacity-90 font-semibold mt-0.5">⚡ ${count} mô hình (${Math.round(totalScore)}đ)</span>
                 </div>`;
             }).join('');
 
-            document.getElementById('suggestedNumbersList').innerHTML = intersectionHtml || '<span class="text-slate-400 text-xs italic">Không tìm thấy con số nào đạt điều kiện giao thoa trong kỳ này.</span>';
+            document.getElementById('suggestedNumbersList').innerHTML = intersectionHtml || '<span class="text-slate-400 text-xs italic">Không tìm thấy con số nào đạt chuẩn định lượng trong kỳ này.</span>';
         }
 
         function veBieuDoDanhGia(models) {
