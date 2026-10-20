@@ -90,7 +90,7 @@
                         <div class="bg-white/5 backdrop-blur px-4 py-3 rounded-xl border border-white/10 text-center">
                             <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp 2 Chữ Số Tối Ưu</p>
                             <span id="final2D" class="text-4xl font-extrabold tracking-wider text-yellow-400 mt-1 block">--</span>
-                            <span class="text-[11px] text-slate-300 mt-2 block">(Gợi ý đồng thuận từ vùng giao thoa)</span>
+                            <span class="text-[11px] text-slate-300 mt-2 block">(Gợi ý đồng thuận cao nhất)</span>
                         </div>
                         <div class="bg-white/5 backdrop-blur px-4 py-3 rounded-xl border border-white/10 text-center">
                             <p class="text-[11px] text-indigo-200 uppercase font-semibold">Top 3 Càng Bóng Âm Dương</p>
@@ -115,13 +115,13 @@
             </div>
         </div>
 
-        <!-- KHU VỰC TÂM ĐIỂM GIAO THOA & MÔ PHỎNG ĐÁNH GIÁ -->
+        <!-- KHU VỰC TÂM ĐIỂM GIAO THOA & LỌC BỎ NHIỄU -->
         <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6">
             <h3 id="sectionTitleSuggest" class="text-xs font-bold uppercase tracking-wider text-indigo-500 dark:text-indigo-400 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">
-                🔗 TÂM ĐIỂM GIAO THOA & MÔ PHỎNG KHUYẾN NGHỊ XUỐNG TIỀN
+                🔗 TÂM ĐIỂM GIAO THOA VÀNG (Đã lọc bỏ số rủi ro / gan sâu)
             </h3>
             <div id="suggestedNumbersList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                <span class="text-slate-400 text-xs italic col-span-full">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị mô phỏng...</span>
+                <span class="text-slate-400 text-xs italic col-span-full">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị danh sách vàng...</span>
             </div>
         </div>
 
@@ -217,8 +217,8 @@
             document.getElementById('final2D').innerText = "--";
             document.getElementById('final3DList').innerHTML = '<span class="text-2xl font-extrabold tracking-wider text-yellow-400">---</span>';
             document.getElementById('detail3DHint').innerText = "(Hàng trăm dịch bóng)";
-            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA & MÔ PHỎNG KHUYẾN NGHỊ XUỐNG TIỀN";
-            document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic col-span-full">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị mô phỏng...</span>';
+            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA VÀNG (Đã lọc bỏ số rủi ro / gan sâu)";
+            document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic col-span-full">Bấm "Chạy Phân Tích" hoặc "Lấy Phần Giao" để hiển thị danh sách vàng...</span>';
             
             document.getElementById('panelTitle').innerText = "📋 Chi Tiết Giải Ngày Đã Chọn";
             document.getElementById('panelBody').innerHTML = '<p class="text-slate-400 italic text-center py-6">Vui lòng chọn ngày ở ô tra cứu bên trên để xem kết quả chi tiết tại đây.</p>';
@@ -545,7 +545,7 @@
             }
         }
 
-        // --- TẦNG MÔ PHỎNG VÀ CHẤM ĐIỂM KHUYẾN NGHỊ THỰC CHIẾN ---
+        // --- TẦNG LỌC VÀNG: TỰ ĐỘNG BỎ SỐ RỦI RO, CHỈ HIỂN THỊ SỐ SÁNG GIÁ ---
         function layPhanGiaoCacMoHinh() {
             if (!lastCachedResults) {
                 alert("Vui lòng bấm 'Chạy Phân Tích' trước!");
@@ -572,10 +572,8 @@
                 });
             });
 
-            // Lấy danh sách số giao thoa từ >= 2 mô hình
             let filteredIntersection = Object.entries(scoreMap).filter(([num, score]) => countMap[num] >= 2);
 
-            // Tính toán nhịp gan hiện tại của các con số từ tập subset
             let allLoList = [];
             if (lastCachedSubset) {
                 lastCachedSubset.forEach(item => {
@@ -592,28 +590,30 @@
             let lastSeen = {};
             allLoList.forEach((num, idx) => { if (!(num in lastSeen)) lastSeen[num] = idx; });
 
+            // 🛑 LỌC BỎ HOÀN TOÀN CÁC SỐ BỊ GAN SÂU (GAN > 30 KỲ) ĐỂ TRÁNH MA TRẬN RÁC
+            filteredIntersection = filteredIntersection.filter(([num, score]) => {
+                let ganVal = lastSeen[num] !== undefined ? lastSeen[num] : 99;
+                return ganVal <= 30; // Chỉ giữ lại các số có nhịp gan an toàn từ 30 kỳ trở xuống
+            });
+
             filteredIntersection.sort((a, b) => b[1] - a[1]);
 
-            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA & MÔ PHỎNG KHUYẾN NGHỊ XUỐNG TIỀN";
+            document.getElementById('sectionTitleSuggest').innerText = "🔗 TÂM ĐIỂM GIAO THOA VÀNG (Đã lọc bỏ số rủi ro / gan sâu)";
             
             let intersectionHtml = filteredIntersection.map(([num, totalScore], idx) => {
                 let count = countMap[num];
                 let modelsList = modelSourceMap[num].join(', ');
-                let ganVal = lastSeen[num] !== undefined ? lastSeen[num] : 99;
+                let ganVal = lastSeen[num] !== undefined ? lastSeen[num] : 0;
 
-                // --- MÔ PHỎNG CHẤM ĐIỂM QUYẾT ĐỊNH (NÊN CHỌN HAY BỎ QUA) ---
                 let recommendation = "";
                 let cardStyle = "";
 
-                if (count >= 3 && ganVal <= 30) {
+                if (count >= 3 && ganVal <= 15) {
                     recommendation = '<span class="mt-1 px-2 py-0.5 bg-emerald-500 text-slate-950 font-bold text-[9px] rounded-full">⭐ RẤT SÁNG (NÊN CHỌN)</span>';
                     cardStyle = "bg-gradient-to-b from-amber-500/20 to-slate-900 border-amber-500/60 ring-2 ring-amber-400/50 shadow-lg";
-                } else if (count >= 2 && ganVal <= 40) {
+                } else {
                     recommendation = '<span class="mt-1 px-2 py-0.5 bg-blue-500 text-white font-semibold text-[9px] rounded-full">👍 CÂN NHẮC (ĐÁNH NHẸ)</span>';
                     cardStyle = "bg-slate-900/80 border-slate-700";
-                } else {
-                    recommendation = '<span class="mt-1 px-2 py-0.5 bg-rose-500/80 text-white font-semibold text-[9px] rounded-full">❌ NÊN BỎ QUA (RỦI RO)</span>';
-                    cardStyle = "bg-slate-900/40 border-slate-800 opacity-70";
                 }
                 
                 return `<div title="Đề xuất: ${modelsList} | Trọng số: ${Math.round(totalScore)}đ | Nhịp gan: ${ganVal} kỳ" class="${cardStyle} p-3 rounded-xl border text-center flex flex-col items-center justify-between cursor-help transition-transform hover:scale-105">
@@ -626,7 +626,7 @@
                 </div>`;
             }).join('');
 
-            document.getElementById('suggestedNumbersList').innerHTML = intersectionHtml || '<span class="text-slate-400 text-xs italic col-span-full">Không tìm thấy con số nào đạt chuẩn định lượng trong kỳ này.</span>';
+            document.getElementById('suggestedNumbersList').innerHTML = intersectionHtml || '<span class="text-slate-400 text-xs italic col-span-full">Không tìm thấy con số nào đạt chuẩn an toàn trong kỳ này.</span>';
         }
 
         function veBieuDoDanhGia(models) {
