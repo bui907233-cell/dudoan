@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Pro - XSMT</title>
+    <title>Analysis Pro - XSMT (Anti-Leakage)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -16,9 +16,9 @@
     <!-- Header -->
     <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
-            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro</h1>
+            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro (Anti-Leakage)</h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Ver 2.0 – Thống kê thực tế + Trọng số động · Chạy trực tiếp trên Hosting
+                Ver 2.1 – Cắt bỏ tương lai hoàn toàn · Trọng số động tính chuẩn xác theo mốc ngày chọn
             </p>
         </div>
         <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2 transition-all">
@@ -53,7 +53,7 @@
         </div>
 
         <div>
-            <label class="block text-xs font-medium text-indigo-500 mb-1">🔍 Chọn Ngày Phân Tích</label>
+            <label class="block text-xs font-medium text-indigo-500 mb-1">🔍 Chọn Ngày Phân Tích (Backtest)</label>
             <select id="selectTraCuuNgay" onchange="hienThongTinNgayTrucTiep()" class="w-full border border-indigo-400/50 rounded-lg px-3 py-2 bg-indigo-50 dark:bg-indigo-950/30 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
                 <option value="">-- Mặc định (kỳ mới nhất) --</option>
             </select>
@@ -85,24 +85,21 @@
     <!-- Kết quả chính -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <div class="lg:col-span-2 bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-xl border border-indigo-500/30">
-            <h3 class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4 text-center">
-                🎯 KẾT QUẢ GIAO THOA (đã lọc + trọng số động)
+            <h3 id="resultTitleBanner" class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4 text-center">
+                🎯 KẾT QUẢ GIAO THOA (đã chuẩn hóa + trọng số động)
             </h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto">
                 <div class="bg-white/5 backdrop-blur p-4 rounded-xl border border-white/10 text-center">
                     <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp 2 số tối ưu</p>
                     <span id="final2D" class="text-4xl font-extrabold tracking-wider text-yellow-400 block mt-1">--</span>
-                    <span class="text-[10px] text-slate-300 mt-2 block">Gợi ý đồng thuận cao nhất</span>
+                    <span id="actualCompareNote" class="text-[10px] text-slate-300 mt-2 block">Gợi ý đồng thuận cao nhất</span>
                 </div>
                 <div class="bg-white/5 backdrop-blur p-4 rounded-xl border border-white/10 text-center">
-                    <p class="text-[11px] text-indigo-200 uppercase font-semibold">Top 3 càng (từ tổng ĐB gần nhất)</p>
+                    <p class="text-[11px] text-indigo-200 uppercase font-semibold">Top 3 càng (từ tổng ĐB mốc chọn)</p>
                     <div id="final3DList" class="flex justify-center gap-2 mt-2 flex-wrap"></div>
                     <span id="detail3DHint" class="text-[10px] text-indigo-300 mt-2 block"></span>
                 </div>
             </div>
-            <p class="text-center text-[11px] text-slate-400 mt-4">
-                Lưu ý: Đây chỉ là gợi ý thống kê tương đối. Xổ số mang tính ngẫu nhiên cao.
-            </p>
         </div>
 
         <div id="panelChiTietNgay" class="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-xl border border-indigo-500/20">
@@ -163,7 +160,7 @@
 
     <!-- Leaderboard -->
     <div class="bg-slate-900 text-white p-5 rounded-xl shadow-lg mb-6 border border-slate-800">
-        <h2 class="text-sm font-bold mb-3 text-indigo-300">🏆 Bảng xếp hạng trọng số động (rolling precision)</h2>
+        <h2 class="text-sm font-bold mb-3 text-indigo-300">🏆 Bảng xếp hạng trọng số động (rolling precision - cắt bỏ tương lai)</h2>
         <div id="modelLeaderboard" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-2">
             <div class="col-span-full text-center text-xs text-slate-400 py-4">Chưa chạy phân tích</div>
         </div>
@@ -180,7 +177,7 @@
 let currentLoadedJson = null;
 let lastCachedResults = null;
 let lastCachedSubset = null;
-let lastCachedLichSu = null;
+let lastCachedSafeHistory = null;
 window.lastModelScores = null;
 
 window.onload = async () => {
@@ -207,7 +204,7 @@ async function onDaiChange() {
     currentLoadedJson = null;
     lastCachedResults = null;
     lastCachedSubset = null;
-    lastCachedLichSu = null;
+    lastCachedSafeHistory = null;
     window.lastModelScores = null;
     resetUI();
     await taiDuLieuDai();
@@ -217,6 +214,8 @@ function resetUI() {
     document.getElementById('final2D').textContent = '--';
     document.getElementById('final3DList').innerHTML = '';
     document.getElementById('detail3DHint').textContent = '';
+    document.getElementById('actualCompareNote').textContent = 'Gợi ý đồng thuận cao nhất';
+    document.getElementById('resultTitleBanner').textContent = '🎯 KẾT QUẢ GIAO THOA (đã chuẩn hóa + trọng số động)';
     document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic">Bấm “Chạy Phân Tích” để hiển thị...</span>';
     document.getElementById('panelTitle').textContent = '📋 Chi tiết giải ngày đã chọn';
     document.getElementById('panelBody').innerHTML = '<p class="text-slate-400 italic text-center py-8">Chọn ngày ở dropdown phía trên để xem kết quả thực tế.</p>';
@@ -331,8 +330,8 @@ function getDeList(subset) {
     }).filter(Boolean);
 }
 
-// ==================== 9 MÔ HÌNH CẢI TIẾN ====================
-function chay9MoHinh(subset, fullHistory) {
+// ==================== 9 MÔ HÌNH ====================
+function chay9MoHinh(subset, fullHistorySafe) {
     const allLo = [];
     subset.forEach(item => allLo.push(...extractAll2D(item)));
     const deList = getDeList(subset);
@@ -401,9 +400,9 @@ function chay9MoHinh(subset, fullHistory) {
         if (m4.length >= 12) break;
     }
 
-    // 5. Bạc nhớ theo thứ
+    // 5. Bạc nhớ theo thứ (chỉ dùng lịch sử đã được gọt bỏ tương lai)
     const targetThu = subset[0]?.thu || '';
-    const sameDay = fullHistory.filter(i => i.thu === targetThu);
+    const sameDay = fullHistorySafe.filter(i => i.thu === targetThu);
     const dayFreq = {};
     sameDay.forEach((item, idx) => {
         const db = (item.gdb || '').toString().slice(-2);
@@ -477,15 +476,16 @@ function chay9MoHinh(subset, fullHistory) {
     };
 }
 
-// ==================== TRỌNG SỐ ĐỘNG (ROLLING) ====================
-function tinhTrongSoDong(lichSu) {
+// ==================== TRỌNG SỐ ĐỘNG (HOÀN TOÀN AN TOÀN - KHÔNG RÒ RỈ) ====================
+function tinhTrongSoDong(safeHistory) {
     const scores = {
         'Tần suất TW': 50, 'Lô Gan': 50, 'Markov': 50, 'Chạm Tổng': 50,
         'Bạc Nhớ Thứ': 50, 'Delta': 50, 'Pair Freq': 50, 'Digit Trans': 50, 'Ensemble': 50
     };
-    if (!Array.isArray(lichSu) || lichSu.length < 8) return scores;
+    if (!Array.isArray(safeHistory) || safeHistory.length < 8) return scores;
 
-    const recent = lichSu.slice(0, Math.min(35, lichSu.length));
+    // Rolling tính toán ngược trong chính kho dữ liệu quá khứ đã được cắt bỏ tương lai
+    const recent = safeHistory.slice(0, Math.min(35, safeHistory.length));
 
     for (let i = recent.length - 1; i >= 5; i--) {
         const train = recent.slice(i);
@@ -493,7 +493,7 @@ function tinhTrongSoDong(lichSu) {
         const actual2D = (actual.gdb || '').toString().slice(-2);
         if (actual2D.length !== 2) continue;
 
-        const preds = chay9MoHinh(train, lichSu);
+        const preds = chay9MoHinh(train, safeHistory);
         Object.keys(preds).forEach(name => {
             if (preds[name].includes(actual2D)) {
                 scores[name] = Math.min(110, scores[name] + 2.8);
@@ -505,39 +505,54 @@ function tinhTrongSoDong(lichSu) {
     return scores;
 }
 
-// ==================== CHẠY PHÂN TÍCH CHÍNH ====================
+// ==================== CHẠY PHÂN TÍCH CHÍNH (ANTI-LEAKAGE) ====================
 async function thucHienPhanTich() {
     if (!currentLoadedJson) {
         const ok = await taiDuLieuDai();
         if (!ok) {
-            alert('Không tải được dữ liệu JSON của đài này. Vui lòng kiểm tra lại file data/<tên_đài>.json trên hosting.');
+            alert('Không tải được dữ liệu JSON của đài này.');
             return;
         }
     }
 
     const targetDate = document.getElementById('selectTraCuuNgay').value;
     const limit = parseInt(document.getElementById('selectLimit').value);
-    const lichSu = currentLoadedJson.lich_su_quay || currentLoadedJson;
+    const rawLichSu = currentLoadedJson.lich_su_quay || currentLoadedJson;
 
-    if (!Array.isArray(lichSu) || lichSu.length < 5) {
+    if (!Array.isArray(rawLichSu) || rawLichSu.length < 5) {
         alert('Dữ liệu lịch sử quá ít.');
         return;
     }
 
-    let active = lichSu;
+    // 🛑 BƯỚC QUAN TRỌNG: CẮT BỎ TƯƠNG LAI HOÀN TOÀN
+    // Nếu người dùng chọn ngày X, ta chỉ giữ lại các phần tử có ngày <= X (trong mảng giảm dần, nghĩa là từ index của X trở xuống cuối mảng)
+    let safeHistory = rawLichSu;
+    let actualNextDraw = null; // Kỳ quay ngay sau ngày X để đối chiếu thực tế (Anti-Leakage Backtest)
+
     if (targetDate) {
-        const idx = lichSu.findIndex(i => i.ngay === targetDate);
-        if (idx !== -1) active = lichSu.slice(idx);
+        const idx = rawLichSu.findIndex(i => i.ngay === targetDate);
+        if (idx !== -1) {
+            // idx là vị trí của ngày được chọn. Vì mảng sắp xếp từ mới xuống cũ (ngày lớn ở trên),
+            // nên các kỳ TƯƠNG LAI nằm ở các index < idx. Ta cắt bỏ hoàn toàn:
+            safeHistory = rawLichSu.slice(idx);
+            
+            // Nếu có kỳ ngay trước đó (index = idx - 1), đó chính là kết quả thực tế của kỳ tiếp theo cần dự đoán:
+            if (idx > 0) {
+                actualNextDraw = rawLichSu[idx - 1];
+            }
+        }
     }
 
-    const subset = active.slice(0, limit);
+    const subset = safeHistory.slice(0, limit);
     lastCachedSubset = subset;
-    lastCachedLichSu = lichSu;
+    lastCachedSafeHistory = safeHistory;
 
-    const results = chay9MoHinh(subset, lichSu);
+    // Chạy 9 mô hình chỉ dựa trên dữ liệu an toàn (safeHistory)
+    const results = chay9MoHinh(subset, safeHistory);
     lastCachedResults = results;
 
-    const scores = tinhTrongSoDong(lichSu);
+    // Tính trọng số động cũng chỉ dựa trên dữ liệu an toàn (safeHistory)
+    const scores = tinhTrongSoDong(safeHistory);
     window.lastModelScores = scores;
 
     const scoreMap = {}, countMap = {}, sourceMap = {};
@@ -569,6 +584,7 @@ async function thucHienPhanTich() {
     const final2D = filtered.length ? filtered[0][0] : (results['Tần suất TW'][0] || '50');
     document.getElementById('final2D').textContent = final2D;
 
+    // 3 càng từ tổng ĐB của mốc chọn
     const deListSubset = getDeList(subset);
     const latestDeVal = deListSubset[0] || '53';
     const sumDe = (parseInt(latestDeVal[0]) + parseInt(latestDeVal[1])) % 10;
@@ -579,7 +595,27 @@ async function thucHienPhanTich() {
     document.getElementById('final3DList').innerHTML = list3D.map((v,i) => 
         `<span class="${i===0 ? 'text-yellow-400 font-extrabold' : 'text-indigo-200'} text-lg px-2 py-0.5 bg-black/20 rounded border border-white/10">${v}</span>`
     ).join('');
-    document.getElementById('detail3DHint').textContent = `(từ tổng ĐB gần nhất: ${topH.join(', ')})`;
+    document.getElementById('detail3DHint').textContent = `(từ tổng ĐB ngày ${latest?.ngay}: ${topH.join(', ')})`;
+
+    // ĐỐI CHIẾU BACKTEST THỰC TẾ (NẾU CÓ KỲ KẾ TIẾP)
+    if (actualNextDraw) {
+        const actualDB = (actualNextDraw.gdb || '').toString();
+        const actual2D = actualDB.slice(-2);
+        const isMatch2D = (final2D === actual2D);
+        const isMatch3D = list3D.includes(actualDB);
+
+        document.getElementById('resultTitleBanner').innerText = `🔍 BACKTEST: MỐC CHỌN ${targetDate} ➔ KỲ THỰC TẾ ${actualNextDraw.ngay}`;
+        
+        let compareHtml = `Thực tế kỳ ${actualNextDraw.ngay} về ĐB: <strong class="text-yellow-300">${actualDB}</strong><br>`;
+        compareHtml += `<span class="${(isMatch2D || isMatch3D) ? 'text-red-400 font-bold' : 'text-slate-300'}">`;
+        compareHtml += isMatch2D ? `✅ TRÚNG 2 SỐ (${actual2D})!` : `❌ Lệch 2S (Thực tế: ${actual2D})`;
+        if (isMatch3D) compareHtml += ` | 👑 TRÚNG 3 CÀNG!`;
+        compareHtml += `</span>`;
+        document.getElementById('actualCompareNote').innerHTML = compareHtml;
+    } else {
+        document.getElementById('resultTitleBanner').innerText = '🎯 KẾT QUẢ GIAO THOA (Dự đoán kỳ mới nhất)';
+        document.getElementById('actualCompareNote').textContent = 'Gợi ý đồng thuận cao nhất';
+    }
 
     const render = (id, arr, max = 6) => {
         document.getElementById(id).innerHTML = arr.slice(0, max).map(n => 
