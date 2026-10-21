@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Pro - 15 Mô Hình + Mô Hình 16 (Quét Toàn Giải & Toàn Kỳ)</title>
+    <title>Analysis Pro - 17 Mô Hình (Tích hợp Ngũ Hành & Khoảng Cách Ngày)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -16,9 +16,9 @@
     <!-- Header -->
     <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
-            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Đồng Thuận 15 Mô Hình & Mô Hình 16 (Quét Toàn Giải)</h1>
+            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - 17 Mô Hình (Ngũ Hành & Khoảng Cách Ngày)</h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Mô hình 16 bóc tách tất cả các giải ở mọi kỳ quay để chắt lọc 1 số duy nhất · Chống rò rỉ (Anti-Leakage)
+                Tích hợp Diễn dịch Âm Dương Ngũ Hành & Delta 7 ngày theo chu kỳ tuần · Chống rò rỉ (Anti-Leakage)
             </p>
         </div>
         <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2 transition-all">
@@ -71,7 +71,7 @@
 
         <div>
             <button onclick="thucHienPhanTich()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg text-sm shadow transition-all">
-                🚀 Chạy Phân Tích Song Song
+                🚀 Chạy 17 Mô Hình
             </button>
         </div>
 
@@ -82,44 +82,63 @@
         </div>
     </div>
 
-    <!-- KHU VỰC ĐỐI CHÍNH: 15 MÔ HÌNH VS MÔ HÌNH 16 ĐỘC LẬP -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <!-- BÊN TRÁI: ĐỒNG THUẬN 15 MÔ HÌNH -->
-        <div class="bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-xl border border-indigo-500/30 flex flex-col justify-between">
+    <!-- KHU VỰC 3 HỆ THỐNG ĐỐI CHÍNH -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <!-- HỆ THỐNG A: 15 MÔ HÌNH ĐỒNG THUẬN -->
+        <div class="bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-indigo-500/30 flex flex-col justify-between">
             <div>
                 <h3 class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-2 text-center">
-                    🤝 HỆ THỐNG A: TÁN THÀNH 15 MÔ HÌNH
+                    🤝 Hệ thống A: Đồng Thuận 15 Mô Hình
                 </h3>
-                <div class="text-center bg-white/5 backdrop-blur p-4 rounded-xl border border-white/10 mb-4">
-                    <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp số đồng thuận cao nhất</p>
-                    <span id="finalTopNum" class="text-4xl font-extrabold tracking-wider text-yellow-400 block mt-1">--</span>
-                    <span id="consensusRate" class="text-[10px] text-slate-300 mt-1 block">Đang chờ phân tích...</span>
+                <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
+                    <p class="text-[10px] text-indigo-200 uppercase font-semibold">Cặp số đồng thuận cao nhất</p>
+                    <span id="finalTopNum" class="text-3xl font-extrabold tracking-wider text-yellow-400 block mt-1">--</span>
+                    <span id="consensusRate" class="text-[9px] text-slate-300 mt-0.5 block">Đang chờ phân tích...</span>
                 </div>
-                <div class="bg-black/20 p-3 rounded-xl border border-white/10">
-                    <p class="text-[11px] text-indigo-300 font-semibold mb-1">Top dàn số đồng thuận:</p>
-                    <div id="suggestedNumbersList" class="flex flex-wrap gap-1.5 text-xs min-h-[35px]"></div>
+                <div class="bg-black/20 p-2.5 rounded-xl border border-white/10">
+                    <p class="text-[10px] text-indigo-300 font-semibold mb-1">Top dàn số:</p>
+                    <div id="suggestedNumbersList" class="flex flex-wrap gap-1 text-xs min-h-[30px]"></div>
                 </div>
             </div>
-            <div id="compareSysA" class="text-[11px] text-slate-300 mt-4 pt-3 border-t border-white/10">Chưa chạy Backtest</div>
+            <div id="compareSysA" class="text-[10px] text-slate-300 mt-3 pt-2 border-t border-white/10">Chưa chạy Backtest</div>
         </div>
 
-        <!-- BÊN PHẢI: MÔ HÌNH 16 (QUÉT TOÀN BỘ GIẢI & KỲ - 1 SỐ DUY NHẤT) -->
-        <div class="bg-gradient-to-br from-amber-900 to-slate-900 text-white p-6 rounded-2xl shadow-xl border border-amber-500/40 flex flex-col justify-between">
+        <!-- HỆ THỐNG B: MÔ HÌNH 16 (QUÉT TOÀN GIẢI) -->
+        <div class="bg-gradient-to-br from-amber-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-amber-500/40 flex flex-col justify-between">
             <div>
                 <h3 class="text-xs font-bold uppercase tracking-widest text-amber-300 mb-2 text-center">
-                    🔥 HỆ THỐNG B: MÔ HÌNH 16 (QUÉT TOÀN GIẢI & KỲ)
+                    🔥 Hệ thống B: Mô Hình 16 (Quét Toàn Giải)
                 </h3>
-                <div class="text-center bg-white/5 backdrop-blur p-4 rounded-xl border border-white/10 mb-4">
-                    <p class="text-[11px] text-amber-200 uppercase font-semibold">Số duy nhất từ tất cả các giải & kỳ quay</p>
-                    <span id="model16SingleNum" class="text-4xl font-extrabold tracking-wider text-yellow-400 block mt-1">--</span>
-                    <span id="model16Reason" class="text-[10px] text-amber-100 mt-1 block italic">Đang quét toàn bộ dữ liệu giải...</span>
+                <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
+                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Số duy nhất từ tất cả các giải</p>
+                    <span id="model16SingleNum" class="text-3xl font-extrabold tracking-wider text-yellow-400 block mt-1">--</span>
+                    <span id="model16Reason" class="text-[9px] text-amber-100 mt-0.5 block italic">Đang quét dữ liệu...</span>
                 </div>
-                <div class="bg-black/20 p-3 rounded-xl border border-white/10">
-                    <p class="text-[11px] text-amber-300 font-semibold mb-1">Thống kê bóc tách toàn giải:</p>
-                    <div id="model16Details" class="text-xs text-slate-200 space-y-1">Chưa có dữ liệu phân tích...</div>
+                <div class="bg-black/20 p-2.5 rounded-xl border border-white/10">
+                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Thống kê bóc tách:</p>
+                    <div id="model16Details" class="text-[11px] text-slate-200 space-y-0.5">Chưa có dữ liệu...</div>
                 </div>
             </div>
-            <div id="compareSysB" class="text-[11px] text-slate-300 mt-4 pt-3 border-t border-white/10">Chưa chạy Backtest</div>
+            <div id="compareSysB" class="text-[10px] text-slate-300 mt-3 pt-2 border-t border-white/10">Chưa chạy Backtest</div>
+        </div>
+
+        <!-- HỆ THỐNG C: MÔ HÌNH 17 (NGŨ HÀNH & KHOẢNG CÁCH NGÀY) -->
+        <div class="bg-gradient-to-br from-emerald-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-emerald-500/40 flex flex-col justify-between">
+            <div>
+                <h3 class="text-xs font-bold uppercase tracking-widest text-emerald-300 mb-2 text-center">
+                    ☯️ Hệ thống C: Mô Hình 17 (Ngũ Hành & Delta 7 Ngày)
+                </h3>
+                <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
+                    <p class="text-[10px] text-emerald-200 uppercase font-semibold">Số chuyển hóa theo Ngũ Hành & Chu kỳ 7 ngày</p>
+                    <span id="model17SingleNum" class="text-3xl font-extrabold tracking-wider text-yellow-400 block mt-1">--</span>
+                    <span id="model17Reason" class="text-[9px] text-emerald-100 mt-0.5 block italic">Đang diễn dịch phong thủy & ngày...</span>
+                </div>
+                <div class="bg-black/20 p-2.5 rounded-xl border border-white/10">
+                    <p class="text-[10px] text-emerald-300 font-semibold mb-1">Chi tiết diễn dịch ngũ hành:</p>
+                    <div id="model17Details" class="text-[11px] text-slate-200 space-y-0.5">Chưa có dữ liệu...</div>
+                </div>
+            </div>
+            <div id="compareSysC" class="text-[10px] text-slate-300 mt-3 pt-2 border-t border-white/10">Chưa chạy Backtest</div>
         </div>
     </div>
 
@@ -191,10 +210,14 @@ function resetUI() {
     document.getElementById('finalTopNum').textContent = '--';
     document.getElementById('consensusRate').textContent = 'Đang chờ phân tích...';
     document.getElementById('model16SingleNum').textContent = '--';
-    document.getElementById('model16Reason').textContent = 'Đang quét toàn bộ dữ liệu giải...';
-    document.getElementById('model16Details').textContent = 'Chưa có dữ liệu phân tích...';
+    document.getElementById('model16Reason').textContent = 'Đang quét dữ liệu...';
+    document.getElementById('model16Details').textContent = 'Chưa có dữ liệu...';
+    document.getElementById('model17SingleNum').textContent = '--';
+    document.getElementById('model17Reason').textContent = 'Đang diễn dịch...';
+    document.getElementById('model17Details').textContent = 'Chưa có dữ liệu...';
     document.getElementById('compareSysA').textContent = 'Chưa chạy Backtest';
     document.getElementById('compareSysB').textContent = 'Chưa chạy Backtest';
+    document.getElementById('compareSysC').textContent = 'Chưa chạy Backtest';
     document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic">Bấm chạy để xem mức độ đồng thuận...</span>';
     document.getElementById('panelBody').innerHTML = '<p class="text-slate-400 italic text-center py-4">Chọn ngày để xem chi tiết.</p>';
     document.getElementById('selectTraCuuNgay').innerHTML = '<option value="">-- Mặc định (kỳ mới nhất) --</option>';
@@ -430,29 +453,24 @@ function chay15MoHinh(subset, fullHistorySafe) {
     };
 }
 
-// ==================== 🔥 MÔ HÌNH 16: QUÉT TẤT CẢ CÁC GIẢI & TẤT CẢ CÁC KỲ (CHỐT 1 SỐ DUY NHẤT) ====================
+// ==================== MÔ HÌNH 16: QUÉT TOÀN GIẢI & KỲ ====================
 function chayMoHinh16_FullPrizesScan(subset) {
-    if (!subset || subset.length < 3) return { singleNum: '38', reason: 'Dữ liệu quá ngắn', details: 'Không đủ kỳ để quét.' };
+    if (!subset || subset.length < 3) return { singleNum: '38', reason: 'Dữ liệu quá ngắn', details: 'Không đủ kỳ.' };
 
     let positionalScores = {};
     let prizeNames = ['giai_8', 'giai_7', 'giai_6', 'giai_5', 'giai_4', 'giai_3', 'giai_2', 'giai_1', 'gdb'];
 
-    // Bóc tách tất cả các giải ở tất cả các kỳ quay trong subset với trọng số thời gian
     subset.forEach((item, periodIdx) => {
-        let timeWeight = Math.pow(0.88, periodIdx); // Kỳ càng gần hiện tại trọng số càng cao
-
+        let timeWeight = Math.pow(0.88, periodIdx);
         prizeNames.forEach(pName => {
             let val = item[pName];
             if (!val) return;
-
             let listVals = Array.isArray(val) ? val : [val];
             listVals.forEach(v => {
                 let s = v.toString();
                 if (s.length >= 2) {
                     let num2d = s.slice(-2);
-                    // Các giải quan trọng như GĐB và G8 có thêm trọng số ưu tiên vị trí cốt lõi
                     let prizeBonus = (pName === 'gdb' || pName === 'giai_8') ? 1.8 : 1.0;
-                    
                     positionalScores[num2d] = (positionalScores[num2d] || 0) + (timeWeight * prizeBonus);
                 }
             });
@@ -463,18 +481,62 @@ function chayMoHinh16_FullPrizesScan(subset) {
     let singleNum = sortedPositional.length > 0 ? sortedPositional[0][0] : '42';
     let topScore = sortedPositional.length > 0 ? Math.round(sortedPositional[0][1] * 10) / 10 : 0;
 
-    let details = `• Đã quét toàn bộ <strong>9 nhóm giải</strong> qua <strong>${subset.length} kỳ</strong> quay.<br>` +
-                  `• Tổng hợp điểm trọng số vị trí toàn giải: <strong>${topScore} điểm</strong><br>` +
-                  `➔ <em>Chốt 1 số duy nhất tối ưu từ toàn bộ giải & kỳ:</em> <strong>${singleNum}</strong>`;
+    let details = `• Quét toàn bộ <strong>9 nhóm giải</strong> qua ${subset.length} kỳ.<br>` +
+                  `• Điểm trọng số vị trí: <strong>${topScore}đ</strong><br>` +
+                  `➔ <em>Số tối ưu toàn giải:</em> <strong>${singleNum}</strong>`;
+
+    return { singleNum: singleNum, reason: `Quét toàn giải (${subset.length} kỳ)`, details: details };
+}
+
+// ==================== 🔥 MÔ HÌNH 17: ÂM DƯƠNG NGŨ HÀNH & KHOẢNG CÁCH NGÀY (DELTA 7 NGÀY) ====================
+function chayMoHinh17_NgũHànhDelta(bestNumSysA, bestNumSysB, subset) {
+    // Bảng chuyển hóa bóng Âm Dương Ngũ Hành
+    const bongDuong = { '0':'5', '5':'0', '1':'6', '6':'1', '2':'7', '7':'2', '3':'8', '8':'3', '4':'9', '9':'4' };
+    const bongAm   = { '0':'7', '7':'0', '1':'4', '4':'1', '2':'9', '9':'2', '3':'6', '6':'3', '5':'8', '8':'5' };
+
+    let baseNum = bestNumSysA || bestNumSysB || '50';
+    let nVal = parseInt(baseNum);
+
+    // Tính toán khoảng cách Delta chu kỳ tuần (ví dụ cách 7 ngày)
+    let deltaWeek = 7;
+    if (subset && subset.length >= 2) {
+        let d1 = new Date(subset[0].ngay);
+        let d2 = new Date(subset[1].ngay);
+        let diffDays = Math.round(Math.abs((d1 - d2) / (1000 * 60 * 60 * 24)));
+        if (!isNaN(diffDays) && diffDays > 0) deltaWeek = diffDays;
+    }
+
+    // Áp dụng phép xoay vòng Ngũ Hành & Bước nhảy Delta
+    let transformed1 = pad2((nVal + deltaWeek) % 100);
+    let transformed2 = pad2((nVal - deltaWeek + 100) % 100);
+    
+    // Bóng dương và bóng âm của số cốt lõi
+    let dCode = bongDuong[baseNum[0]] + bongDuong[baseNum[1]];
+    let aCode = bongAm[baseNum[0]] + bongAm[baseNum[1]];
+
+    // Chọn ra con số hạt nhân qua sự giao thoa Ngũ Hành & Delta
+    let candidateScores = {};
+    candidateScores[transformed1] = (candidateScores[transformed1] || 0) + 3;
+    candidateScores[transformed2] = (candidateScores[transformed2] || 0) + 3;
+    candidateScores[dCode] = (candidateScores[dCode] || 0) + 4;
+    candidateScores[aCode] = (candidateScores[aCode] || 0) + 3.5;
+
+    let sortedFinal = Object.entries(candidateScores).sort((a,b) => b[1] - a[1]);
+    let finalSingleNum = sortedFinal.length > 0 ? sortedFinal[0][0] : '36';
+
+    let details = `• Số gốc tham chiếu: <strong>${baseNum}</strong><br>` +
+                  `• Chu kỳ Delta tuần: <strong>${deltaWeek} ngày</strong><br>` +
+                  `• Bóng dương Ngũ Hành: <strong>${dCode}</strong> | Bóng âm: <strong>${aCode}</strong><br>` +
+                  `➔ <em>Chốt số chuyển hóa Ngũ Hành:</em> <strong>${finalSingleNum}</strong>`;
 
     return {
-        singleNum: singleNum,
-        reason: `Quét toàn giải & toàn kỳ (Biên độ ${subset.length} kỳ)`,
+        singleNum: finalSingleNum,
+        reason: `Chuyển hóa từ số gốc ${baseNum} (Delta ${deltaWeek} ngày)`,
         details: details
     };
 }
 
-// ==================== THỰC HIỆN PHÂN TÍCH SONG SONG ====================
+// ==================== THỰC HIỆN PHÂN TÍCH SONG SONG 3 HỆ THỐNG ====================
 async function thucHienPhanTich() {
     if (!currentLoadedJson) {
         const ok = await taiDuLieuDai();
@@ -499,7 +561,7 @@ async function thucHienPhanTich() {
     const subset = safeHistory.slice(0, limit);
     lastCachedSubset = subset;
 
-    // Chạy Hệ thống A: 15 Mô hình đồng thuận
+    // 1. Chạy Hệ thống A: 15 Mô hình đồng thuận
     const results15 = chay15MoHinh(subset, safeHistory);
     lastCachedResults = results15;
 
@@ -521,10 +583,10 @@ async function thucHienPhanTich() {
     document.getElementById('suggestedNumbersList').innerHTML = sortedConsensus.slice(0, 10).map(([num, votes], idx) => {
         let percent = Math.round((votes / totalModels) * 100);
         let cls = 'bg-emerald-600 text-white';
-        if (idx === 0) cls = 'bg-yellow-400 text-slate-900 ring-4 ring-yellow-300 font-bold scale-105';
-        return `<div title="Được ${votes} mô hình ủng hộ (${percent}%)" class="${cls} px-2.5 py-1 rounded text-center cursor-help transition">
-            <span class="text-base font-bold">${num}</span>
-            <span class="block text-[9px] opacity-90">${votes} phiếu</span>
+        if (idx === 0) cls = 'bg-yellow-400 text-slate-900 ring-2 ring-yellow-300 font-bold';
+        return `<div title="Được ${votes} mô hình ủng hộ (${percent}%)" class="${cls} px-2 py-0.5 rounded text-center cursor-help">
+            <span class="text-sm font-bold">${num}</span>
+            <span class="block text-[8px] opacity-90">${votes}p</span>
         </div>`;
     }).join('');
 
@@ -537,23 +599,32 @@ async function thucHienPhanTich() {
         }
     });
 
-    // Chạy Hệ thống B: Mô hình 16 (Quét toàn bộ giải & kỳ)
+    // 2. Chạy Hệ thống B: Mô hình 16 (Quét toàn giải)
     const m16Res = chayMoHinh16_FullPrizesScan(subset);
     document.getElementById('model16SingleNum').textContent = m16Res.singleNum;
     document.getElementById('model16Reason').textContent = m16Res.reason;
     document.getElementById('model16Details').innerHTML = m16Res.details;
 
-    // Đối chiếu Backtest thực tế
+    // 3. Chạy Hệ thống C: Mô hình 17 (Ngũ hành & Delta 7 ngày)
+    const m17Res = chayMoHinh17_NgũHànhDelta(topBestNumA, m16Res.singleNum, subset);
+    document.getElementById('model17SingleNum').textContent = m17Res.singleNum;
+    document.getElementById('model17Reason').textContent = m17Res.reason;
+    document.getElementById('model17Details').innerHTML = m17Res.details;
+
+    // Đối chiếu Backtest thực tế cho cả 3 hệ thống
     if (actualNextDraw) {
         let actualAllNums = extractAll2D(actualNextDraw);
         let hitA = actualAllNums.includes(topBestNumA);
         let hitB = actualAllNums.includes(m16Res.singleNum);
+        let hitC = actualAllNums.includes(m17Res.singleNum);
 
-        document.getElementById('compareSysA').innerHTML = `Thực tế kỳ ${actualNextDraw.ngay} [${actualAllNums.join(', ')}]: <br><strong class="${hitA ? 'text-emerald-400 font-bold' : 'text-red-400'}">${hitA ? '✅ Hệ thống A TRÚNG!' : '❌ Hệ thống A trượt'}</strong>`;
-        document.getElementById('compareSysB').innerHTML = `Thực tế kỳ ${actualNextDraw.ngay} [${actualAllNums.join(', ')}]: <br><strong class="${hitB ? 'text-emerald-400 font-bold' : 'text-red-400'}">${hitB ? '✅ Mô hình 16 TRÚNG!' : '❌ Mô hình 16 trượt'}</strong>`;
+        document.getElementById('compareSysA').innerHTML = `Thực tế [${actualAllNums.join(', ')}]: <strong class="${hitA ? 'text-emerald-400 font-bold' : 'text-red-400'}">${hitA ? '✅ TRÚNG!' : '❌ Trượt'}</strong>`;
+        document.getElementById('compareSysB').innerHTML = `Thực tế [${actualAllNums.join(', ')}]: <strong class="${hitB ? 'text-emerald-400 font-bold' : 'text-red-400'}">${hitB ? '✅ TRÚNG!' : '❌ Trượt'}</strong>`;
+        document.getElementById('compareSysC').innerHTML = `Thực tế [${actualAllNums.join(', ')}]: <strong class="${hitC ? 'text-emerald-400 font-bold' : 'text-red-400'}">${hitC ? '✅ TRÚNG!' : '❌ Trượt'}</strong>`;
     } else {
-        document.getElementById('compareSysA').textContent = 'Đang dự đoán kỳ mới nhất (Chưa có kết quả thực tế để đối chiếu)';
-        document.getElementById('compareSysB').textContent = 'Đang dự đoán kỳ mới nhất (Chưa có kết quả thực tế để đối chiếu)';
+        document.getElementById('compareSysA').textContent = 'Đang dự đoán kỳ mới nhất (Chưa có kết quả thực tế)';
+        document.getElementById('compareSysB').textContent = 'Đang dự đoán kỳ mới nhất (Chưa có kết quả thực tế)';
+        document.getElementById('compareSysC').textContent = 'Đang dự đoán kỳ mới nhất (Chưa có kết quả thực tế)';
     }
 }
 </script>
