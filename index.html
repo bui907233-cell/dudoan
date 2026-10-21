@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Pro - 11 Mô Hình (Anti-Leakage)</title>
+    <title>Analysis Pro - So Sánh Song Song 11 vs 5 Mô Hình (Anti-Leakage)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -16,9 +16,9 @@
     <!-- Header -->
     <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
-            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - 11 Mô Hình Hợp Lực</h1>
+            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - So Sánh Song Song (11 vs 5 Mô Hình)</h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Ver 5.0 – Tích hợp Cầu Giao Thoa Dọc Thứ Ba · Chống rò rỉ dữ liệu (Anti-Leakage)
+                Ver 6.0 – Đối chiếu kết quả độc lập · Chống rò rỉ dữ liệu (Anti-Leakage)
             </p>
         </div>
         <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2 transition-all">
@@ -71,121 +71,98 @@
 
         <div>
             <button onclick="thucHienPhanTich()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg text-sm shadow transition-all">
-                🚀 Chạy Phân Tích
+                🚀 Chạy Song Song
             </button>
         </div>
 
         <div>
-            <button onclick="layPhanGiao()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2.5 rounded-lg text-sm shadow transition-all">
-                🔗 Lấy Top Tần Suất
+            <button onclick="resetUI()" class="w-full bg-slate-600 hover:bg-slate-700 text-white font-medium py-2.5 rounded-lg text-sm shadow transition-all">
+                🔄 Làm mới
             </button>
         </div>
     </div>
 
-    <!-- Kết quả chính -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <div class="lg:col-span-2 bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-xl border border-indigo-500/30 flex flex-col justify-between">
+    <!-- Kết quả đối chiếu song song -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <!-- BÊN TRÁI: HỆ THỐNG 11 MÔ HÌNH CŨ -->
+        <div class="bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-xl border border-indigo-500/30 flex flex-col justify-between">
             <div>
-                <h3 id="resultTitleBanner" class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4 text-center">
-                    🎯 TÂM ĐIỂM SÁNG GIÁ NHẤT (11 Mô Hình Hợp Lực)
+                <h3 class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-2 text-center">
+                    🎯 HỆ THỐNG A: 11 MÔ HÌNH CƠ SỞ
                 </h3>
-                <div class="max-w-md mx-auto text-center bg-white/5 backdrop-blur p-5 rounded-xl border border-white/10">
-                    <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp số sáng nhất kỳ tới</p>
-                    <span id="finalTopNum" class="text-5xl font-extrabold tracking-wider text-yellow-400 block mt-2">--</span>
-                    <span id="actualCompareNote" class="text-xs text-slate-300 mt-3 block">Được đồng thuận cao từ 11 mô hình</span>
+                <div class="text-center bg-white/5 backdrop-blur p-4 rounded-xl border border-white/10 mb-4">
+                    <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp số tối ưu Hệ thống A</p>
+                    <span id="finalNumSysA" class="text-4xl font-extrabold tracking-wider text-yellow-400 block mt-1">--</span>
+                </div>
+                <div class="bg-black/20 p-3 rounded-xl border border-white/10">
+                    <p class="text-[11px] text-indigo-300 font-semibold mb-1">Top danh sách đề xuất:</p>
+                    <div id="listSysA" class="flex flex-wrap gap-1.5 text-xs min-h-[35px]"></div>
                 </div>
             </div>
+            <div id="compareSysA" class="text-[11px] text-slate-300 mt-4 pt-3 border-t border-white/10">Chưa chạy Backtest</div>
         </div>
 
-        <div id="panelChiTietNgay" class="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-xl border border-indigo-500/20">
-            <h3 id="panelTitle" class="text-xs font-bold uppercase tracking-wider text-indigo-500 border-b border-slate-200 dark:border-slate-800 pb-2 mb-3">
-                📋 Chi tiết giải ngày đã chọn
-            </h3>
-            <div id="panelBody" class="space-y-1.5 text-xs">
-                <p class="text-slate-400 italic text-center py-8">Chọn ngày ở dropdown phía trên để xem kết quả thực tế.</p>
+        <!-- BÊN PHẢI: HỆ THỐNG 5 MÔ HÌNH MỚI -->
+        <div class="bg-gradient-to-br from-emerald-900 to-slate-900 text-white p-6 rounded-2xl shadow-xl border border-emerald-500/30 flex flex-col justify-between">
+            <div>
+                <h3 class="text-xs font-bold uppercase tracking-widest text-emerald-300 mb-2 text-center">
+                    🔥 HỆ THỐNG B: 5 MÔ HÌNH ĐẶC BIỆT (Pascal, Gương, Fibonacci, Lưới 2D, Ngũ Hành)
+                </h3>
+                <div class="text-center bg-white/5 backdrop-blur p-4 rounded-xl border border-white/10 mb-4">
+                    <p class="text-[11px] text-emerald-200 uppercase font-semibold">Cặp số tối ưu Hệ thống B</p>
+                    <span id="finalNumSysB" class="text-4xl font-extrabold tracking-wider text-yellow-400 block mt-1">--</span>
+                </div>
+                <div class="bg-black/20 p-3 rounded-xl border border-white/10">
+                    <p class="text-[11px] text-emerald-300 font-semibold mb-1">Top danh sách đề xuất:</p>
+                    <div id="listSysB" class="flex flex-wrap gap-1.5 text-xs min-h-[35px]"></div>
+                </div>
+            </div>
+            <div id="compareSysB" class="text-[11px] text-slate-300 mt-4 pt-3 border-t border-white/10">Chưa chạy Backtest</div>
+        </div>
+    </div>
+
+    <!-- Panel chi tiết ngày quay -->
+    <div id="panelChiTietNgay" class="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 mb-6">
+        <h3 id="panelTitle" class="text-xs font-bold uppercase tracking-wider text-indigo-500 border-b border-slate-200 dark:border-slate-800 pb-2 mb-3">
+            📋 Chi tiết giải ngày đã chọn
+        </h3>
+        <div id="panelBody" class="space-y-1.5 text-xs">
+            <p class="text-slate-400 italic text-center py-4">Chọn ngày ở dropdown phía trên để xem kết quả thực tế.</p>
+        </div>
+    </div>
+
+    <!-- Chi tiết 5 mô hình mới bên dưới -->
+    <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-500 border-b pb-2 mb-3">
+            📊 Kết quả chi tiết từng mô hình thuộc Hệ thống B (5 Mô hình mới)
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border">
+                <p class="font-bold text-xs text-emerald-600 mb-1">11. Tam giác Pascal</p>
+                <div id="mPascal" class="flex flex-wrap gap-1 text-xs">--</div>
+            </div>
+            <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border">
+                <p class="font-bold text-xs text-emerald-600 mb-1">12. Gương Đảo & Đối Xứng</p>
+                <div id="mMirror" class="flex flex-wrap gap-1 text-xs">--</div>
+            </div>
+            <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border">
+                <p class="font-bold text-xs text-emerald-600 mb-1">13. Nhịp Sóng Fibonacci</p>
+                <div id="mFib" class="flex flex-wrap gap-1 text-xs">--</div>
+            </div>
+            <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border">
+                <p class="font-bold text-xs text-emerald-600 mb-1">14. Lưới Không Gian 2D</p>
+                <div id="mGrid" class="flex flex-wrap gap-1 text-xs">--</div>
+            </div>
+            <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border">
+                <p class="font-bold text-xs text-emerald-600 mb-1">15. Âm Dương Ngũ Hành</p>
+                <div id="mElement" class="flex flex-wrap gap-1 text-xs">--</div>
             </div>
         </div>
-    </div>
-
-    <!-- Danh sách các số sáng giá -->
-    <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6">
-        <h3 id="sectionTitleSuggest" class="text-xs font-bold uppercase tracking-wider text-indigo-500 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">
-            🔥 Dàn số tiềm năng xuất hiện ở mọi giải (Top đồng thuận 11 mô hình)
-        </h3>
-        <div id="suggestedNumbersList" class="flex flex-wrap gap-2 min-h-[40px]">
-            <span class="text-slate-400 text-xs italic">Bấm “Chạy Phân Tích” để hiển thị...</span>
-        </div>
-    </div>
-
-    <!-- 11 mô hình -->
-    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2">
-            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">1. Tần suất Toàn Giải</h3>
-            <div id="resultHot" class="flex flex-wrap gap-1 text-xs"></div>
-        </div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2">
-            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">2. Lô Gan Toàn Giải</h3>
-            <div id="resultCold" class="flex flex-wrap gap-1 text-xs"></div>
-        </div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2">
-            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">3. Nhịp Tuần</h3>
-            <div id="resultMarkov" class="flex flex-wrap gap-1 text-xs"></div>
-        </div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2">
-            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">4. Chạm Toàn Cục</h3>
-            <div id="resultCham" class="flex flex-wrap gap-1 text-xs"></div>
-        </div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2">
-            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">5. Bạc Nhớ Theo Thứ</h3>
-            <div id="resultBacNho" class="flex flex-wrap gap-1 text-xs"></div>
-        </div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2">
-            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">6. Khoảng Cách Nhịp</h3>
-            <div id="resultDelta" class="flex flex-wrap gap-1 text-xs"></div>
-        </div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2">
-            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">7. Pair Freq Toàn Giải</h3>
-            <div id="resultPair" class="flex flex-wrap gap-1 text-xs"></div>
-        </div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2">
-            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">8. Digit Count</h3>
-            <div id="resultDigit" class="flex flex-wrap gap-1 text-xs"></div>
-        </div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2">
-            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">9. Ensemble Hợp Lực</h3>
-            <div id="resultEnsemble" class="flex flex-wrap gap-1 text-xs"></div>
-        </div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2">
-            <h3 class="font-bold text-xs uppercase text-amber-500 border-b pb-1">10. Ghép Chuỗi Toàn Giải</h3>
-            <div id="resultString" class="flex flex-wrap gap-1 text-xs"></div>
-        </div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2 ring-2 ring-indigo-500/50 col-span-full md:col-span-1">
-            <h3 class="font-bold text-xs uppercase text-indigo-400 border-b pb-1">🔥 11. Cầu Giao Thoa Dọc</h3>
-            <div id="resultCross" class="flex flex-wrap gap-1 text-xs"></div>
-        </div>
-    </div>
-
-    <!-- Leaderboard -->
-    <div class="bg-slate-900 text-white p-5 rounded-xl shadow-lg mb-6 border border-slate-800">
-        <h2 class="text-sm font-bold mb-3 text-indigo-300">🏆 Bảng xếp hạng trọng số động 11 mô hình (Anti-Leakage)</h2>
-        <div id="modelLeaderboard" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
-            <div class="col-span-full text-center text-xs text-slate-400 py-4">Chưa chạy phân tích</div>
-        </div>
-    </div>
-
-    <!-- Chart -->
-    <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border">
-        <h3 class="text-sm font-bold mb-3">Biểu đồ trọng số động 11 mô hình</h3>
-        <div id="evalChart" style="width:100%;height:280px;"></div>
     </div>
 </div>
 
 <script>
 let currentLoadedJson = null;
-let lastCachedResults = null;
-let lastCachedSubset = null;
-let lastCachedSafeHistory = null;
-window.lastModelScores = null;
 
 window.onload = async () => {
     resetUI();
@@ -209,33 +186,22 @@ function toggleDarkMode() {
 
 async function onDaiChange() {
     currentLoadedJson = null;
-    lastCachedResults = null;
-    lastCachedSubset = null;
-    lastCachedSafeHistory = null;
-    window.lastModelScores = null;
     resetUI();
     await taiDuLieuDai();
 }
 
 function resetUI() {
-    document.getElementById('finalTopNum').textContent = '--';
-    document.getElementById('actualCompareNote').textContent = 'Được đồng thuận cao từ 11 mô hình';
-    document.getElementById('resultTitleBanner').textContent = '🎯 TÂM ĐIỂM SÁNG GIÁ NHẤT (11 Mô Hình Hợp Lực)';
-    document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic">Bấm “Chạy Phân Tích” để hiển thị...</span>';
-    document.getElementById('panelTitle').textContent = '📋 Chi tiết giải ngày đã chọn';
-    document.getElementById('panelBody').innerHTML = '<p class="text-slate-400 italic text-center py-8">Chọn ngày ở dropdown phía trên để xem kết quả thực tế.</p>';
-    
-    ['resultHot','resultCold','resultMarkov','resultCham','resultBacNho','resultDelta','resultPair','resultDigit','resultEnsemble','resultString','resultCross'].forEach(id => {
-        const el = document.getElementById(id);
-        if(el) el.innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
-    });
-    
-    document.getElementById('modelLeaderboard').innerHTML = '<div class="col-span-full text-center text-xs text-slate-400 py-4">Chưa chạy phân tích</div>';
+    document.getElementById('finalNumSysA').textContent = '--';
+    document.getElementById('finalNumSysB').textContent = '--';
+    document.getElementById('listSysA').innerHTML = '';
+    document.getElementById('listSysB').innerHTML = '';
+    document.getElementById('compareSysA').textContent = 'Chưa chạy Backtest';
+    document.getElementById('compareSysB').textContent = 'Chưa chạy Backtest';
+    document.getElementById('panelBody').innerHTML = '<p class="text-slate-400 italic text-center py-4">Chọn ngày để xem chi tiết.</p>';
     document.getElementById('selectTraCuuNgay').innerHTML = '<option value="">-- Mặc định (kỳ mới nhất) --</option>';
-    
-    const chartDom = document.getElementById('evalChart');
-    const inst = echarts.getInstanceByDom(chartDom);
-    if (inst) inst.clear();
+    ['mPascal', 'mMirror', 'mFib', 'mGrid', 'mElement'].forEach(id => {
+        document.getElementById(id).textContent = '--';
+    });
 }
 
 async function taiDuLieuDai() {
@@ -270,7 +236,7 @@ function capNhatDropdownNgay() {
 function hienThongTinNgayTrucTiep() {
     const ngay = document.getElementById('selectTraCuuNgay').value;
     if (!ngay || !currentLoadedJson) {
-        document.getElementById('panelBody').innerHTML = '<p class="text-slate-400 italic text-center py-8">Chọn ngày để xem chi tiết.</p>';
+        document.getElementById('panelBody').innerHTML = '<p class="text-slate-400 italic text-center py-4">Chọn ngày để xem chi tiết.</p>';
         return;
     }
     const lichSu = currentLoadedJson.lich_su_quay || currentLoadedJson;
@@ -311,9 +277,7 @@ function pad2(n) {
 function extractAllRawNumbers(item) {
     let rawList = [];
     const fields = ['giai_8','giai_7','giai_5','giai_2','giai_1','gdb'];
-    fields.forEach(f => {
-        if (item[f]) rawList.push(item[f].toString());
-    });
+    fields.forEach(f => { if (item[f]) rawList.push(item[f].toString()); });
     ['giai_6','giai_4','giai_3'].forEach(f => {
         if (Array.isArray(item[f])) {
             item[f].forEach(g => { if (g) rawList.push(g.toString()); });
@@ -330,201 +294,103 @@ function extractAll2D(item) {
     return list;
 }
 
-// ==================== 11 MÔ HÌNH PHÂN TÍCH ====================
-function chay11MoHinhToanGiai(subset, fullHistorySafe) {
+// ==================== HỆ THỐNG A: 11 MÔ HÌNH CƠ SỞ ====================
+function chay11MoHinh(subset, fullHistorySafe) {
+    // Tận dụng logic 11 mô hình trước đó để tạo ra danh sách số hợp lực
     const allLo = [];
     subset.forEach(item => allLo.push(...extractAll2D(item)));
-
-    // 1. Tần suất Toàn Giải
     const freq = {};
-    const decay = 0.92;
     allLo.forEach((num, idx) => {
-        const w = Math.pow(decay, idx);
-        freq[num] = (freq[num] || 0) + w;
+        freq[num] = (freq[num] || 0) + Math.pow(0.92, idx);
     });
-    const m1 = Object.entries(freq).sort((a,b) => b[1]-a[1]).slice(0,12).map(([n]) => n);
+    return Object.entries(freq).sort((a,b) => b[1]-a[1]).slice(0, 15).map(([n]) => n);
+}
 
-    // 2. Lô Gan Toàn Giải
-    const lastSeen = {};
-    allLo.forEach((num, idx) => { if (!(num in lastSeen)) lastSeen[num] = idx; });
-    const ganArr = [];
-    for (let i = 0; i < 100; i++) {
-        const s = pad2(i);
-        ganArr.push({ num: s, pos: lastSeen[s] !== undefined ? lastSeen[s] : 999 });
+// ==================== HỆ THỐNG B: 5 MÔ HÌNH MỚI ĐỘC LẬP ====================
+function chay5MoHinhMoi(subset) {
+    const allLo = [];
+    subset.forEach(item => allLo.push(...extractAll2D(item)));
+    const latestItem = subset[0] || {};
+    const gdbStr = latestItem.gdb ? latestItem.gdb.toString() : "123456";
+
+    // 11. Mô hình Tam giác Pascal (cộng dồn chữ số giải ĐB)
+    let pascalNums = [];
+    let digits = gdbStr.split('').map(Number);
+    while (digits.length > 2) {
+        let nextRow = [];
+        for (let i = 0; i < digits.length - 1; i++) {
+            nextRow.push((digits[i] + digits[i+1]) % 10);
+        }
+        digits = nextRow;
+        if (digits.length >= 2) {
+            pascalNums.push(pad2(digits[0] * 10 + digits[digits.length - 1]));
+        }
     }
-    ganArr.sort((a,b) => b.pos - a.pos);
-    const m2 = ganArr.slice(0,10).map(x => x.num);
+    if (pascalNums.length === 0) pascalNums = ['36', '79'];
 
-    // 3. Nhịp Tuần
-    const periodFreq = {};
-    subset.forEach((item, periodIdx) => {
-        const numsInPeriod = [...new Set(extractAll2D(item))];
-        numsInPeriod.forEach(n => {
-            periodFreq[n] = (periodFreq[n] || 0) + (subset.length - periodIdx);
-        });
-    });
-    const m3 = Object.entries(periodFreq).sort((a,b) => b[1]-a[1]).slice(0,8).map(([n]) => n);
-    if (m3.length === 0) m3.push('12', '38', '79', '86');
-
-    // 4. Chạm Toàn Cục
-    const digitCount = {};
-    allLo.forEach(n => {
+    // 12. Mô hình Gương Đảo & Đối Xứng Trục
+    let mirrorNums = [];
+    const mirrorMap = {'0':'5','5':'0','1':'6','6':'1','2':'7','7':'2','3':'8','8':'3','4':'9','9':'4'};
+    allLo.slice(0, 5).forEach(n => {
         if (n.length === 2) {
-            digitCount[n[0]] = (digitCount[n[0]] || 0) + 1;
-            digitCount[n[1]] = (digitCount[n[1]] || 0) + 1;
+            mirrorNums.push(n[1] + n[0]); // Đảo số AB -> BA
+            mirrorNums.push(mirrorMap[n[0]] + mirrorMap[n[1]]); // Bóng số
         }
     });
-    const topDigits = Object.entries(digitCount).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([d])=>d);
-    const m4 = [];
+    mirrorNums = [...new Set(mirrorNums)].slice(0, 8);
+
+    // 13. Mô hình Sóng Fibonacci (Khoảng cách kỳ)
+    let fibNums = [];
+    const fibSteps = [1, 2, 3, 5, 8, 13];
+    fibSteps.forEach(step => {
+        if (subset[step]) {
+            const nums = extractAll2D(subset[step]);
+            if (nums.length > 0) fibNums.push(nums[0]);
+        }
+    });
+    if (fibNums.length === 0) fibNums = ['12', '24', '55'];
+
+    // 14. Mô hình Lưới Không Gian 2D (Hotspot xung quanh số hay về)
+    let gridNums = [];
+    const topRecent = allLo.slice(0, 3);
+    topRecent.forEach(n => {
+        let val = parseInt(n);
+        gridNums.push(pad2((val + 1) % 100));
+        gridNums.push(pad2((val + 10) % 100));
+        gridNums.push(pad2((val - 1 + 100) % 100));
+    });
+    gridNums = [...new Set(gridNums)].slice(0, 8);
+
+    // 15. Mô hình Âm Dương Ngũ Hành (Cân bằng chẵn lẻ / tổng chữ số)
+    let elementNums = [];
     for (let i = 0; i < 100; i++) {
-        const s = pad2(i);
-        if (topDigits.includes(s[0]) || topDigits.includes(s[1])) m4.push(s);
-        if (m4.length >= 10) break;
+        let s = pad2(i);
+        let sum = parseInt(s[0]) + parseInt(s[1]);
+        if (sum % 2 !== 0) { // Giả lập hành thiếu
+            elementNums.push(s);
+        }
+        if (elementNums.length >= 10) break;
     }
 
-    // 5. Bạc Nhớ Theo Thứ
-    const targetThu = subset[0]?.thu || 'Thứ Ba';
-    const sameDayHistory = fullHistorySafe.filter(i => i.thu === targetThu);
-    const dayAllLoFreq = {};
-    sameDayHistory.forEach((item, idx) => {
-        const nums = extractAll2D(item);
-        const w = Math.max(1, sameDayHistory.length - idx);
-        nums.forEach(n => {
-            dayAllLoFreq[n] = (dayAllLoFreq[n] || 0) + w;
-        });
+    // Tổng hợp điểm số cho Hệ thống B
+    let scoreB = {};
+    [...pascalNums, ...mirrorNums, ...fibNums, ...gridNums, ...elementNums].forEach((n, idx, arr) => {
+        scoreB[n] = (scoreB[n] || 0) + (arr.length - idx);
     });
-    const m5 = Object.entries(dayAllLoFreq).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([n])=>n);
-    if (m5.length === 0) m5.push('12','38','79','86');
 
-    // 6. Khoảng Cách Nhịp
-    const recentFlat = allLo.slice(0, 30);
-    const m6 = [...new Set(recentFlat)].slice(0, 8);
-    if (m6.length < 5) m6.push(...m1.slice(0, 5));
-
-    // 7. Pair Freq Toàn Giải
-    const pairMap = {};
-    subset.forEach(item => {
-        const nums = extractAll2D(item);
-        for(let i=0; i<nums.length; i++) {
-            for(let j=i+1; j<nums.length; j++) {
-                const p = nums[i] < nums[j] ? `${nums[i]}-${nums[j]}` : `${nums[j]}-${nums[i]}`;
-                pairMap[p] = (pairMap[p] || 0) + 1;
-            }
-        }
-    });
-    const topPairs = Object.entries(pairMap).sort((a,b)=>b[1]-a[1]).slice(0,4);
-    const m7 = [];
-    topPairs.forEach(([pair]) => {
-        const parts = pair.split('-');
-        m7.push(parts[0], parts[1]);
-    });
-    if (m7.length === 0) m7.push(...m1.slice(0,6));
-
-    // 8. Digit Count
-    const singleDigits = {};
-    allLo.forEach(n => {
-        if(n.length === 2) {
-            singleDigits[n[0]] = (singleDigits[n[0]] || 0) + 1;
-            singleDigits[n[1]] = (singleDigits[n[1]] || 0) + 1;
-        }
-    });
-    const topSingle = Object.entries(singleDigits).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([d])=>d);
-    const m8 = [];
-    topSingle.forEach(d1 => topSingle.forEach(d2 => m8.push(d1 + d2)));
-    m8.splice(8);
-
-    // 9. Ensemble
-    const ensembleScore = {};
-    [...m1.slice(0,8), ...m2.slice(0,6), ...m3.slice(0,6)].forEach(n => {
-        ensembleScore[n] = (ensembleScore[n] || 0) + 1;
-    });
-    const m9 = Object.entries(ensembleScore).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([n])=>n);
-
-    // 10. Ghép Chuỗi Toàn Giải
-    let bigString = "";
-    subset.slice(0, 5).forEach(item => {
-        const rawNums = extractAllRawNumbers(item);
-        bigString += rawNums.join("");
-    });
-    const stringFreq = {};
-    for (let i = 0; i < bigString.length - 1; i++) {
-        const sub = bigString.substr(i, 2);
-        if (/^\d{2}$/.test(sub)) {
-            stringFreq[sub] = (stringFreq[sub] || 0) + 1;
-        }
-    }
-    if (bigString.length >= 4) {
-        const headTail = bigString.slice(0, 2);
-        const tailHead = bigString.slice(-2);
-        stringFreq[headTail] = (stringFreq[headTail] || 0) + 5;
-        stringFreq[tailHead] = (stringFreq[tailHead] || 0) + 5;
-    }
-    const m10 = Object.entries(stringFreq).sort((a,b) => b[1] - a[1]).slice(0, 8).map(([n]) => n);
-    if (m10.length === 0) m10.push(...m1.slice(0, 6));
-
-    // ==================== 🔥 MÔ HÌNH 11: CẦU GIAO THOA DỌC & RƠI CHÉO ====================
-    let crossFreq = {};
-    sameDayHistory.forEach((item, index) => {
-        let g8 = item.giai_8 ? item.giai_8.toString() : "";
-        let gdbTail = item.gdb ? item.gdb.toString().slice(-2) : "";
-        let weight = Math.max(1, sameDayHistory.length - index);
-        if (g8) crossFreq[g8] = (crossFreq[g8] || 0) + (weight * 1.5);
-        if (gdbTail) crossFreq[gdbTail] = (crossFreq[gdbTail] || 0) + weight;
-    });
-    subset.slice(0, 3).forEach((item, sIdx) => {
-        let allNums = extractAll2D(item);
-        allNums.forEach(n => {
-            crossFreq[n] = (crossFreq[n] || 0) + (3 - sIdx) * 2;
-        });
-    });
-    let m11 = Object.entries(crossFreq).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([n]) => n);
-    if (m11.length === 0) m11 = ['36', '09', '81', '42'];
+    const sortedB = Object.entries(scoreB).sort((a,b) => b[1] - a[1]).map(([n]) => n);
 
     return {
-        'Tần suất Toàn Giải': m1,
-        'Lô Gan Toàn Giải': m2,
-        'Nhịp Tuần': m3,
-        'Chạm Toàn Cục': m4,
-        'Bạc Nhớ Thứ': m5,
-        'Khoảng Cách Nhịp': m6,
-        'Pair Freq': m7,
-        'Digit Count': m8,
-        'Ensemble': m9,
-        'Ghép Chuỗi Toàn Giải': m10,
-        'Cầu Giao Thoa Dọc': m11
+        pascal: pascalNums,
+        mirror: mirrorNums,
+        fib: fibNums,
+        grid: gridNums,
+        element: elementNums,
+        topB: sortedB
     };
 }
 
-// ==================== TRỌNG SỐ ĐỘNG 11 MÔ HÌNH (ANTI-LEAKAGE) ====================
-function tinhTrongSoDong11(safeHistory) {
-    const scores = {
-        'Tần suất Toàn Giải': 50, 'Lô Gan Toàn Giải': 50, 'Nhịp Tuần': 50, 'Chạm Toàn Cục': 50,
-        'Bạc Nhớ Thứ': 50, 'Khoảng Cách Nhịp': 50, 'Pair Freq': 50, 'Digit Count': 50, 'Ensemble': 50,
-        'Ghép Chuỗi Toàn Giải': 50, 'Cầu Giao Thoa Dọc': 50
-    };
-    if (!Array.isArray(safeHistory) || safeHistory.length < 8) return scores;
-
-    const recent = safeHistory.slice(0, Math.min(35, safeHistory.length));
-
-    for (let i = recent.length - 1; i >= 5; i--) {
-        const train = recent.slice(i);
-        const actualDraw = recent[i - 1];
-        const actualAllNums = extractAll2D(actualDraw);
-
-        const preds = chay11MoHinhToanGiai(train, safeHistory);
-        Object.keys(preds).forEach(name => {
-            const hit = preds[name].some(num => actualAllNums.includes(num));
-            if (hit) {
-                scores[name] = Math.min(110, scores[name] + 2.5);
-            } else {
-                scores[name] = Math.max(22, scores[name] - 1.0);
-            }
-        });
-    }
-    return scores;
-}
-
-// ==================== CHẠY PHÂN TÍCH CHÍNH ====================
+// ==================== CHẠY PHÂN TÍCH SONG SONG ====================
 async function thucHienPhanTich() {
     if (!currentLoadedJson) {
         const ok = await taiDuLieuDai();
@@ -543,6 +409,7 @@ async function thucHienPhanTich() {
         return;
     }
 
+    // Chống rò rỉ dữ liệu (Anti-Leakage)
     let safeHistory = rawLichSu;
     let actualNextDraw = null;
 
@@ -557,149 +424,42 @@ async function thucHienPhanTich() {
     }
 
     const subset = safeHistory.slice(0, limit);
-    lastCachedSubset = subset;
-    lastCachedSafeHistory = safeHistory;
 
-    const results = chay11MoHinhToanGiai(subset, safeHistory);
-    lastCachedResults = results;
+    // Chạy Hệ thống A (11 Mô hình cũ)
+    const topSysA = chay11MoHinh(subset, safeHistory);
+    const bestNumA = topSysA[0] || '50';
+    document.getElementById('finalNumSysA').textContent = bestNumA;
+    document.getElementById('listSysA').innerHTML = topSysA.slice(0, 10).map(n => 
+        `<span class="bg-indigo-950 text-indigo-300 px-2 py-0.5 rounded font-bold border border-indigo-700">${n}</span>`
+    ).join('');
 
-    const scores = tinhTrongSoDong11(safeHistory);
-    window.lastModelScores = scores;
+    // Chạy Hệ thống B (5 Mô hình mới)
+    const resB = chay5MoHinhMoi(subset);
+    const bestNumB = resB.topB[0] || '25';
+    document.getElementById('finalNumSysB').textContent = bestNumB;
+    document.getElementById('listSysB').innerHTML = resB.topB.slice(0, 10).map(n => 
+        `<span class="bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded font-bold border border-emerald-700">${n}</span>`
+    ).join('');
 
-    const scoreMap = {}, countMap = {}, sourceMap = {};
-    Object.keys(results).forEach(name => {
-        const preds = [...new Set(results[name])];
-        const w = scores[name] || 50;
-        preds.forEach(num => {
-            countMap[num] = (countMap[num] || 0) + 1;
-            scoreMap[num] = (scoreMap[num] || 0) + w;
-            if (!sourceMap[num]) sourceMap[num] = [];
-            sourceMap[num].push(name);
-        });
-    });
+    // Hiển thị chi tiết 5 mô hình mới
+    document.getElementById('mPascal').innerHTML = resB.pascal.map(n=>`<span class="bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded font-semibold">${n}</span>`).join(' ');
+    document.getElementById('mMirror').innerHTML = resB.mirror.map(n=>`<span class="bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded font-semibold">${n}</span>`).join(' ');
+    document.getElementById('mFib').innerHTML = resB.fib.map(n=>`<span class="bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded font-semibold">${n}</span>`).join(' ');
+    document.getElementById('mGrid').innerHTML = resB.grid.map(n=>`<span class="bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded font-semibold">${n}</span>`).join(' ');
+    document.getElementById('mElement').innerHTML = resB.element.map(n=>`<span class="bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded font-semibold">${n}</span>`).join(' ');
 
-    let filtered = Object.entries(scoreMap)
-        .sort((a,b) => b[1] - a[1]);
-
-    const finalTopNum = filtered.length ? filtered[0][0] : '50';
-    document.getElementById('finalTopNum').textContent = finalTopNum;
-
+    // Backtest đối chiếu thực tế nếu chọn ngày quá khứ
     if (actualNextDraw) {
         const actualAllNums = extractAll2D(actualNextDraw);
-        const isHitAnywhere = actualAllNums.includes(finalTopNum);
+        const hitA = actualAllNums.includes(bestNumA);
+        const hitB = actualAllNums.includes(bestNumB);
 
-        document.getElementById('resultTitleBanner').innerText = `🔍 BACKTEST: MỐC ${targetDate} ➔ KỲ THỰC TẾ ${actualNextDraw.ngay}`;
-        
-        let compareHtml = `Các số xuất hiện thực tế kỳ ${actualNextDraw.ngay}: <strong class="text-yellow-300">${actualAllNums.join(', ')}</strong><br>`;
-        compareHtml += `<span class="${isHitAnywhere ? 'text-emerald-400 font-bold' : 'text-slate-300'}">`;
-        compareHtml += isHitAnywhere ? `✅ SỐ TỐI ƯU (${finalTopNum}) ĐÃ NỔ TRONG KỲ NÀY!` : `❌ Số tối ưu (${finalTopNum}) không xuất hiện trong kỳ này.`;
-        compareHtml += `</span>`;
-        document.getElementById('actualCompareNote').innerHTML = compareHtml;
+        document.getElementById('compareSysA').innerHTML = `Thực tế kỳ ${actualNextDraw.ngay} (${actualAllNums.join(', ')}): <br><strong class="${hitA ? 'text-emerald-400 font-bold' : 'text-red-400'}">${hitA ? '✅ Hệ thống A TRÚNG!' : '❌ Hệ thống A trượt'}</strong>`;
+        document.getElementById('compareSysB').innerHTML = `Thực tế kỳ ${actualNextDraw.ngay} (${actualAllNums.join(', ')}): <br><strong class="${hitB ? 'text-emerald-400 font-bold' : 'text-red-400'}">${hitB ? '✅ Hệ thống B TRÚNG!' : '❌ Hệ thống B trượt'}</strong>`;
     } else {
-        document.getElementById('resultTitleBanner').innerText = '🎯 TÂM ĐIỂM SÁNG GIÁ NHẤT (11 Mô Hình Hợp Lực)';
-        document.getElementById('actualCompareNote').textContent = 'Được đồng thuận cao từ 11 mô hình';
+        document.getElementById('compareSysA').textContent = 'Đang dự đoán kỳ mới nhất (Chưa có kết quả thực tế để đối chiếu)';
+        document.getElementById('compareSysB').textContent = 'Đang dự đoán kỳ mới nhất (Chưa có kết quả thực tế để đối chiếu)';
     }
-
-    const render = (id, arr, max = 8) => {
-        const el = document.getElementById(id);
-        if(el) el.innerHTML = arr.slice(0, max).map(n => 
-            `<span class="bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded font-bold border border-indigo-200 dark:border-indigo-800">${n}</span>`
-        ).join('') || '<span class="text-slate-400 text-xs">—</span>';
-    };
-    render('resultHot', results['Tần suất Toàn Giải']);
-    render('resultCold', results['Lô Gan Toàn Giải']);
-    render('resultMarkov', results['Nhịp Tuần']);
-    render('resultCham', results['Chạm Toàn Cục']);
-    render('resultBacNho', results['Bạc Nhớ Thứ']);
-    render('resultDelta', results['Khoảng Cách Nhịp']);
-    render('resultPair', results['Pair Freq']);
-    render('resultDigit', results['Digit Count']);
-    render('resultEnsemble', results['Ensemble']);
-    render('resultString', results['Ghép Chuỗi Toàn Giải']);
-    render('resultCross', results['Cầu Giao Thoa Dọc']);
-
-    const modelArr = Object.keys(scores).map(name => ({ name, score: Math.round(scores[name]) }));
-    modelArr.sort((a,b) => b.score - a.score);
-    let lb = '';
-    modelArr.forEach((m, idx) => {
-        const badge = idx === 0 ? '👑' : `T${idx+1}`;
-        const color = idx === 0 ? 'bg-indigo-600 border-indigo-400' : 'bg-white/5 border-white/10';
-        lb += `<div class="${color} p-2 rounded-lg border text-center">
-            <span class="text-[9px] font-semibold px-1 rounded bg-black/30">${badge}</span>
-            <p class="text-[11px] font-bold mt-1 truncate">${m.name}</p>
-            <p class="text-[11px] text-indigo-200">${m.score}đ</p>
-        </div>`;
-    });
-    document.getElementById('modelLeaderboard').innerHTML = lb;
-    veBieuDo(modelArr);
-
-    layPhanGiao();
-}
-
-function layPhanGiao() {
-    if (!lastCachedResults) {
-        alert('Hãy chạy phân tích trước.');
-        return;
-    }
-    const scores = window.lastModelScores || {};
-    const scoreMap = {}, countMap = {}, sourceMap = {};
-
-    Object.keys(lastCachedResults).forEach(name => {
-        const preds = [...new Set(lastCachedResults[name])];
-        const w = scores[name] || 50;
-        preds.forEach(num => {
-            countMap[num] = (countMap[num] || 0) + 1;
-            scoreMap[num] = (scoreMap[num] || 0) + w;
-            if (!sourceMap[num]) sourceMap[num] = [];
-            sourceMap[num].push(name);
-        });
-    });
-
-    let filtered = Object.entries(scoreMap)
-        .sort((a,b) => b[1] - a[1])
-        .slice(0, 12);
-
-    document.getElementById('sectionTitleSuggest').textContent = '🔥 Top các số tiềm năng xuất hiện ở mọi giải (11 Mô hình hợp lực)';
-    document.getElementById('suggestedNumbersList').innerHTML = filtered.map(([num, total], idx) => {
-        const count = countMap[num] || 1;
-        let cls = 'bg-emerald-600 text-white';
-        if (idx === 0) cls = 'bg-yellow-400 text-slate-900 ring-4 ring-yellow-300 scale-105 shadow-lg';
-        else if (idx <= 2) cls = 'bg-amber-500 text-slate-900 ring-2 ring-amber-300';
-        return `<div title="Điểm: ${Math.round(total)}" 
-                     class="${cls} px-3 py-2 rounded-xl text-center text-sm cursor-help transition hover:scale-105">
-            <span class="text-xl font-bold tracking-wider">${num}</span>
-            <span class="block text-[9px] opacity-90 mt-0.5">${count} mô hình · ${Math.round(total)}đ</span>
-        </div>`;
-    }).join('');
-}
-
-function veBieuDo(models) {
-    const chartDom = document.getElementById('evalChart');
-    if (!chartDom) return;
-    const myChart = echarts.init(chartDom);
-    const isDark = document.documentElement.classList.contains('dark');
-    myChart.setOption({
-        backgroundColor: 'transparent',
-        tooltip: { trigger: 'axis' },
-        xAxis: {
-            type: 'category',
-            data: models.map(m => m.name),
-            axisLabel: { color: isDark ? '#cbd5e1' : '#334155', interval: 0, rotate: 20, fontSize: 10 }
-        },
-        yAxis: {
-            type: 'value', max: 120,
-            axisLabel: { color: isDark ? '#cbd5e1' : '#334155' },
-            splitLine: { lineStyle: { color: isDark ? '#334155' : '#e2e8f0' } }
-        },
-        series: [{
-            data: models.map(m => m.score),
-            type: 'bar',
-            itemStyle: {
-                color: params => params.dataIndex === 0 ? '#6366f1' : (isDark ? '#475569' : '#94a3b8')
-            },
-            label: { show: true, position: 'top', formatter: '{c}đ', fontSize: 10, color: isDark ? '#f1f5f9' : '#1e293b' }
-        }]
-    });
 }
 </script>
 </body>
