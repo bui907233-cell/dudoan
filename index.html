@@ -18,10 +18,10 @@
         <div>
             <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro</h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Ver 2.0 – Thống kê thực tế + Trọng số động · Không hứa hẹn chính xác tuyệt đối
+                Ver 2.0 – Thống kê thực tế + Trọng số động · Chạy trực tiếp trên Hosting
             </p>
         </div>
-        <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2">
+        <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2 transition-all">
             <span id="darkModeIcon">☀️</span>
             <span id="darkModeText">Giao diện sáng</span>
         </button>
@@ -32,8 +32,6 @@
         <div>
             <label class="block text-xs font-medium mb-1">Chọn Đài Miền Trung</label>
             <select id="selectDai" onchange="onDaiChange()" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
-                <option value="phuyen">Thứ 2 - Phú Yên</option>
-                <option value="hue">Thứ 2 - Thừa Thiên Huế</option>
                 <option value="daklak" selected>Thứ 3 - Đắk Lắk</option>
                 <option value="quangnam">Thứ 3 - Quảng Nam</option>
                 <option value="khanhhoa">Thứ 4 - Khánh Hòa</option>
@@ -49,6 +47,8 @@
                 <option value="kontum">Chủ Nhật - Kon Tum</option>
                 <option value="khanhhoa_cn">Chủ Nhật - Khánh Hòa</option>
                 <option value="hue_cn">Chủ Nhật - Thừa Thiên Huế</option>
+                <option value="phuyen">Thứ 2 - Phú Yên</option>
+                <option value="hue">Thứ 2 - Thừa Thiên Huế</option>
             </select>
         </div>
 
@@ -70,13 +70,13 @@
         </div>
 
         <div>
-            <button onclick="thucHienPhanTich()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg text-sm shadow">
+            <button onclick="thucHienPhanTich()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg text-sm shadow transition-all">
                 🚀 Chạy Phân Tích
             </button>
         </div>
 
         <div>
-            <button onclick="layPhanGiao()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2.5 rounded-lg text-sm shadow">
+            <button onclick="layPhanGiao()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2.5 rounded-lg text-sm shadow transition-all">
                 🔗 Lấy Phần Giao
             </button>
         </div>
@@ -183,7 +183,10 @@ let lastCachedSubset = null;
 let lastCachedLichSu = null;
 window.lastModelScores = null;
 
-window.onload = () => resetUI();
+window.onload = async () => {
+    resetUI();
+    await taiDuLieuDai();
+};
 
 function toggleDarkMode() {
     const html = document.documentElement;
@@ -200,13 +203,14 @@ function toggleDarkMode() {
     }
 }
 
-function onDaiChange() {
+async function onDaiChange() {
     currentLoadedJson = null;
     lastCachedResults = null;
     lastCachedSubset = null;
     lastCachedLichSu = null;
     window.lastModelScores = null;
     resetUI();
+    await taiDuLieuDai();
 }
 
 function resetUI() {
@@ -231,15 +235,15 @@ function resetUI() {
 
 async function taiDuLieuDai() {
     const dai = document.getElementById('selectDai').value;
+    const jsonPath = `data/${dai}.json`;
     try {
-        const res = await fetch(`data/${dai}.json`);
-        if (!res.ok) throw new Error('Không tìm thấy file JSON');
+        const res = await fetch(jsonPath);
+        if (!res.ok) throw new Error(`Không tìm thấy file: ${jsonPath}`);
         currentLoadedJson = await res.json();
         capNhatDropdownNgay();
         return true;
     } catch (e) {
-        console.warn(e.message);
-        alert('Không tải được dữ liệu đài. Kiểm tra thư mục data/ và tên file.');
+        console.warn("Lỗi tải JSON:", e.message);
         return false;
     }
 }
@@ -334,7 +338,7 @@ function chay9MoHinh(subset, fullHistory) {
     const deList = getDeList(subset);
     const latestDe = deList[0] || '50';
 
-    // 1. Tần suất có trọng số thời gian (exponential decay)
+    // 1. Tần suất có trọng số thời gian
     const freq = {};
     const decay = 0.92;
     allLo.forEach((num, idx) => {
@@ -397,7 +401,7 @@ function chay9MoHinh(subset, fullHistory) {
         if (m4.length >= 12) break;
     }
 
-    // 5. Bạc nhớ theo thứ (có trọng số)
+    // 5. Bạc nhớ theo thứ
     const targetThu = subset[0]?.thu || '';
     const sameDay = fullHistory.filter(i => i.thu === targetThu);
     const dayFreq = {};
@@ -411,7 +415,7 @@ function chay9MoHinh(subset, fullHistory) {
     const m5 = Object.entries(dayFreq).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([n])=>n);
     if (m5.length === 0) m5.push('12','38','79','86');
 
-    // 6. Delta + simple autocorr
+    // 6. Delta + autocorr
     const deltas = [];
     for (let i = 0; i < deList.length - 1; i++) {
         deltas.push((parseInt(deList[i]) - parseInt(deList[i+1]) + 100) % 100);
@@ -426,7 +430,7 @@ function chay9MoHinh(subset, fullHistory) {
         pad2((pred - 7 + 100) % 100)
     ];
 
-    // 7. Pair frequency (số hay xuất hiện cùng kỳ với latestDe)
+    // 7. Pair frequency
     const pairFreq = {};
     subset.forEach(item => {
         const nums = extractAll2D(item);
@@ -439,7 +443,7 @@ function chay9MoHinh(subset, fullHistory) {
     const m7 = Object.entries(pairFreq).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([n])=>n);
     if (m7.length < 4) m7.push(...m1.slice(0,4));
 
-    // 8. Digit transition (hàng đơn vị / hàng chục)
+    // 8. Digit transition
     const digitTrans = { d: {}, u: {} };
     deList.forEach(n => {
         if (n.length === 2) {
@@ -453,7 +457,7 @@ function chay9MoHinh(subset, fullHistory) {
     topD.forEach(d => topU.forEach(u => m8.push(d + u)));
     m8.splice(8);
 
-    // 9. Ensemble nhẹ (kết hợp tần suất + gan + markov)
+    // 9. Ensemble nhẹ
     const ensembleScore = {};
     [...m1.slice(0,6), ...m2.slice(0,4), ...m3.slice(0,4)].forEach(n => {
         ensembleScore[n] = (ensembleScore[n] || 0) + 1;
@@ -481,7 +485,6 @@ function tinhTrongSoDong(lichSu) {
     };
     if (!Array.isArray(lichSu) || lichSu.length < 8) return scores;
 
-    // Chỉ dùng 30 kỳ gần nhất để tránh bias quá khứ xa
     const recent = lichSu.slice(0, Math.min(35, lichSu.length));
 
     for (let i = recent.length - 1; i >= 5; i--) {
@@ -506,7 +509,10 @@ function tinhTrongSoDong(lichSu) {
 async function thucHienPhanTich() {
     if (!currentLoadedJson) {
         const ok = await taiDuLieuDai();
-        if (!ok) return;
+        if (!ok) {
+            alert('Không tải được dữ liệu JSON của đài này. Vui lòng kiểm tra lại file data/<tên_đài>.json trên hosting.');
+            return;
+        }
     }
 
     const targetDate = document.getElementById('selectTraCuuNgay').value;
@@ -534,7 +540,6 @@ async function thucHienPhanTich() {
     const scores = tinhTrongSoDong(lichSu);
     window.lastModelScores = scores;
 
-    // Giao thoa
     const scoreMap = {}, countMap = {}, sourceMap = {};
     Object.keys(results).forEach(name => {
         const preds = [...new Set(results[name])];
@@ -551,7 +556,6 @@ async function thucHienPhanTich() {
         .filter(([n, s]) => countMap[n] >= 2)
         .sort((a,b) => b[1] - a[1]);
 
-    // Bonus nhẹ nếu chạm giải 8 / ĐB gần nhất
     const latest = subset[0];
     const g8 = (latest?.giai_8 || '').toString().slice(-2);
     const gdb = (latest?.gdb || '').toString().slice(-2);
@@ -565,8 +569,9 @@ async function thucHienPhanTich() {
     const final2D = filtered.length ? filtered[0][0] : (results['Tần suất TW'][0] || '50');
     document.getElementById('final2D').textContent = final2D;
 
-    // 3 càng từ tổng ĐB gần nhất + bóng đơn giản
-    const sumDe = (parseInt(latestDe := (getDeList(subset)[0] || '53')[0]) + parseInt(latestDe[1])) % 10;
+    const deListSubset = getDeList(subset);
+    const latestDeVal = deListSubset[0] || '53';
+    const sumDe = (parseInt(latestDeVal[0]) + parseInt(latestDeVal[1])) % 10;
     const bong = { '0':'5','5':'0','1':'6','6':'1','2':'7','7':'2','3':'8','8':'3','4':'9','9':'4' };
     const hBase = sumDe.toString();
     const topH = [...new Set([hBase, bong[hBase] || hBase, ((sumDe + 5) % 10).toString()])].slice(0,3);
@@ -576,7 +581,6 @@ async function thucHienPhanTich() {
     ).join('');
     document.getElementById('detail3DHint').textContent = `(từ tổng ĐB gần nhất: ${topH.join(', ')})`;
 
-    // Hiển thị từng mô hình
     const render = (id, arr, max = 6) => {
         document.getElementById(id).innerHTML = arr.slice(0, max).map(n => 
             `<span class="bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded font-bold border border-indigo-200 dark:border-indigo-800">${n}</span>`
@@ -592,7 +596,6 @@ async function thucHienPhanTich() {
     render('resultDigit', results['Digit Trans']);
     render('resultEnsemble', results['Ensemble']);
 
-    // Leaderboard
     const modelArr = Object.keys(scores).map(name => ({ name, score: Math.round(scores[name]) }));
     modelArr.sort((a,b) => b.score - a.score);
     let lb = '';
@@ -608,7 +611,6 @@ async function thucHienPhanTich() {
     document.getElementById('modelLeaderboard').innerHTML = lb;
     veBieuDo(modelArr);
 
-    // Tự động lấy phần giao
     layPhanGiao();
 }
 
@@ -635,7 +637,6 @@ function layPhanGiao() {
         .filter(([n]) => countMap[n] >= 2)
         .sort((a,b) => b[1] - a[1]);
 
-    // Lọc thêm: loại số quá gan nếu điểm thấp
     if (lastCachedSubset) {
         const allLo = [];
         lastCachedSubset.forEach(item => allLo.push(...extractAll2D(item)));
@@ -661,7 +662,7 @@ function layPhanGiao() {
         if (idx === 0) cls = 'bg-yellow-400 text-slate-900 ring-4 ring-yellow-300 scale-105 shadow-lg';
         else if (idx <= 2) cls = 'bg-amber-500 text-slate-900 ring-2 ring-amber-300';
         return `<div title="Nguồn: ${models} | Điểm: ${Math.round(total)}" 
-                    class="${cls} px-3 py-2 rounded-xl text-center text-sm cursor-help transition hover:scale-105">
+                     class="${cls} px-3 py-2 rounded-xl text-center text-sm cursor-help transition hover:scale-105">
             <span class="text-xl font-bold tracking-wider">${num}</span>
             <span class="block text-[9px] opacity-90 mt-0.5">${count} mô hình · ${Math.round(total)}đ</span>
         </div>`;
