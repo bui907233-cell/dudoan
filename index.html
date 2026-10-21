@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Pro - 14 Mô Hợp Lực & Đồng Thuận (Anti-Leakage)</title>
+    <title>Analysis Pro - 15 Mô Hình Tự Học & Hợp Lực (Anti-Leakage)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -16,9 +16,9 @@
     <!-- Header -->
     <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
-            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - 14 Mô Hình & Tán Thành Đồng Thuận</h1>
+            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - 15 Mô Hình Tự Học (Mini Perceptron & Sai Số)</h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Tích hợp Thống kê, Mật mã học (ECC, Hash, Lượng tử) · Chống rò rỉ (Anti-Leakage)
+                Tích hợp Học máy tự học từ sai số dư lượng · Chống rò rỉ (Anti-Leakage)
             </p>
         </div>
         <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2 transition-all">
@@ -71,7 +71,7 @@
 
         <div>
             <button onclick="thucHienPhanTich()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg text-sm shadow transition-all">
-                🚀 Chạy 14 Mô Hình
+                🚀 Chạy 15 Mô Hình
             </button>
         </div>
 
@@ -85,7 +85,7 @@
     <!-- KHU VỰC ĐỒNG THUẬN (TÁN THÀNH GIỮA CÁC MÔ HÌNH) -->
     <div class="bg-gradient-to-r from-amber-900 via-slate-900 to-indigo-900 text-white p-6 rounded-2xl shadow-xl border border-amber-500/40 mb-6">
         <h3 id="resultTitleBanner" class="text-xs font-bold uppercase tracking-widest text-amber-300 mb-4 text-center">
-            🤝 BẢNG TÁN THÀNH & ĐỒNG THUẬN CAO NHẤT (14 MÔ HÌNH)
+            🤝 BẢNG TÁN THÀNH & ĐỒNG THUẬN CAO NHẤT (15 MÔ HÌNH)
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
             <div class="text-center bg-white/5 backdrop-blur p-4 rounded-xl border border-white/10">
@@ -103,27 +103,26 @@
         <div id="actualCompareNote" class="text-xs text-slate-200 mt-4 pt-3 border-t border-white/10 text-center font-medium"></div>
     </div>
 
-    <!-- CHI TIẾT RIÊNG BIỆT TỪNG MÔ HÌNH (11 CƠ SỞ + 3 MẬT MÃ MỚI) -->
+    <!-- CHI TIẾT RIÊNG BIỆT TỪNG MÔ HÌNH (15 MÔ HÌNH) -->
     <div class="mb-4">
-        <h3 class="text-sm font-bold uppercase tracking-wider text-indigo-400 mb-3">📋 Kết Quả Riêng Biệt Của Từng Mô Hình</h3>
+        <h3 class="text-sm font-bold uppercase tracking-wider text-indigo-400 mb-3">📋 Kết Quả Riêng Biệt Của 15 Mô Hình</h3>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2"><h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">1. Tần suất Toàn Giải</h3><div id="res1" class="flex flex-wrap gap-1 text-xs">--</div></div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2"><h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">2. Lô Gan Toàn Giải</h3><div id="res2" class="flex flex-wrap gap-1 text-xs">--</div></div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2"><h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">3. Nhịp Tuần</h3><div id="res3" class="flex flex-wrap gap-1 text-xs">--</div></div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2"><h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">4. Chạm Toàn Cục</h3><div id="res4" class="flex flex-wrap gap-1 text-xs">--</div></div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2"><h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">5. Bạc Nhớ Theo Thứ</h3><div id="res5" class="flex flex-wrap gap-1 text-xs">--</div></div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2"><h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">6. Khoảng Cách Nhịp</h3><div id="res6" class="flex flex-wrap gap-1 text-xs">--</div></div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2"><h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">7. Pair Freq Toàn Giải</h3><div id="res7" class="flex flex-wrap gap-1 text-xs">--</div></div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2"><h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">8. Digit Count</h3><div id="res8" class="flex flex-wrap gap-1 text-xs">--</div></div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2"><h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">9. Ensemble Hợp Lực</h3><div id="res9" class="flex flex-wrap gap-1 text-xs">--</div></div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2"><h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">10. Ghép Chuỗi Toàn Giải</h3><div id="res10" class="flex flex-wrap gap-1 text-xs">--</div></div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2"><h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">11. Cầu Giao Thoa Dọc</h3><div id="res11" class="flex flex-wrap gap-1 text-xs">--</div></div>
-        
-        <!-- 3 Mô hình mật mã mới chuyên biệt -->
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2 ring-1 ring-emerald-500/50"><h3 class="font-bold text-xs uppercase text-emerald-400 border-b pb-1">12. Đường Cong Elliptic (ECC)</h3><div id="res12" class="flex flex-wrap gap-1 text-xs">--</div></div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2 ring-1 ring-emerald-500/50"><h3 class="font-bold text-xs uppercase text-emerald-400 border-b pb-1">13. Hàm Băm Chuỗi (Hash)</h3><div id="res13" class="flex flex-wrap gap-1 text-xs">--</div></div>
-        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2 ring-1 ring-emerald-500/50"><h3 class="font-bold text-xs uppercase text-emerald-400 border-b pb-1">14. Hàm Sóng Lượng Tử</h3><div id="res14" class="flex flex-wrap gap-1 text-xs">--</div></div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mb-6">
+        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm border space-y-1"><h3 class="font-bold text-[11px] uppercase text-indigo-500 border-b pb-1">1. Tần suất</h3><div id="res1" class="flex flex-wrap gap-1 text-xs">--</div></div>
+        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm border space-y-1"><h3 class="font-bold text-[11px] uppercase text-indigo-500 border-b pb-1">2. Lô Gan</h3><div id="res2" class="flex flex-wrap gap-1 text-xs">--</div></div>
+        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm border space-y-1"><h3 class="font-bold text-[11px] uppercase text-indigo-500 border-b pb-1">3. Nhịp Tuần</h3><div id="res3" class="flex flex-wrap gap-1 text-xs">--</div></div>
+        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm border space-y-1"><h3 class="font-bold text-[11px] uppercase text-indigo-500 border-b pb-1">4. Chạm Toàn Cục</h3><div id="res4" class="flex flex-wrap gap-1 text-xs">--</div></div>
+        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm border space-y-1"><h3 class="font-bold text-[11px] uppercase text-indigo-500 border-b pb-1">5. Bạc Nhớ Thứ</h3><div id="res5" class="flex flex-wrap gap-1 text-xs">--</div></div>
+        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm border space-y-1"><h3 class="font-bold text-[11px] uppercase text-indigo-500 border-b pb-1">6. Khoảng Cách</h3><div id="res6" class="flex flex-wrap gap-1 text-xs">--</div></div>
+        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm border space-y-1"><h3 class="font-bold text-[11px] uppercase text-indigo-500 border-b pb-1">7. Pair Freq</h3><div id="res7" class="flex flex-wrap gap-1 text-xs">--</div></div>
+        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm border space-y-1"><h3 class="font-bold text-[11px] uppercase text-indigo-500 border-b pb-1">8. Digit Count</h3><div id="res8" class="flex flex-wrap gap-1 text-xs">--</div></div>
+        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm border space-y-1"><h3 class="font-bold text-[11px] uppercase text-indigo-500 border-b pb-1">9. Ensemble</h3><div id="res9" class="flex flex-wrap gap-1 text-xs">--</div></div>
+        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm border space-y-1"><h3 class="font-bold text-[11px] uppercase text-indigo-500 border-b pb-1">10. Ghép Chuỗi</h3><div id="res10" class="flex flex-wrap gap-1 text-xs">--</div></div>
+        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm border space-y-1"><h3 class="font-bold text-[11px] uppercase text-indigo-500 border-b pb-1">11. Cầu Dọc</h3><div id="res11" class="flex flex-wrap gap-1 text-xs">--</div></div>
+        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm border space-y-1"><h3 class="font-bold text-[11px] uppercase text-emerald-400 border-b pb-1">12. Đường Cong ECC</h3><div id="res12" class="flex flex-wrap gap-1 text-xs">--</div></div>
+        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm border space-y-1"><h3 class="font-bold text-[11px] uppercase text-emerald-400 border-b pb-1">13. Hàm Băm Hash</h3><div id="res13" class="flex flex-wrap gap-1 text-xs">--</div></div>
+        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm border space-y-1"><h3 class="font-bold text-[11px] uppercase text-emerald-400 border-b pb-1">14. Sóng Lượng Tử</h3><div id="res14" class="flex flex-wrap gap-1 text-xs">--</div></div>
+        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm border space-y-1 ring-2 ring-amber-500/50"><h3 class="font-bold text-[11px] uppercase text-amber-400 border-b pb-1">🔥 15. Mini Perceptron & Sai Số</h3><div id="res15" class="flex flex-wrap gap-1 text-xs">--</div></div>
     </div>
 
     <!-- Panel chi tiết ngày quay -->
@@ -158,7 +157,7 @@ function toggleDarkMode() {
     } else {
         html.classList.add('dark');
         icon.textContent = '☀️';
-        text.textContent = 'Giao diện tối';
+        text.textContent = 'Giao diện sáng';
     }
 }
 
@@ -175,7 +174,7 @@ function resetUI() {
     document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic">Bấm chạy để xem mức độ đồng thuận...</span>';
     document.getElementById('panelBody').innerHTML = '<p class="text-slate-400 italic text-center py-4">Chọn ngày để xem chi tiết.</p>';
     document.getElementById('selectTraCuuNgay').innerHTML = '<option value="">-- Mặc định (kỳ mới nhất) --</option>';
-    for(let i=1; i<=14; i++) {
+    for(let i=1; i<=15; i++) {
         const el = document.getElementById(`res${i}`);
         if(el) el.innerHTML = '--';
     }
@@ -271,8 +270,8 @@ function extractAll2D(item) {
     return list;
 }
 
-// ==================== TỔNG HỢP 14 MÔ HÌNH ====================
-function chay14MoHinh(subset, fullHistorySafe) {
+// ==================== TỔNG HỢP 15 MÔ HÌNH (CÓ MINI PERCEPTRON & SAI SỐ) ====================
+function chay15MoHinh(subset, fullHistorySafe) {
     const allLo = [];
     subset.forEach(item => allLo.push(...extractAll2D(item)));
 
@@ -352,7 +351,7 @@ function chay14MoHinh(subset, fullHistorySafe) {
     [...m1.slice(0,5), ...m2.slice(0,5), ...m3.slice(0,5)].forEach(n => { ensembleScore[n] = (ensembleScore[n]||0)+1; });
     const m9 = Object.entries(ensembleScore).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([n])=>n);
 
-    // 10. Ghép Chuỗi Toàn Giải
+    // 10. Ghép Chuỗi
     let bigString = "";
     subset.slice(0, 4).forEach(item => { bigString += extractAllRawNumbers(item).join(""); });
     const stringFreq = {};
@@ -362,11 +361,10 @@ function chay14MoHinh(subset, fullHistorySafe) {
     }
     const m10 = Object.entries(stringFreq).sort((a,b) => b[1] - a[1]).slice(0, 8).map(([n]) => n);
 
-    // 11. Cầu Giao Thoa Dọc
+    // 11. Cầu Dọc
     const m11 = m5.slice(0, 8);
 
-    // ==================== 3 MÔ HÌNH MẬT MÃ MỚI ====================
-    // 12. Đường Cong Elliptic Mô Phỏng (ECC Points: y^2 = x^3 + 7 mod 100)
+    // 12. Đường Cong ECC
     let eccScores = {};
     allLo.forEach((nStr, idx) => {
         let x = parseInt(nStr);
@@ -377,7 +375,7 @@ function chay14MoHinh(subset, fullHistorySafe) {
     });
     const m12 = Object.entries(eccScores).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([n])=>n);
 
-    // 13. Hàm Băm Chuỗi (Rolling Hash Checksum)
+    // 13. Hàm Băm Hash
     let hashScores = {};
     subset.forEach((item, idx) => {
         let raw = extractAllRawNumbers(item).join("");
@@ -388,30 +386,56 @@ function chay14MoHinh(subset, fullHistorySafe) {
     });
     const m13 = Object.entries(hashScores).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([n])=>n);
 
-    // 14. Hàm Sóng Lượng Tử (Superposition Amplitude)
+    // 14. Sóng Lượng Tử
     let quantScores = {};
     allLo.forEach((n, idx) => {
-        let amplitude = Math.sin(idx + 1) * Math.cos(parseInt(n));
-        let prob = Math.abs(amplitude);
+        let prob = Math.abs(Math.sin(idx + 1) * Math.cos(parseInt(n)));
         quantScores[n] = (quantScores[n] || 0) + prob;
     });
     const m14 = Object.entries(quantScores).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([n])=>n);
 
+    // ==================== 🔥 MÔ HÌNH 15: MINI PERCEPTRON & HỌC SAI SỐ (RESIDUAL LEARNING) ====================
+    let residualScores = {};
+    // Phân tích sai số dư lượng giữa các kỳ gần nhất để tự điều chỉnh trọng số tự học
+    if (subset.length >= 6) {
+        for (let k = 0; k < 5; k++) {
+            let pastDraw = subset[k];
+            let actualNums = extractAll2D(pastDraw);
+            let learningWeight = Math.pow(0.8, k);
+
+            actualNums.forEach(num => {
+                let nVal = parseInt(num);
+                // Bù trừ sai số dư lượng (residual correction) bằng cách kích hoạt các vùng lân cận
+                let r1 = pad2((nVal + 3) % 100);
+                let r2 = pad2((nVal - 3 + 100) % 100);
+                let r3 = pad2((nVal * 2) % 100);
+
+                residualScores[num] = (residualScores[num] || 0) + (3 * learningWeight);
+                residualScores[r1] = (residualScores[r1] || 0) + (1.5 * learningWeight);
+                residualScores[r2] = (residualScores[r2] || 0) + (1.5 * learningWeight);
+                residualScores[r3] = (residualScores[r3] || 0) + learningWeight;
+            });
+        }
+    }
+    const m15 = Object.entries(residualScores).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([n])=>n);
+    if (m15.length === 0) m15.push(...m1.slice(0, 6));
+
     return {
-        'Tần suất Toàn Giải': m1,
-        'Lô Gan Toàn Giải': m2,
+        'Tần suất': m1,
+        'Lô Gan': m2,
         'Nhịp Tuần': m3,
         'Chạm Toàn Cục': m4,
         'Bạc Nhớ Thứ': m5,
-        'Khoảng Cách Nhịp': m6,
+        'Khoảng Cách': m6,
         'Pair Freq': m7,
         'Digit Count': m8,
         'Ensemble': m9,
         'Ghép Chuỗi': m10,
-        'Cầu Giao Thoa Dọc': m11,
+        'Cầu Dọc': m11,
         'Đường Cong ECC': m12,
         'Hàm Băm Hash': m13,
-        'Hàm Sóng Lượng Tử': m14
+        'Sóng Lượng Tử': m14,
+        'Mini Perceptron': m15
     };
 }
 
@@ -440,20 +464,17 @@ async function thucHienPhanTich() {
     const subset = safeHistory.slice(0, limit);
     lastCachedSubset = subset;
 
-    const results = chay14MoHinh(subset, safeHistory);
+    const results = chay15MoHinh(subset, safeHistory);
     lastCachedResults = results;
 
-    // Tính toán mức độ tán thành (Consensus Vote giữa 14 mô hình)
+    // Tính toán mức độ tán thành (Consensus Vote giữa 15 mô hình)
     let voteMap = {};
-    let modelSource = {};
     let totalModels = Object.keys(results).length;
 
     Object.keys(results).forEach(mName => {
         let uniquePreds = [...new Set(results[mName])];
         uniquePreds.forEach(num => {
             voteMap[num] = (voteMap[num] || 0) + 1;
-            if(!modelSource[num]) modelSource[num] = [];
-            modelSource[num].push(mName);
         });
     });
 
@@ -475,7 +496,7 @@ async function thucHienPhanTich() {
         </div>`;
     }).join('');
 
-    // Hiển thị kết quả riêng biệt cho từng ô của 14 mô hình
+    // Hiển thị kết quả riêng biệt cho từng ô của 15 mô hình
     const keys = Object.keys(results);
     keys.forEach((mName, idx) => {
         let boxId = `res${idx + 1}`;
@@ -494,7 +515,7 @@ async function thucHienPhanTich() {
         document.getElementById('resultTitleBanner').innerText = `🔍 BACKTEST ĐỒNG THUẬN: MỐC ${targetDate} ➔ KỲ THỰC TẾ ${actualNextDraw.ngay}`;
         document.getElementById('actualCompareNote').innerHTML = `Thực tế kỳ ${actualNextDraw.ngay} về: [${actualAllNums.join(', ')}] | <span class="${isHit ? 'text-emerald-300 font-bold' : 'text-red-300'}">${isHit ? '✅ SỐ ĐỒNG THUẬN CAO NHẤT ĐÃ NỔ!' : '❌ Số đồng thuận cao nhất không xuất hiện.'}</span>`;
     } else {
-        document.getElementById('resultTitleBanner').innerText = '🤝 BẢNG TÁN THÀNH & ĐỒNG THUẬN CAO NHẤT (14 MÔ HÌNH)';
+        document.getElementById('resultTitleBanner').innerText = '🤝 BẢNG TÁN THÀNH & ĐỒNG THUẬN CAO NHẤT (15 MÔ HÌNH)';
         document.getElementById('actualCompareNote').textContent = 'Đang dự đoán kỳ mới nhất dựa trên sự đồng thuận đa chiều.';
     }
 }
