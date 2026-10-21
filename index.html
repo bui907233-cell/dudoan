@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Pro - 15 Mô Hình + Mô Hình 16 (Anti-Leakage)</title>
+    <title>Analysis Pro - 15 Mô Hình + Mô Hình 16 (Quét Toàn Giải & Toàn Kỳ)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -16,9 +16,9 @@
     <!-- Header -->
     <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
-            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - 15 Mô Hình & Mô Hình 16 (Cầu Vị Trí Độc Lập)</h1>
+            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Đồng Thuận 15 Mô Hình & Mô Hình 16 (Quét Toàn Giải)</h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Chạy song song Đồng thuận 15 mô hình vs Chuyên gia bóc tách từng giải (Giải 8, 7, ĐB) · Chống rò rỉ (Anti-Leakage)
+                Mô hình 16 bóc tách tất cả các giải ở mọi kỳ quay để chắt lọc 1 số duy nhất · Chống rò rỉ (Anti-Leakage)
             </p>
         </div>
         <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2 transition-all">
@@ -103,19 +103,19 @@
             <div id="compareSysA" class="text-[11px] text-slate-300 mt-4 pt-3 border-t border-white/10">Chưa chạy Backtest</div>
         </div>
 
-        <!-- BÊN PHẢI: MÔ HÌNH 16 (CẦU VỊ TRÍ ĐỘC LẬP - 1 SỐ DUY NHẤT) -->
+        <!-- BÊN PHẢI: MÔ HÌNH 16 (QUÉT TOÀN BỘ GIẢI & KỲ - 1 SỐ DUY NHẤT) -->
         <div class="bg-gradient-to-br from-amber-900 to-slate-900 text-white p-6 rounded-2xl shadow-xl border border-amber-500/40 flex flex-col justify-between">
             <div>
                 <h3 class="text-xs font-bold uppercase tracking-widest text-amber-300 mb-2 text-center">
-                    🔥 HỆ THỐNG B: MÔ HÌNH 16 (CẦU VỊ TRÍ ĐỘC LẬP THEO GIẢI)
+                    🔥 HỆ THỐNG B: MÔ HÌNH 16 (QUÉT TOÀN GIẢI & KỲ)
                 </h3>
                 <div class="text-center bg-white/5 backdrop-blur p-4 rounded-xl border border-white/10 mb-4">
-                    <p class="text-[11px] text-amber-200 uppercase font-semibold">Số duy nhất chắt lọc từ G8, G7, ĐB</p>
+                    <p class="text-[11px] text-amber-200 uppercase font-semibold">Số duy nhất từ tất cả các giải & kỳ quay</p>
                     <span id="model16SingleNum" class="text-4xl font-extrabold tracking-wider text-yellow-400 block mt-1">--</span>
-                    <span id="model16Reason" class="text-[10px] text-amber-100 mt-1 block italic">Đang chờ phân tích quy luật giải...</span>
+                    <span id="model16Reason" class="text-[10px] text-amber-100 mt-1 block italic">Đang quét toàn bộ dữ liệu giải...</span>
                 </div>
                 <div class="bg-black/20 p-3 rounded-xl border border-white/10">
-                    <p class="text-[11px] text-amber-300 font-semibold mb-1">Chi tiết nhịp chạy vị trí:</p>
+                    <p class="text-[11px] text-amber-300 font-semibold mb-1">Thống kê bóc tách toàn giải:</p>
                     <div id="model16Details" class="text-xs text-slate-200 space-y-1">Chưa có dữ liệu phân tích...</div>
                 </div>
             </div>
@@ -191,7 +191,7 @@ function resetUI() {
     document.getElementById('finalTopNum').textContent = '--';
     document.getElementById('consensusRate').textContent = 'Đang chờ phân tích...';
     document.getElementById('model16SingleNum').textContent = '--';
-    document.getElementById('model16Reason').textContent = 'Đang chờ phân tích quy luật giải...';
+    document.getElementById('model16Reason').textContent = 'Đang quét toàn bộ dữ liệu giải...';
     document.getElementById('model16Details').textContent = 'Chưa có dữ liệu phân tích...';
     document.getElementById('compareSysA').textContent = 'Chưa chạy Backtest';
     document.getElementById('compareSysB').textContent = 'Chưa chạy Backtest';
@@ -430,48 +430,46 @@ function chay15MoHinh(subset, fullHistorySafe) {
     };
 }
 
-// ==================== 🔥 MÔ HÌNH 16: CẦU VỊ TRÍ ĐỘC LẬP TỪNG GIẢI (CHỐT 1 SỐ DUY NHẤT) ====================
-function chayMoHinh16_PositionalPattern(subset) {
-    if (!subset || subset.length < 5) return { singleNum: '38', reason: 'Dữ liệu quá ngắn', details: 'Không đủ kỳ để quét.' };
+// ==================== 🔥 MÔ HÌNH 16: QUÉT TẤT CẢ CÁC GIẢI & TẤT CẢ CÁC KỲ (CHỐT 1 SỐ DUY NHẤT) ====================
+function chayMoHinh16_FullPrizesScan(subset) {
+    if (!subset || subset.length < 3) return { singleNum: '38', reason: 'Dữ liệu quá ngắn', details: 'Không đủ kỳ để quét.' };
 
-    let g8History = [];
-    let g7History = [];
-    let gdbHistory = [];
+    let positionalScores = {};
+    let prizeNames = ['giai_8', 'giai_7', 'giai_6', 'giai_5', 'giai_4', 'giai_3', 'giai_2', 'giai_1', 'gdb'];
 
-    subset.forEach(item => {
-        if (item.giai_8) g8History.push(item.giai_8.toString());
-        if (item.giai_7) g7History.push(item.giai_7.toString().slice(-2));
-        if (item.gdb) gdbHistory.push(item.gdb.toString().slice(-2));
+    // Bóc tách tất cả các giải ở tất cả các kỳ quay trong subset với trọng số thời gian
+    subset.forEach((item, periodIdx) => {
+        let timeWeight = Math.pow(0.88, periodIdx); // Kỳ càng gần hiện tại trọng số càng cao
+
+        prizeNames.forEach(pName => {
+            let val = item[pName];
+            if (!val) return;
+
+            let listVals = Array.isArray(val) ? val : [val];
+            listVals.forEach(v => {
+                let s = v.toString();
+                if (s.length >= 2) {
+                    let num2d = s.slice(-2);
+                    // Các giải quan trọng như GĐB và G8 có thêm trọng số ưu tiên vị trí cốt lõi
+                    let prizeBonus = (pName === 'gdb' || pName === 'giai_8') ? 1.8 : 1.0;
+                    
+                    positionalScores[num2d] = (positionalScores[num2d] || 0) + (timeWeight * prizeBonus);
+                }
+            });
+        });
     });
 
-    let scoreMap = {};
-
-    let lastG8 = g8History[0] || '00';
-    let prevG8 = g8History[1] || '00';
-    let deltaG8 = Math.abs(parseInt(lastG8) - parseInt(prevG8)) % 100;
-    let candidate1 = pad2((parseInt(lastG8) + deltaG8) % 100);
-    scoreMap[candidate1] = (scoreMap[candidate1] || 0) + 4;
-
-    let lastG7 = g7History[0] || '00';
-    scoreMap[lastG7] = (scoreMap[lastG7] || 0) + 3;
-    let revG7 = lastG7[1] + lastG7[0];
-    scoreMap[revG7] = (scoreMap[revG7] || 0) + 2.5;
-
-    let lastGdb = gdbHistory[0] || '00';
-    let sumGdb = pad2((parseInt(lastGdb.slice(0,1)) + parseInt(lastGdb.slice(1,2))) * 11 % 100);
-    scoreMap[sumGdb] = (scoreMap[sumGdb] || 0) + 3;
-
-    let sortedPositional = Object.entries(scoreMap).sort((a,b) => b[1] - a[1]);
+    let sortedPositional = Object.entries(positionalScores).sort((a, b) => b[1] - a[1]);
     let singleNum = sortedPositional.length > 0 ? sortedPositional[0][0] : '42';
+    let topScore = sortedPositional.length > 0 ? Math.round(sortedPositional[0][1] * 10) / 10 : 0;
 
-    let details = `• Giải 8 kỳ trước: <strong>${lastG8}</strong> (Delta nhịp: ${deltaG8})<br>` +
-                  `• Giải 7 kỳ trước: <strong>${lastG7}</strong> (Đảo: ${revG7})<br>` +
-                  `• 2 số cuối ĐB kỳ trước: <strong>${lastGdb}</strong><br>` +
-                  `➔ <em>Chốt 1 số duy nhất tối ưu theo vị trí:</em> <strong>${singleNum}</strong>`;
+    let details = `• Đã quét toàn bộ <strong>9 nhóm giải</strong> qua <strong>${subset.length} kỳ</strong> quay.<br>` +
+                  `• Tổng hợp điểm trọng số vị trí toàn giải: <strong>${topScore} điểm</strong><br>` +
+                  `➔ <em>Chốt 1 số duy nhất tối ưu từ toàn bộ giải & kỳ:</em> <strong>${singleNum}</strong>`;
 
     return {
         singleNum: singleNum,
-        reason: `Bóc tách nhịp G8 (${lastG8}) và G7 (${lastG7})`,
+        reason: `Quét toàn giải & toàn kỳ (Biên độ ${subset.length} kỳ)`,
         details: details
     };
 }
@@ -539,13 +537,13 @@ async function thucHienPhanTich() {
         }
     });
 
-    // Chạy Hệ thống B: Mô hình 16 (Cầu vị trí độc lập)
-    const m16Res = chayMoHinh16_PositionalPattern(subset);
+    // Chạy Hệ thống B: Mô hình 16 (Quét toàn bộ giải & kỳ)
+    const m16Res = chayMoHinh16_FullPrizesScan(subset);
     document.getElementById('model16SingleNum').textContent = m16Res.singleNum;
     document.getElementById('model16Reason').textContent = m16Res.reason;
     document.getElementById('model16Details').innerHTML = m16Res.details;
 
-    // Đối chiếu Backtest thực tế (ĐÃ FIX ĐỂ HIỂN THỊ KẾT QUẢ ĐỐI CHIẾU CHUẨN XÁC)
+    // Đối chiếu Backtest thực tế
     if (actualNextDraw) {
         let actualAllNums = extractAll2D(actualNextDraw);
         let hitA = actualAllNums.includes(topBestNumA);
