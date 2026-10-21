@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Pro - 15 Mô Hình + Mô Hình 16 Cầu Vị Trí Độc Lập (Anti-Leakage)</title>
+    <title>Analysis Pro - 15 Mô Hình + Mô Hình 16 (Anti-Leakage)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -446,26 +446,21 @@ function chayMoHinh16_PositionalPattern(subset) {
 
     let scoreMap = {};
 
-    // 1. Phân tích nhịp rơi Giải 8 (Kỳ gần nhất tác động mạnh nhất)
     let lastG8 = g8History[0] || '00';
     let prevG8 = g8History[1] || '00';
     let deltaG8 = Math.abs(parseInt(lastG8) - parseInt(prevG8)) % 100;
     let candidate1 = pad2((parseInt(lastG8) + deltaG8) % 100);
     scoreMap[candidate1] = (scoreMap[candidate1] || 0) + 4;
 
-    // 2. Phân tích nhịp Giải 7
     let lastG7 = g7History[0] || '00';
     scoreMap[lastG7] = (scoreMap[lastG7] || 0) + 3;
     let revG7 = lastG7[1] + lastG7[0];
     scoreMap[revG7] = (scoreMap[revG7] || 0) + 2.5;
 
-    // 3. Phân tích nhịp Giải Đặc Biệt (2 số cuối)
     let lastGdb = gdbHistory[0] || '00';
-    let prevGdb = gdbHistory[1] || '00';
     let sumGdb = pad2((parseInt(lastGdb.slice(0,1)) + parseInt(lastGdb.slice(1,2))) * 11 % 100);
     scoreMap[sumGdb] = (scoreMap[sumGdb] || 0) + 3;
 
-    // Sắp xếp để chắt lọc lấy MỘT con số duy nhất có điểm vị trí cao nhất
     let sortedPositional = Object.entries(scoreMap).sort((a,b) => b[1] - a[1]);
     let singleNum = sortedPositional.length > 0 ? sortedPositional[0][0] : '42';
 
@@ -535,7 +530,6 @@ async function thucHienPhanTich() {
         </div>`;
     }).join('');
 
-    // Hiển thị kết quả 15 mô hình cơ sở
     Object.keys(results15).forEach((mName, idx) => {
         let el = document.getElementById(`res${idx + 1}`);
         if(el) {
@@ -546,12 +540,12 @@ async function thucHienPhanTich() {
     });
 
     // Chạy Hệ thống B: Mô hình 16 (Cầu vị trí độc lập)
-    const m16Res = chay16MoHinh_PositionalPattern(subset);
+    const m16Res = chayMoHinh16_PositionalPattern(subset);
     document.getElementById('model16SingleNum').textContent = m16Res.singleNum;
     document.getElementById('model16Reason').textContent = m16Res.reason;
     document.getElementById('model16Details').innerHTML = m16Res.details;
 
-    // Đối chiếu Backtest thực tế
+    // Đối chiếu Backtest thực tế (ĐÃ FIX ĐỂ HIỂN THỊ KẾT QUẢ ĐỐI CHIẾU CHUẨN XÁC)
     if (actualNextDraw) {
         let actualAllNums = extractAll2D(actualNextDraw);
         let hitA = actualAllNums.includes(topBestNumA);
@@ -560,8 +554,8 @@ async function thucHienPhanTich() {
         document.getElementById('compareSysA').innerHTML = `Thực tế kỳ ${actualNextDraw.ngay} [${actualAllNums.join(', ')}]: <br><strong class="${hitA ? 'text-emerald-400 font-bold' : 'text-red-400'}">${hitA ? '✅ Hệ thống A TRÚNG!' : '❌ Hệ thống A trượt'}</strong>`;
         document.getElementById('compareSysB').innerHTML = `Thực tế kỳ ${actualNextDraw.ngay} [${actualAllNums.join(', ')}]: <br><strong class="${hitB ? 'text-emerald-400 font-bold' : 'text-red-400'}">${hitB ? '✅ Mô hình 16 TRÚNG!' : '❌ Mô hình 16 trượt'}</strong>`;
     } else {
-        document.getElementById('compareSysA').textContent = 'Đang dự đoán kỳ mới nhất (Chưa có kết quả thực tế)';
-        document.getElementById('compareSysB').textContent = 'Đang dự đoán kỳ mới nhất (Chưa có kết quả thực tế)';
+        document.getElementById('compareSysA').textContent = 'Đang dự đoán kỳ mới nhất (Chưa có kết quả thực tế để đối chiếu)';
+        document.getElementById('compareSysB').textContent = 'Đang dự đoán kỳ mới nhất (Chưa có kết quả thực tế để đối chiếu)';
     }
 }
 </script>
