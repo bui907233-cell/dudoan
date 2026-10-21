@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Pro - Toàn Bộ Giải (Anti-Leakage)</title>
+    <title>Analysis Pro - 10 Mô Hình (Anti-Leakage)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -16,9 +16,9 @@
     <!-- Header -->
     <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
-            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Quét Toàn Bộ Giải</h1>
+            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - 10 Mô Hình Toàn Giải</h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Ver 3.0 – Dự đoán con số nổ trên mọi giải · Không rò rỉ dữ liệu (Anti-Leakage)
+                Ver 4.0 – Tích hợp Mô hình Ghép chuỗi toàn giải · Không rò rỉ dữ liệu (Anti-Leakage)
             </p>
         </div>
         <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2 transition-all">
@@ -77,7 +77,7 @@
 
         <div>
             <button onclick="layPhanGiao()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2.5 rounded-lg text-sm shadow transition-all">
-                🔗 Lấy Top Tần Suất Toàn Cục
+                🔗 Lấy Top Tần Suất
             </button>
         </div>
     </div>
@@ -87,12 +87,12 @@
         <div class="lg:col-span-2 bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-xl border border-indigo-500/30 flex flex-col justify-between">
             <div>
                 <h3 id="resultTitleBanner" class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4 text-center">
-                    🎯 TÂM ĐIỂM SÁNG GIÁ NHẤT (Toàn bộ các giải)
+                    🎯 TÂM ĐIỂM SÁNG GIÁ NHẤT (10 Mô Hình Hợp Lực)
                 </h3>
                 <div class="max-w-md mx-auto text-center bg-white/5 backdrop-blur p-5 rounded-xl border border-white/10">
                     <p class="text-[11px] text-indigo-200 uppercase font-semibold">Cặp số sáng nhất kỳ tới</p>
                     <span id="finalTopNum" class="text-5xl font-extrabold tracking-wider text-yellow-400 block mt-2">--</span>
-                    <span id="actualCompareNote" class="text-xs text-slate-300 mt-3 block">Được đồng thuận cao từ các mô hình quét toàn giải</span>
+                    <span id="actualCompareNote" class="text-xs text-slate-300 mt-3 block">Được đồng thuận cao từ 10 mô hình</span>
                 </div>
             </div>
         </div>
@@ -110,60 +110,68 @@
     <!-- Danh sách các số sáng giá -->
     <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6">
         <h3 id="sectionTitleSuggest" class="text-xs font-bold uppercase tracking-wider text-indigo-500 border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">
-            🔥 Dàn số tiềm năng xuất hiện ở mọi giải (Top đồng thuận)
+            🔥 Dàn số tiềm năng xuất hiện ở mọi giải (Top đồng thuận 10 mô hình)
         </h3>
         <div id="suggestedNumbersList" class="flex flex-wrap gap-2 min-h-[40px]">
             <span class="text-slate-400 text-xs italic">Bấm “Chạy Phân Tích” để hiển thị...</span>
         </div>
     </div>
 
-    <!-- 9 mô hình quét toàn giải -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border space-y-4">
-            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-2">1. Tần suất toàn giải (Exponential)</h3>
-            <div id="resultHot" class="flex flex-wrap gap-1.5 text-xs"></div>
-
-            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-2 pt-2">2. Lô gan toàn giải</h3>
-            <div id="resultCold" class="flex flex-wrap gap-1.5 text-xs"></div>
-
-            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-2 pt-2">3. Nhịp rơi chu kỳ tuần</h3>
-            <div id="resultMarkov" class="flex flex-wrap gap-1.5 text-xs"></div>
+    <!-- 10 mô hình -->
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2">
+            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">1. Tần suất Toàn Giải</h3>
+            <div id="resultHot" class="flex flex-wrap gap-1 text-xs"></div>
         </div>
-
-        <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border space-y-4">
-            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-2">4. Chạm toàn cục các giải</h3>
-            <div id="resultCham" class="flex flex-wrap gap-1.5 text-xs"></div>
-
-            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-2 pt-2">5. Bạc nhớ theo thứ</h3>
-            <div id="resultBacNho" class="flex flex-wrap gap-1.5 text-xs"></div>
-
-            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-2 pt-2">6. Khoảng cách nhịp xuất hiện</h3>
-            <div id="resultDelta" class="flex flex-wrap gap-1.5 text-xs"></div>
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2">
+            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">2. Lô Gan Toàn Giải</h3>
+            <div id="resultCold" class="flex flex-wrap gap-1 text-xs"></div>
         </div>
-
-        <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border space-y-4">
-            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-2">7. Cặp số hay đi kèm (Pair Freq)</h3>
-            <div id="resultPair" class="flex flex-wrap gap-1.5 text-xs"></div>
-
-            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-2 pt-2">8. Tần suất chữ số (Digit Count)</h3>
-            <div id="resultDigit" class="flex flex-wrap gap-1.5 text-xs"></div>
-
-            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-2 pt-2">9. Hợp lực tổng hợp (Ensemble)</h3>
-            <div id="resultEnsemble" class="flex flex-wrap gap-1.5 text-xs"></div>
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2">
+            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">3. Nhịp Tuần</h3>
+            <div id="resultMarkov" class="flex flex-wrap gap-1 text-xs"></div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2">
+            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">4. Chạm Toàn Cục</h3>
+            <div id="resultCham" class="flex flex-wrap gap-1 text-xs"></div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2">
+            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">5. Bạc Nhớ Theo Thứ</h3>
+            <div id="resultBacNho" class="flex flex-wrap gap-1 text-xs"></div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2">
+            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">6. Khoảng Cách Nhịp</h3>
+            <div id="resultDelta" class="flex flex-wrap gap-1 text-xs"></div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2">
+            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">7. Pair Freq Toàn Giải</h3>
+            <div id="resultPair" class="flex flex-wrap gap-1 text-xs"></div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2">
+            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">8. Digit Count</h3>
+            <div id="resultDigit" class="flex flex-wrap gap-1 text-xs"></div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2">
+            <h3 class="font-bold text-xs uppercase text-indigo-500 border-b pb-1">9. Ensemble Hợp Lực</h3>
+            <div id="resultEnsemble" class="flex flex-wrap gap-1 text-xs"></div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border space-y-2 ring-2 ring-amber-500/50">
+            <h3 class="font-bold text-xs uppercase text-amber-500 border-b pb-1">🔥 10. Mô Hình Ghép Chuỗi Toàn Giải</h3>
+            <div id="resultString" class="flex flex-wrap gap-1 text-xs"></div>
         </div>
     </div>
 
     <!-- Leaderboard -->
     <div class="bg-slate-900 text-white p-5 rounded-xl shadow-lg mb-6 border border-slate-800">
-        <h2 class="text-sm font-bold mb-3 text-indigo-300">🏆 Bảng xếp hạng trọng số động (Không rò rỉ dữ liệu tương lai)</h2>
-        <div id="modelLeaderboard" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-2">
+        <h2 class="text-sm font-bold mb-3 text-indigo-300">🏆 Bảng xếp hạng trọng số động 10 mô hình (Anti-Leakage)</h2>
+        <div id="modelLeaderboard" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-10 gap-2">
             <div class="col-span-full text-center text-xs text-slate-400 py-4">Chưa chạy phân tích</div>
         </div>
     </div>
 
     <!-- Chart -->
     <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border">
-        <h3 class="text-sm font-bold mb-3">Biểu đồ trọng số động 9 mô hình</h3>
+        <h3 class="text-sm font-bold mb-3">Biểu đồ trọng số động 10 mô hình</h3>
         <div id="evalChart" style="width:100%;height:280px;"></div>
     </div>
 </div>
@@ -207,13 +215,13 @@ async function onDaiChange() {
 
 function resetUI() {
     document.getElementById('finalTopNum').textContent = '--';
-    document.getElementById('actualCompareNote').textContent = 'Được đồng thuận cao từ các mô hình quét toàn giải';
-    document.getElementById('resultTitleBanner').textContent = '🎯 TÂM ĐIỂM SÁNG GIÁ NHẤT (Toàn bộ các giải)';
+    document.getElementById('actualCompareNote').textContent = 'Được đồng thuận cao từ 10 mô hình';
+    document.getElementById('resultTitleBanner').textContent = '🎯 TÂM ĐIỂM SÁNG GIÁ NHẤT (10 Mô Hình Hợp Lực)';
     document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic">Bấm “Chạy Phân Tích” để hiển thị...</span>';
     document.getElementById('panelTitle').textContent = '📋 Chi tiết giải ngày đã chọn';
     document.getElementById('panelBody').innerHTML = '<p class="text-slate-400 italic text-center py-8">Chọn ngày ở dropdown phía trên để xem kết quả thực tế.</p>';
     
-    ['resultHot','resultCold','resultMarkov','resultCham','resultBacNho','resultDelta','resultPair','resultDigit','resultEnsemble'].forEach(id => {
+    ['resultHot','resultCold','resultMarkov','resultCham','resultBacNho','resultDelta','resultPair','resultDigit','resultEnsemble','resultString'].forEach(id => {
         document.getElementById(id).innerHTML = '<span class="text-slate-400 text-xs italic">Chưa có dữ liệu</span>';
     });
     
@@ -295,33 +303,35 @@ function pad2(n) {
     return n < 10 ? '0' + n : '' + n;
 }
 
-// Trích xuất toàn bộ 2 chữ số từ mọi giải trong 1 kỳ quay
-function extractAll2D(item) {
-    const list = [];
+// Trích xuất toàn bộ các con số từ TẤT CẢ CÁC GIẢI trong 1 kỳ quay
+function extractAllRawNumbers(item) {
+    let rawList = [];
     const fields = ['giai_8','giai_7','giai_5','giai_2','giai_1','gdb'];
     fields.forEach(f => {
-        if (item[f]) {
-            const s = item[f].toString();
-            if (s.length >= 2) list.push(s.slice(-2));
-        }
+        if (item[f]) rawList.push(item[f].toString());
     });
     ['giai_6','giai_4','giai_3'].forEach(f => {
         if (Array.isArray(item[f])) {
-            item[f].forEach(g => {
-                const s = (g || '').toString();
-                if (s.length >= 2) list.push(s.slice(-2));
-            });
+            item[f].forEach(g => { if (g) rawList.push(g.toString()); });
         }
+    });
+    return rawList;
+}
+
+function extractAll2D(item) {
+    const list = [];
+    extractAllRawNumbers(item).forEach(s => {
+        if (s.length >= 2) list.push(s.slice(-2));
     });
     return list;
 }
 
-// ==================== 9 MÔ HÌNH QUÉT TOÀN BỘ GIẢI ====================
-function chay9MoHinhToanGiai(subset, fullHistorySafe) {
+// ==================== 10 MÔ HÌNH PHÂN TÍCH ====================
+function chay10MoHinhToanGiai(subset, fullHistorySafe) {
     const allLo = [];
     subset.forEach(item => allLo.push(...extractAll2D(item)));
 
-    // 1. Tần suất toàn giải có trọng số thời gian
+    // 1. Tần suất toàn giải
     const freq = {};
     const decay = 0.92;
     allLo.forEach((num, idx) => {
@@ -341,7 +351,7 @@ function chay9MoHinhToanGiai(subset, fullHistorySafe) {
     ganArr.sort((a,b) => b.pos - a.pos);
     const m2 = ganArr.slice(0,10).map(x => x.num);
 
-    // 3. Nhịp rơi chu kỳ tuần (dựa trên tần suất xuất hiện giữa các kỳ liên tiếp)
+    // 3. Nhịp Tuần
     const periodFreq = {};
     subset.forEach((item, periodIdx) => {
         const numsInPeriod = [...new Set(extractAll2D(item))];
@@ -352,7 +362,7 @@ function chay9MoHinhToanGiai(subset, fullHistorySafe) {
     const m3 = Object.entries(periodFreq).sort((a,b) => b[1]-a[1]).slice(0,8).map(([n]) => n);
     if (m3.length === 0) m3.push('12', '38', '79', '86');
 
-    // 4. Chạm toàn cục trên mọi giải
+    // 4. Chạm Toàn Cục
     const digitCount = {};
     allLo.forEach(n => {
         if (n.length === 2) {
@@ -368,7 +378,7 @@ function chay9MoHinhToanGiai(subset, fullHistorySafe) {
         if (m4.length >= 10) break;
     }
 
-    // 5. Bạc nhớ theo thứ (từ toàn bộ số xuất hiện trong quá khứ cùng thứ)
+    // 5. Bạc Nhớ Theo Thứ
     const targetThu = subset[0]?.thu || '';
     const sameDayHistory = fullHistorySafe.filter(i => i.thu === targetThu);
     const dayAllLoFreq = {};
@@ -382,12 +392,12 @@ function chay9MoHinhToanGiai(subset, fullHistorySafe) {
     const m5 = Object.entries(dayAllLoFreq).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([n])=>n);
     if (m5.length === 0) m5.push('12','38','79','86');
 
-    // 6. Khoảng cách nhịp xuất hiện (Delta toàn cục)
+    // 6. Khoảng Cách Nhịp
     const recentFlat = allLo.slice(0, 30);
     const m6 = [...new Set(recentFlat)].slice(0, 8);
     if (m6.length < 5) m6.push(...m1.slice(0, 5));
 
-    // 7. Cặp số hay đi kèm trong các giải (Pair Freq)
+    // 7. Pair Freq Toàn Giải
     const pairMap = {};
     subset.forEach(item => {
         const nums = extractAll2D(item);
@@ -406,25 +416,53 @@ function chay9MoHinhToanGiai(subset, fullHistorySafe) {
     });
     if (m7.length === 0) m7.push(...m1.slice(0,6));
 
-    // 8. Tần suất xuất hiện chữ số đơn lẻ
+    // 8. Digit Count
     const singleDigits = {};
-    allLo.forEach(n => {
+    allLo.allLo = allLo.forEach ? allLo.forEach(n => {
         if(n.length === 2) {
             singleDigits[n[0]] = (singleDigits[n[0]] || 0) + 1;
             singleDigits[n[1]] = (singleDigits[n[1]] || 0) + 1;
         }
-    });
+    }) : null;
     const topSingle = Object.entries(singleDigits).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([d])=>d);
     const m8 = [];
     topSingle.forEach(d1 => topSingle.forEach(d2 => m8.push(d1 + d2)));
     m8.splice(8);
 
-    // 9. Hợp lực tổng hợp toàn giải (Ensemble)
+    // 9. Ensemble
     const ensembleScore = {};
     [...m1.slice(0,8), ...m2.slice(0,6), ...m3.slice(0,6)].forEach(n => {
         ensembleScore[n] = (ensembleScore[n] || 0) + 1;
     });
     const m9 = Object.entries(ensembleScore).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([n])=>n);
+
+    // ==================== 🔥 MÔ HÌNH 10: GHÉP CHUỖI & SUY LUẬN TỪ TOÀN BỘ CÁC GIẢI ====================
+    let bigString = "";
+    // Lấy 5 kỳ gần nhất, gom toàn bộ các con số của mọi giải thành một chuỗi siêu dài
+    subset.slice(0, 5).forEach(item => {
+        const rawNums = extractAllRawNumbers(item);
+        bigString += rawNums.join("");
+    });
+
+    const stringFreq = {};
+    // Trượt cửa sổ 2 ký tự trên chuỗi khổng lồ để bắt các cặp số xuất hiện liên tiếp hoặc đan xen
+    for (let i = 0; i < bigString.length - 1; i++) {
+        const sub = bigString.substr(i, 2);
+        if (/^\d{2}$/.test(sub)) {
+            stringFreq[sub] = (stringFreq[sub] || 0) + 1;
+        }
+    }
+    // Suy luận thêm: Lấy số đầu chuỗi và số cuối chuỗi ghép lại, đảo ngược, hoặc lấy tổng dồn
+    if (bigString.length >= 4) {
+        const headTail = bigString.slice(0, 2);
+        const tailHead = bigString.slice(-2);
+        stringFreq[headTail] = (stringFreq[headTail] || 0 + 5);
+        stringFreq[tailHead] = (stringFreq[tailHead] || 0 + 5);
+        const reversedTail = tailHead[1] + tailHead[0];
+        stringFreq[reversedTail] = (stringFreq[reversedTail] || 0 + 3);
+    }
+    const m10 = Object.entries(stringFreq).sort((a,b) => b[1] - a[1]).slice(0, 8).map(([n]) => n);
+    if (m10.length === 0) m10.push(...m1.slice(0, 6));
 
     return {
         'Tần suất Toàn Giải': m1,
@@ -435,15 +473,17 @@ function chay9MoHinhToanGiai(subset, fullHistorySafe) {
         'Khoảng Cách Nhịp': m6,
         'Pair Freq': m7,
         'Digit Count': m8,
-        'Ensemble': m9
+        'Ensemble': m9,
+        'Ghép Chuỗi Toàn Giải': m10
     };
 }
 
-// ==================== TRỌNG SỐ ĐỘNG (ANTI-LEAKAGE) ====================
-function tinhTrongSoDongToanGiai(safeHistory) {
+// ==================== TRỌNG SỐ ĐỘNG 10 MÔ HÌNH (ANTI-LEAKAGE) ====================
+function tinhTrongSoDong10(safeHistory) {
     const scores = {
         'Tần suất Toàn Giải': 50, 'Lô Gan Toàn Giải': 50, 'Nhịp Tuần': 50, 'Chạm Toàn Cục': 50,
-        'Bạc Nhớ Thứ': 50, 'Khoảng Cách Nhịp': 50, 'Pair Freq': 50, 'Digit Count': 50, 'Ensemble': 50
+        'Bạc Nhớ Thứ': 50, 'Khoảng Cách Nhịp': 50, 'Pair Freq': 50, 'Digit Count': 50, 'Ensemble': 50,
+        'Ghép Chuỗi Toàn Giải': 50
     };
     if (!Array.isArray(safeHistory) || safeHistory.length < 8) return scores;
 
@@ -452,9 +492,9 @@ function tinhTrongSoDongToanGiai(safeHistory) {
     for (let i = recent.length - 1; i >= 5; i--) {
         const train = recent.slice(i);
         const actualDraw = recent[i - 1];
-        const actualAllNums = extractAll2D(actualDraw); // Kiểm tra số trúng ở BẤT KỲ GIẢI NÀO
+        const actualAllNums = extractAll2D(actualDraw);
 
-        const preds = chay9MoHinhToanGiai(train, safeHistory);
+        const preds = chay10MoHinhToanGiai(train, safeHistory);
         Object.keys(preds).forEach(name => {
             const hit = preds[name].some(num => actualAllNums.includes(num));
             if (hit) {
@@ -486,7 +526,6 @@ async function thucHienPhanTich() {
         return;
     }
 
-    // 🛑 CHỐNG RÒ RỈ DỮ LIỆU TƯƠNG LAI HOÀN TOÀN
     let safeHistory = rawLichSu;
     let actualNextDraw = null;
 
@@ -504,13 +543,12 @@ async function thucHienPhanTich() {
     lastCachedSubset = subset;
     lastCachedSafeHistory = safeHistory;
 
-    const results = chay9MoHinhToanGiai(subset, safeHistory);
+    const results = chay10MoHinhToanGiai(subset, safeHistory);
     lastCachedResults = results;
 
-    const scores = tinhTrongSoDongToanGiai(safeHistory);
+    const scores = tinhTrongSoDong10(safeHistory);
     window.lastModelScores = scores;
 
-    // Tổng hợp điểm số giao thoa từ tất cả các mô hình
     const scoreMap = {}, countMap = {}, sourceMap = {};
     Object.keys(results).forEach(name => {
         const preds = [...new Set(results[name])];
@@ -529,7 +567,6 @@ async function thucHienPhanTich() {
     const finalTopNum = filtered.length ? filtered[0][0] : '50';
     document.getElementById('finalTopNum').textContent = finalTopNum;
 
-    // ĐỐI CHIẾU BACKTEST (KIỂM TRA XEM CẶP SỐ NÀY CÓ NỔ Ở GIẢI NÀO ĐÓ TRONG KỲ THỰC TẾ KHÔNG)
     if (actualNextDraw) {
         const actualAllNums = extractAll2D(actualNextDraw);
         const isHitAnywhere = actualAllNums.includes(finalTopNum);
@@ -542,8 +579,8 @@ async function thucHienPhanTich() {
         compareHtml += `</span>`;
         document.getElementById('actualCompareNote').innerHTML = compareHtml;
     } else {
-        document.getElementById('resultTitleBanner').innerText = '🎯 TÂM ĐIỂM SÁNG GIÁ NHẤT (Toàn bộ các giải)';
-        document.getElementById('actualCompareNote').textContent = 'Được đồng thuận cao từ các mô hình quét toàn giải';
+        document.getElementById('resultTitleBanner').innerText = '🎯 TÂM ĐIỂM SÁNG GIÁ NHẤT (10 Mô Hình Hợp Lực)';
+        document.getElementById('actualCompareNote').textContent = 'Được đồng thuận cao từ 10 mô hình';
     }
 
     const render = (id, arr, max = 8) => {
@@ -560,6 +597,7 @@ async function thucHienPhanTich() {
     render('resultPair', results['Pair Freq']);
     render('resultDigit', results['Digit Count']);
     render('resultEnsemble', results['Ensemble']);
+    render('resultString', results['Ghép Chuỗi Toàn Giải']);
 
     const modelArr = Object.keys(scores).map(name => ({ name, score: Math.round(scores[name]) }));
     modelArr.sort((a,b) => b.score - a.score);
@@ -600,9 +638,9 @@ function layPhanGiao() {
 
     let filtered = Object.entries(scoreMap)
         .sort((a,b) => b[1] - a[1])
-        .slice(0, 12); // Lấy top 12 số tiềm năng nhất trên mọi giải
+        .slice(0, 12);
 
-    document.getElementById('sectionTitleSuggest').textContent = '🔥 Top các số tiềm năng xuất hiện ở mọi giải';
+    document.getElementById('sectionTitleSuggest').textContent = '🔥 Top các số tiềm năng xuất hiện ở mọi giải (10 Mô hình)';
     document.getElementById('suggestedNumbersList').innerHTML = filtered.map(([num, total], idx) => {
         const count = countMap[num] || 1;
         let cls = 'bg-emerald-600 text-white';
