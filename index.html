@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Pro - Ma Trận Giao Thoa Cấu Trúc (Tens & Units Matrix)</title>
+    <title>Analysis Pro - Bóc Tách Top 2 Ma Trận Cấu Trúc (Tens & Units)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -16,9 +16,9 @@
     <!-- Header -->
     <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
-            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Ma Trận Giao Thoa Cấu Trúc (Tens & Units Matrix)</h1>
+            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Bóc Tách Top 2 Ma Trận Cấu Trúc</h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Mô hình 18 Pro (Sinh dàn ma trận nhân chéo Hàng Chục & Đơn Vị) · Chống rò rỉ tuyệt đối (Anti-Leakage)
+                Mô hình 18 Pro (Sinh ma trận & Chấm điểm đối chiếu 15 mô hình lấy Top 2) · Chống rò rỉ (Anti-Leakage)
             </p>
         </div>
         <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2 transition-all">
@@ -121,20 +121,20 @@
             <div id="compareSysA" class="text-[10px] text-slate-300 mt-3 pt-2 border-t border-white/10">Chưa chạy Backtest</div>
         </div>
 
-        <!-- 3. MÔ HÌNH 18 PRO: MA TRẬN GIAO THOA TENS & UNITS -->
+        <!-- 3. MÔ HÌNH 18 PRO: BÓC TÁCH TOP 2 TỪ MA TRẬN -->
         <div class="bg-gradient-to-br from-amber-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-amber-500/40 flex flex-col justify-between">
             <div>
                 <h3 class="text-xs font-bold uppercase tracking-widest text-amber-300 mb-2 text-center">
-                    🔥 Mô Hình 18 Pro: Ma Trận Giao Thoa
+                    🔥 Mô Hình 18 Pro: Bóc Tách Top 2 Tinh Hoa
                 </h3>
                 <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
-                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Dàn Ma Trận Nhân Chéo (Top Hàng Chục x Đơn Vị)</p>
-                    <div id="model18Grid" class="flex flex-wrap justify-center gap-1.5 mt-2 min-h-[35px]">
-                        <span class="text-xs text-amber-200 italic">Đang thiết lập ma trận...</span>
+                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Top 2 Con Số Sáng Giá Nhất Từ Ma Trận</p>
+                    <div id="model18Top2" class="flex justify-center gap-2 mt-2 min-h-[35px]">
+                        <span class="text-xs text-amber-200 italic">Đang bóc tách...</span>
                     </div>
                 </div>
                 <div class="bg-black/20 p-2.5 rounded-xl border border-white/10">
-                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Chi tiết phân rã thành phần:</p>
+                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Chi tiết lọc ma trận & 15 mô hình:</p>
                     <div id="model18Details" class="text-[11px] text-slate-200 space-y-1">Chưa có dữ liệu...</div>
                 </div>
             </div>
@@ -210,7 +210,7 @@ function resetUI() {
     document.getElementById('entropyVal').textContent = '--';
     document.getElementById('entropyStatus').textContent = 'Đang chờ phân tích...';
     document.getElementById('entropyWarningBox').textContent = 'Đánh giá trạng thái ngẫu nhiên độc lập của dữ liệu.';
-    document.getElementById('model18Grid').innerHTML = '<span class="text-xs text-amber-200 italic">Đang thiết lập ma trận...</span>';
+    document.getElementById('model18Top2').innerHTML = '<span class="text-xs text-amber-200 italic">Đang bóc tách...</span>';
     document.getElementById('model18Details').textContent = 'Chưa có dữ liệu...';
     document.getElementById('compareSysA').textContent = 'Chưa chạy Backtest';
     document.getElementById('compareSysB').textContent = 'Chưa chạy Backtest';
@@ -329,12 +329,12 @@ function calculateEntropy(subset) {
     return Math.min(Math.max(entropy / 6.64, 0), 1);
 }
 
-// ==================== 2. MÔ HÌNH 18 PRO: TÍCH DESCARTES MA TRẬN TENS & UNITS ====================
-function chayMoHinh18_MatrixGrid(subset) {
-    if (!subset || subset.length < 3) return { grid: [], details: 'Dữ liệu quá ngắn' };
+// ==================== 2. MÔ HÌNH 18 PRO: LỌC MA TRẬN & BÓC TÁCH TOP 2 ====================
+function chayMoHinh18_MatrixTop2(subset, voteMap) {
+    if (!subset || subset.length < 3) return { top2: ['38', '50'], details: 'Dữ liệu quá ngắn' };
 
-    let tensFreq = {};  // Hàng chục (0-9)
-    let unitsFreq = {}; // Hàng đơn vị (0-9)
+    let tensFreq = {};  
+    let unitsFreq = {}; 
 
     subset.forEach((item, periodIdx) => {
         let timeWeight = Math.pow(0.88, periodIdx);
@@ -351,14 +351,14 @@ function chayMoHinh18_MatrixGrid(subset) {
         });
     });
 
-    // Lấy Top 3 Hàng Chục và Top 3 Hàng Đơn Vị có điểm số cao nhất
+    // Lấy Top 3 Hàng Chục và Top 3 Hàng Đơn Vị cao nhất
     let sortedTens = Object.entries(tensFreq).sort((a, b) => b[1] - a[1]);
     let sortedUnits = Object.entries(unitsFreq).sort((a, b) => b[1] - a[1]);
 
     let topTens = sortedTens.slice(0, 3).map(([d]) => d);
     let topUnits = sortedUnits.slice(0, 3).map(([d]) => d);
 
-    // Nhân chéo tạo ma trận dàn số tiềm năng (Cartesian Product)
+    // Sinh dàn ma trận nhân chéo (Cartesian Product)
     let matrixGrid = [];
     topTens.forEach(t => {
         topUnits.forEach(u => {
@@ -366,12 +366,26 @@ function chayMoHinh18_MatrixGrid(subset) {
         });
     });
 
+    // Tầng lọc thứ 2: Chấm điểm từng số trong ma trận dựa trên điểm số đồng thuận từ 15 mô hình cơ sở (voteMap)
+    let scoredGrid = matrixGrid.map(num => {
+        let consensusVotes = voteMap[num] || 0; // Số mô hình cơ sở ủng hộ con số này
+        let isTopTens = topTens.includes(num[0]) ? 2 : 0;
+        let isTopUnits = topUnits.includes(num[1]) ? 2 : 0;
+        let totalScore = (consensusVotes * 3) + isTopTens + isTopUnits;
+        return { num: num, score: totalScore };
+    });
+
+    // Sắp xếp giảm dần theo điểm số để bóc ra Top 2 con số sắc bén nhất
+    scoredGrid.sort((a, b) => b.score - a.score);
+    let top2 = scoredGrid.slice(0, 2).map(x => x.num);
+
     let details = `• <strong>Top Hàng Chục:</strong> ${topTens.join(', ')}<br>` +
                   `• <strong>Top Hàng Đơn Vị:</strong> ${topUnits.join(', ')}<br>` +
-                  `➔ <em>Sinh ma trận dàn số (${matrixGrid.length} cặp giao thoa tối ưu):</em>`;
+                  `• <strong>Quét ${matrixGrid.length} cặp ma trận, chấm điểm đối chiếu 15 mô hình</strong><br>` +
+                  `➔ <em>Đã bóc tách 2 con số tinh hoa:</em> <strong>${top2.join(', ')}</strong>`;
 
     return {
-        grid: matrixGrid,
+        top2: top2,
         details: details
     };
 }
@@ -593,12 +607,12 @@ async function thucHienPhanTich() {
         }
     });
 
-    // 3. Chạy Mô hình 18 Pro: Ma trận giao thoa
-    const m18Res = chayMoHinh18_MatrixGrid(subset);
+    // 3. Chạy Mô hình 18 Pro: Bóc tách Top 2 tinh hoa
+    const m18Res = chayMoHinh18_MatrixTop2(subset, voteMap);
     
-    // Hiển thị dàn ma trận lên giao diện
-    document.getElementById('model18Grid').innerHTML = m18Res.grid.map(n => 
-        `<span class="bg-amber-600 text-white px-2 py-1 rounded text-sm font-extrabold shadow border border-amber-400">${n}</span>`
+    // Hiển thị Top 2 lên giao diện chính
+    document.getElementById('model18Top2').innerHTML = m18Res.top2.map(n => 
+        `<span class="bg-amber-500 text-slate-950 px-3 py-1 rounded text-lg font-black shadow-lg ring-2 ring-amber-300">${n}</span>`
     ).join(' ');
     
     document.getElementById('model18Details').innerHTML = m18Res.details;
@@ -607,10 +621,10 @@ async function thucHienPhanTich() {
     if (actualNextDraw) {
         let actualAllNums = extractAll2D(actualNextDraw);
         let hitA = actualAllNums.includes(topBestNumA);
-        let hitB = actualAllNums.some(n => m18Res.grid.includes(n));
+        let hitB = actualAllNums.some(n => m18Res.top2.includes(n));
 
         document.getElementById('compareSysA').innerHTML = `Thực tế kỳ ${actualNextDraw.ngay} [${actualAllNums.join(', ')}]: <strong class="${hitA ? 'text-emerald-400 font-bold' : 'text-red-400'}">${hitA ? '✅ TRÚNG!' : '❌ Trượt'}</strong>`;
-        document.getElementById('compareSysB').innerHTML = `Thực tế kỳ ${actualNextDraw.ngay} [${actualAllNums.join(', ')}]: <strong class="${hitB ? 'text-emerald-400 font-bold' : 'text-red-400'}">${hitB ? '✅ TRÚNG MA TRẬN!' : '❌ Ngoài ma trận'}</strong>`;
+        document.getElementById('compareSysB').innerHTML = `Thực tế kỳ ${actualNextDraw.ngay} [${actualAllNums.join(', ')}]: <strong class="${hitB ? 'text-emerald-400 font-bold' : 'text-red-400'}">${hitB ? '✅ TRÚNG TOP 2!' : '❌ Trượt'}</strong>`;
     } else {
         document.getElementById('compareSysA').textContent = 'Đang dự đoán kỳ mới nhất (Chưa có kết quả thực tế)';
         document.getElementById('compareSysB').textContent = 'Đang dự đoán kỳ mới nhất (Chưa có kết quả thực tế)';
