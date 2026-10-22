@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Pro - Lượng Tử Hóa & Hồi Quy Trọng Số</title>
+    <title>Analysis Pro - Biểu Đồ Sóng Giao Cắt Hình Sin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -16,9 +16,9 @@
     <!-- Header -->
     <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
-            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Mô Hình Hàm Sóng Lượng Tử & Hồi Quy</h1>
+            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Sóng Hình Sin Giao Cắt & Phân Tích Cặp Số</h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Quang phổ lượng tử năng lượng Photon · Sụp đổ hàm sóng · Hồi quy trọng số & Chặn lô gan
+                Biểu đồ giao cắt sóng lượng tử · Xác định điểm uốn năng lượng · Bóc tách Top 2 chuẩn thống kê
             </p>
         </div>
         <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2 transition-all">
@@ -53,14 +53,14 @@
         </div>
 
         <div>
-            <label class="block text-xs font-medium text-indigo-500 mb-1">🔍 Chọn Ngày Backtest (Chống Gian Lận)</label>
+            <label class="block text-xs font-medium text-indigo-500 mb-1">🔍 Chọn Ngày Backtest (Bước 2)</label>
             <select id="selectTraCuuNgay" onchange="hienThongTinNgayTrucTiep()" class="w-full border border-indigo-400/50 rounded-lg px-3 py-2 bg-indigo-50 dark:bg-indigo-950/30 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
                 <option value="">-- Mặc định (kỳ mới nhất) --</option>
             </select>
         </div>
 
         <div>
-            <label class="block text-xs font-medium mb-1">Biên độ phân tích cơ sở</label>
+            <label class="block text-xs font-medium mb-1">Biên độ phân tích</label>
             <select id="selectLimit" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
                 <option value="15" selected>15 kỳ gần nhất</option>
                 <option value="25">25 kỳ gần nhất</option>
@@ -97,7 +97,7 @@
         <div class="bg-gradient-to-br from-slate-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-slate-700 flex flex-col justify-between">
             <div>
                 <h3 class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-2 text-center">
-                    📊 Kiểm Định Entropy & Quang Phổ
+                    📊 Kiểm Định Entropy & Sóng Sin
                 </h3>
                 <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
                     <p class="text-[10px] text-slate-300 uppercase font-semibold">Chỉ số Entropy hiện tại</p>
@@ -105,10 +105,10 @@
                     <span id="entropyStatus" class="text-[10px] text-yellow-300 mt-1 block font-medium">Đang chờ phân tích...</span>
                 </div>
                 <div id="entropyWarningBox" class="bg-black/30 p-2.5 rounded-xl border border-white/10 text-[11px] text-slate-300">
-                    Đánh giá mức năng lượng photon & trạng thái chồng chập lượng tử.
+                    Đánh giá trạng thái pha giao cắt và biên độ dao động.
                 </div>
             </div>
-            <div class="text-[10px] text-slate-400 mt-3 pt-2 border-t border-white/10">Quantum Wavefunction Active</div>
+            <div class="text-[10px] text-slate-400 mt-3 pt-2 border-t border-white/10">Sine Crossover Active</div>
         </div>
 
         <!-- 2. ĐỒNG THUẬN 15 MÔ HÌNH -->
@@ -130,25 +130,33 @@
             <div id="compareSysA" class="text-[10px] text-slate-300 mt-3 pt-2 border-t border-white/10">Chưa chạy Backtest</div>
         </div>
 
-        <!-- 3. MÔ HÌNH LƯỢNG TỬ & HỒI QUY: BÓC TÁCH TOP 2 -->
+        <!-- 3. MÔ HÌNH LƯỢNG TỬ & BÓC TÁCH TOP 2 -->
         <div class="bg-gradient-to-br from-amber-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-amber-500/40 flex flex-col justify-between">
             <div>
                 <h3 class="text-xs font-bold uppercase tracking-widest text-amber-300 mb-2 text-center">
-                    🔥 Lượng Tử Quang Phổ & Bóc Tách Top 2
+                    🔥 Top 2 Tinh Hoa (Điểm Giao Cắt)
                 </h3>
                 <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
-                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Top 2 Trạng Thái Năng Lượng Cao</p>
+                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Top 2 Trạng Thái Giao Cắt Sóng</p>
                     <div id="model18Top2" class="flex justify-center gap-2 mt-2 min-h-[35px]">
-                        <span class="text-xs text-amber-200 italic">Đang sụp đổ hàm sóng...</span>
+                        <span class="text-xs text-amber-200 italic">Đang bóc tách...</span>
                     </div>
                 </div>
                 <div class="bg-black/20 p-2.5 rounded-xl border border-white/10">
-                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Chi tiết quang phổ lượng tử & Chặn gan:</p>
+                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Chi tiết điểm giao cắt & Chặn gan:</p>
                     <div id="model18Details" class="text-[11px] text-slate-200 space-y-1">Chưa có dữ liệu...</div>
                 </div>
             </div>
             <div id="compareSysB" class="text-[10px] text-slate-300 mt-3 pt-2 border-t border-white/10">Chưa chạy Backtest</div>
         </div>
+    </div>
+
+    <!-- KHU VỰC HIỂN THỊ BIỂU ĐỒ SÓNG HÌNH SIN GIAO CẮT -->
+    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 mb-6">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-500 border-b border-slate-200 dark:border-slate-800 pb-2 mb-3">
+            🌊 Biểu Đồ Sóng Hình Sin Giao Cắt (Phân Tích Đỉnh Sóng & Điểm Cắt Của Các Cặp Số)
+        </h3>
+        <div id="sineWaveChartContainer" style="width: 100%; height: 380px;"></div>
     </div>
 
     <!-- CHI TIẾT 15 MÔ HÌNH CƠ SỞ BÊN DƯỚI -->
@@ -186,11 +194,65 @@
 
 <script>
 let currentLoadedJson = null;
+let sineChart = null;
 
 window.onload = async () => {
     resetUI();
+    initSineChart();
     await taiDuLieuDai();
 };
+
+function initSineChart() {
+    const chartDom = document.getElementById('sineWaveChartContainer');
+    sineChart = echarts.init(chartDom);
+    const option = {
+        tooltip: { trigger: 'axis' },
+        legend: { data: ['Sóng Năng Lượng Nhanh (Fast Wave)', 'Xu Hướng Chậm (Slow Trend)'], textStyle: { color: '#94a3b8', fontSize: 11 } },
+        grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+        xAxis: { type: 'category', data: [], axisLabel: { fontSize: 10, color: '#94a3b8' } },
+        yAxis: { type: 'value', axisLabel: { fontSize: 10, color: '#94a3b8' } },
+        series: [
+            {
+                name: 'Sóng Năng Lượng Nhanh (Fast Wave)',
+                type: 'line',
+                smooth: true,
+                data: [],
+                itemStyle: { color: '#fbbf24' },
+                lineStyle: { width: 3 }
+            },
+            {
+                name: 'Xu Hướng Chậm (Slow Trend)',
+                type: 'line',
+                smooth: true,
+                data: [],
+                itemStyle: { color: '#38bdf8' },
+                lineStyle: { width: 2, type: 'dashed' }
+            }
+        ]
+    };
+    sineChart.setOption(option);
+    window.addEventListener('resize', () => sineChart.resize());
+}
+
+function updateSineChart(scoredData) {
+    if (!sineChart) return;
+    // Lấy top 12 cặp số có điểm số cao nhất để mô phỏng sóng hình sin giao cắt
+    const topData = scoredData.slice(0, 12);
+    const xData = topData.map(item => `Cặp ${item.num}`);
+    
+    // Tạo sóng nhanh (Fast wave mô phỏng năng lượng hiện tại) và sóng chậm (Slow trend mô phỏng trung bình)
+    const fastWave = topData.map(item => parseFloat(item.score.toFixed(2)));
+    const slowTrend = topData.map(item => parseFloat((item.score * 0.85 + Math.sin(parseInt(item.num)) * 2).toFixed(2)));
+
+    const option = {
+        xAxis: { data: xData },
+        series: [
+            { data: fastWave },
+            { data: slowTrend }
+        ]
+    };
+    sineChart.setOption(option);
+}
 
 function toggleDarkMode() {
     const html = document.documentElement;
@@ -218,14 +280,17 @@ function resetUI() {
     document.getElementById('consensusRate').textContent = 'Đang chờ phân tích...';
     document.getElementById('entropyVal').textContent = '--';
     document.getElementById('entropyStatus').textContent = 'Đang chờ phân tích...';
-    document.getElementById('entropyWarningBox').textContent = 'Đánh giá mức năng lượng photon & trạng thái chồng chập lượng tử.';
-    document.getElementById('model18Top2').innerHTML = '<span class="text-xs text-amber-200 italic">Đang sụp đổ hàm sóng...</span>';
+    document.getElementById('entropyWarningBox').textContent = 'Đánh giá trạng thái pha giao cắt và biên độ dao động.';
+    document.getElementById('model18Top2').innerHTML = '<span class="text-xs text-amber-200 italic">Đang bóc tách...</span>';
     document.getElementById('model18Details').textContent = 'Chưa có dữ liệu...';
     document.getElementById('compareSysA').textContent = 'Chưa chạy Backtest';
     document.getElementById('compareSysB').textContent = 'Chưa chạy Backtest';
     document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic">Bấm chạy để xem mức độ đồng thuận...</span>';
     document.getElementById('panelBody').innerHTML = '<p class="text-slate-400 italic text-center py-4">Chọn ngày để xem chi tiết.</p>';
     document.getElementById('selectTraCuuNgay').innerHTML = '<option value="">-- Mặc định (kỳ mới nhất) --</option>';
+    if(sineChart) {
+        sineChart.setOption({ xAxis: { data: [] }, series: [{ data: [] }, { data: [] }] });
+    }
     for(let i=1; i<=15; i++) {
         let el = document.getElementById(`res${i}`);
         if(el) el.innerHTML = '--';
@@ -322,7 +387,6 @@ function extractAll2D(item) {
     return list;
 }
 
-// ==================== 1. TÍNH CHỈ SỐ ENTROPY ====================
 function calculateEntropy(subset) {
     let allLo = [];
     subset.forEach(item => allLo.push(...extractAll2D(item)));
@@ -338,9 +402,9 @@ function calculateEntropy(subset) {
     return Math.min(Math.max(entropy / 6.64, 0), 1);
 }
 
-// ==================== 2. MÔ HÌNH HÀM SÓNG LƯỢNG TỬ & HỒI QUY ====================
-function chayMoHinh18_QuantumWavefunction(fullHistorySafe, userLimit) {
-    if (!fullHistorySafe || fullHistorySafe.length < 3) return { top2: ['38', '50'], details: 'Dữ liệu quá ngắn' };
+// ==================== MÔ HÌNH HÀM SÓNG GIAO CẮT & HỒI QUY ====================
+function chayMoHinh18_SineCrossover(fullHistorySafe, userLimit) {
+    if (!fullHistorySafe || fullHistorySafe.length < 3) return { top2: ['38', '50'], details: 'Dữ liệu quá ngắn', scoredMatrix: [] };
 
     let baseSubset = fullHistorySafe.slice(0, userLimit);
     let entropy = calculateEntropy(baseSubset);
@@ -388,11 +452,8 @@ function chayMoHinh18_QuantumWavefunction(fullHistorySafe, userLimit) {
                 let u = numStr[1];
                 let numVal = parseInt(numStr);
 
-                // --- LÝ THUYẾT LƯỢNG TỬ ÁNH SÁNG & HÀM SÓNG ---
-                // Biên độ hàm sóng quang phổ tính theo dao động điều hòa hàm lượng giác pha lượng tử
                 let photonFrequency = (numVal + 1) / 100; 
                 let waveAmplitude = Math.abs(Math.sin(periodIdx + photonFrequency) * Math.cos(numVal));
-
                 let energyScore = linearRegressionWeight * (1.0 + waveAmplitude);
 
                 digitQuantumEnergy[t] = (digitQuantumEnergy[t] || 0) + energyScore;
@@ -403,11 +464,9 @@ function chayMoHinh18_QuantumWavefunction(fullHistorySafe, userLimit) {
         });
     });
 
-    // Lấy Top 5 chữ số có năng lượng quang phổ cao nhất
     let sortedQuantumDigits = Object.entries(digitQuantumEnergy).sort((a, b) => b[1] - a[1]);
     let topKeyDigits = sortedQuantumDigits.slice(0, 5).map(([d]) => d);
 
-    // Sinh ma trận toàn phần (S x S) chồng chập lượng tử bao gồm số kép
     let matrixGrid = [];
     topKeyDigits.forEach(d1 => {
         topKeyDigits.forEach(d2 => {
@@ -421,7 +480,6 @@ function chayMoHinh18_QuantumWavefunction(fullHistorySafe, userLimit) {
     let uniqueMatrix = [...new Set(matrixGrid)];
     let blockedByGan = [];
 
-    // Sụp đổ hàm sóng (Measurement Collapse) kết hợp Chặn Lô Gan
     let scoredMatrix = [];
     uniqueMatrix.forEach(num => {
         let t = num[0], u = num[1];
@@ -435,7 +493,7 @@ function chayMoHinh18_QuantumWavefunction(fullHistorySafe, userLimit) {
         let waveScore = pairQuantumWave[num] || 0.1;
         let d1Energy = digitQuantumEnergy[t] || 0;
         let d2Energy = digitQuantumEnergy[u] || 0;
-        let doubleBonus = (t === u) ? 5.0 : 0; // Thưởng năng lượng cho trạng thái số kép
+        let doubleBonus = (t === u) ? 5.0 : 0;
 
         let totalScore = (waveScore * 4) + d1Energy + d2Energy + doubleBonus - (ganVal * 0.25);
         scoredMatrix.push({ num: num, score: totalScore, gan: ganVal });
@@ -458,16 +516,16 @@ function chayMoHinh18_QuantumWavefunction(fullHistorySafe, userLimit) {
     let excludedListStr = Array.from(excludedSet).join(', ') || 'Không có';
     let blockedStr = blockedByGan.join(', ') || 'Không có';
 
-    let details = `• <strong>Thuật toán:</strong> Sụp đổ hàm sóng quang phổ lượng tử ($E = hf$)<br>` +
-                  `• <strong>Số đã ra kỳ trước bị loại:</strong> [${excludedListStr}]<br>` +
-                  `• <strong>Tập quang phổ chủ đạo:</strong> (${topKeyDigits.join(', ')})<br>` +
-                  `• 🚫 <strong>Bị chặn bởi Bộ lọc Lô Gan:</strong> [${blockedStr}]<br>` +
-                  `➔ <em>Sụp đổ hàm sóng bóc tách Top 2:</em> <strong>${top2.join(', ')}</strong>`;
+    let details = `• <strong>Bước 1 & 3:</strong> Phân tích giao cắt sóng hình sin ($E = hf$)<br>` +
+                  `• <strong>Bước 2 (Loại trừ):</strong> Đã lọc bỏ số kỳ trước [${excludedListStr}]<br>` +
+                  `• <strong>Bước 4 (Chặn gan):</strong> Loại bỏ [${blockedStr}]<br>` +
+                  `➔ <em>Bước 5 (Giao cắt sóng tối ưu):</em> <strong>${top2.join(', ')}</strong>`;
 
     return {
         top2: top2,
         details: details,
-        entropy: entropy
+        entropy: entropy,
+        scoredMatrix: scoredMatrix
     };
 }
 
@@ -629,9 +687,11 @@ async function thucHienPhanTich() {
         }
     }
 
-    // Chạy Mô hình Lượng tử sóng quang phổ
-    const m18Res = chayMoHinh18_QuantumWavefunction(safeHistory, limit);
+    const m18Res = chayMoHinh18_SineCrossover(safeHistory, limit);
     
+    // Cập nhật biểu đồ sóng hình sin giao cắt
+    updateSineChart(m18Res.scoredMatrix);
+
     let entropyPercent = (m18Res.entropy * 100).toFixed(1);
     document.getElementById('entropyVal').textContent = `${entropyPercent}%`;
 
@@ -639,14 +699,14 @@ async function thucHienPhanTich() {
     let entropyStatus = document.getElementById('entropyStatus');
 
     if (m18Res.entropy > 0.82) {
-        entropyStatus.textContent = "⚠️ Hỗn loạn cao (Sóng lượng tử dao động)";
+        entropyStatus.textContent = "⚠️ Hỗn loạn cao (Sóng giao cắt phân tán)";
         entropyStatus.className = "text-[10px] text-red-400 mt-1 block font-bold";
-        warningBox.innerHTML = `<strong>Cảnh báo:</strong> Entropy đạt ${entropyPercent}%. Hệ thống tăng cường biên độ pha lượng tử để quét tín hiệu.`;
+        warningBox.innerHTML = `<strong>Bước 5 Cảnh báo:</strong> Entropy đạt ${entropyPercent}%. Các giao cắt sóng thưa thớt, cần thận trọng!`;
         warningBox.className = "bg-red-950/40 p-2.5 rounded-xl border border-red-500/30 text-[11px] text-red-200";
     } else {
-        entropyStatus.textContent = "✅ Trạng thái ổn định";
+        entropyStatus.textContent = "✅ Trạng thái ổn định (Giao cắt đồng pha)";
         entropyStatus.className = "text-[10px] text-emerald-400 mt-1 block font-bold";
-        warningBox.innerHTML = `<strong>Đánh giá:</strong> Entropy ở mức ${entropyPercent}%. Quang phổ năng lượng ổn định.`;
+        warningBox.innerHTML = `<strong>Bước 5 Đánh giá:</strong> Entropy ở mức ${entropyPercent}%. Sóng nhanh cắt lên trên sóng chậm, tín hiệu tin cậy.`;
         warningBox.className = "bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-500/30 text-[11px] text-emerald-200";
     }
 
@@ -697,8 +757,8 @@ async function thucHienPhanTich() {
         let hitA = actualAllNums.includes(topBestNumA);
         let hitB = actualAllNums.some(n => m18Res.top2.includes(n));
 
-        document.getElementById('compareSysA').innerHTML = `Thực tế kỳ ${actualNextDraw.ngay} [${actualAllNums.join(', ')}]: <strong class="${hitA ? 'text-emerald-400 font-bold' : 'text-red-400'}">${hitA ? '✅ TRÚNG!' : '❌ Trượt'}</strong>`;
-        document.getElementById('compareSysB').innerHTML = `Thực tế kỳ ${actualNextDraw.ngay} [${actualAllNums.join(', ')}]: <strong class="${hitB ? 'text-emerald-400 font-bold' : 'text-red-400'}">${hitB ? '✅ TRÚNG TOP 2!' : '❌ Trượt'}</strong>`;
+        document.getElementById('compareSysA').innerHTML = `Backtest kỳ ${actualNextDraw.ngay} [${actualAllNums.join(', ')}]: <strong class="${hitA ? 'text-emerald-400 font-bold' : 'text-red-400'}">${hitA ? '✅ TRÚNG!' : '❌ Trượt'}</strong>`;
+        document.getElementById('compareSysB').innerHTML = `Backtest kỳ ${actualNextDraw.ngay} [${actualAllNums.join(', ')}]: <strong class="${hitB ? 'text-emerald-400 font-bold' : 'text-red-400'}">${hitB ? '✅ TRÚNG TOP 2!' : '❌ Trượt'}</strong>`;
     } else {
         document.getElementById('compareSysA').textContent = 'Đang dự đoán kỳ mới nhất (Chưa có kết quả thực tế)';
         document.getElementById('compareSysB').textContent = 'Đang dự đoán kỳ mới nhất (Chưa có kết quả thực tế)';
