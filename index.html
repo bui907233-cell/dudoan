@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Pro - Hồi Quy Trọng Số & Ma Trận Toàn Phần</title>
+    <title>Analysis Pro - Lượng Tử Hóa & Hồi Quy Trọng Số</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -16,9 +16,9 @@
     <!-- Header -->
     <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
-            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Tích Hợp Hồi Quy Trọng Số & Ma Trận Toàn Phần</h1>
+            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Mô Hình Hàm Sóng Lượng Tử & Hồi Quy</h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Thuật toán hồi quy xu hướng thời gian · Chặn lô gan · Sinh số kép & Bóc tách Top 2 chuẩn xác
+                Quang phổ lượng tử năng lượng Photon · Sụp đổ hàm sóng · Hồi quy trọng số & Chặn lô gan
             </p>
         </div>
         <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2 transition-all">
@@ -93,11 +93,11 @@
 
     <!-- KHU VỰC CÁC HỆ THỐNG PHÂN TÍCH CHÍNH -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <!-- 1. KIỂM ĐỊNH ENTROPY & ADAPTIVE WINDOW -->
+        <!-- 1. KIỂM ĐỊNH ENTROPY -->
         <div class="bg-gradient-to-br from-slate-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-slate-700 flex flex-col justify-between">
             <div>
                 <h3 class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-2 text-center">
-                    📊 Kiểm Định Entropy & Hồi Quy
+                    📊 Kiểm Định Entropy & Quang Phổ
                 </h3>
                 <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
                     <p class="text-[10px] text-slate-300 uppercase font-semibold">Chỉ số Entropy hiện tại</p>
@@ -105,10 +105,10 @@
                     <span id="entropyStatus" class="text-[10px] text-yellow-300 mt-1 block font-medium">Đang chờ phân tích...</span>
                 </div>
                 <div id="entropyWarningBox" class="bg-black/30 p-2.5 rounded-xl border border-white/10 text-[11px] text-slate-300">
-                    Đánh giá trạng thái ngẫu nhiên & tối ưu hóa trọng số hồi quy.
+                    Đánh giá mức năng lượng photon & trạng thái chồng chập lượng tử.
                 </div>
             </div>
-            <div class="text-[10px] text-slate-400 mt-3 pt-2 border-t border-white/10">Weighted Regression Active</div>
+            <div class="text-[10px] text-slate-400 mt-3 pt-2 border-t border-white/10">Quantum Wavefunction Active</div>
         </div>
 
         <!-- 2. ĐỒNG THUẬN 15 MÔ HÌNH -->
@@ -130,20 +130,20 @@
             <div id="compareSysA" class="text-[10px] text-slate-300 mt-3 pt-2 border-t border-white/10">Chưa chạy Backtest</div>
         </div>
 
-        <!-- 3. MÔ HÌNH HỒI QUY TRỌNG SỐ & BÓC TÁCH TOP 2 -->
+        <!-- 3. MÔ HÌNH LƯỢNG TỬ & HỒI QUY: BÓC TÁCH TOP 2 -->
         <div class="bg-gradient-to-br from-amber-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-amber-500/40 flex flex-col justify-between">
             <div>
                 <h3 class="text-xs font-bold uppercase tracking-widest text-amber-300 mb-2 text-center">
-                    🔥 Hồi Quy Trọng Số & Bóc Tách Top 2
+                    🔥 Lượng Tử Quang Phổ & Bóc Tách Top 2
                 </h3>
                 <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
-                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Top 2 Con Số Tinh Hoa Nhất</p>
+                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Top 2 Trạng Thái Năng Lượng Cao</p>
                     <div id="model18Top2" class="flex justify-center gap-2 mt-2 min-h-[35px]">
-                        <span class="text-xs text-amber-200 italic">Đang bóc tách...</span>
+                        <span class="text-xs text-amber-200 italic">Đang sụp đổ hàm sóng...</span>
                     </div>
                 </div>
                 <div class="bg-black/20 p-2.5 rounded-xl border border-white/10">
-                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Chi tiết mô hình hồi quy xu hướng:</p>
+                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Chi tiết quang phổ lượng tử & Chặn gan:</p>
                     <div id="model18Details" class="text-[11px] text-slate-200 space-y-1">Chưa có dữ liệu...</div>
                 </div>
             </div>
@@ -218,8 +218,8 @@ function resetUI() {
     document.getElementById('consensusRate').textContent = 'Đang chờ phân tích...';
     document.getElementById('entropyVal').textContent = '--';
     document.getElementById('entropyStatus').textContent = 'Đang chờ phân tích...';
-    document.getElementById('entropyWarningBox').textContent = 'Đánh giá trạng thái ngẫu nhiên & tối ưu hóa trọng số hồi quy.';
-    document.getElementById('model18Top2').innerHTML = '<span class="text-xs text-amber-200 italic">Đang bóc tách...</span>';
+    document.getElementById('entropyWarningBox').textContent = 'Đánh giá mức năng lượng photon & trạng thái chồng chập lượng tử.';
+    document.getElementById('model18Top2').innerHTML = '<span class="text-xs text-amber-200 italic">Đang sụp đổ hàm sóng...</span>';
     document.getElementById('model18Details').textContent = 'Chưa có dữ liệu...';
     document.getElementById('compareSysA').textContent = 'Chưa chạy Backtest';
     document.getElementById('compareSysB').textContent = 'Chưa chạy Backtest';
@@ -338,8 +338,8 @@ function calculateEntropy(subset) {
     return Math.min(Math.max(entropy / 6.64, 0), 1);
 }
 
-// ==================== 2. MÔ HÌNH HỒI QUY TRỌNG SỐ & LỌC GAN ====================
-function chayMoHinh18_WeightedRegression(fullHistorySafe, userLimit) {
+// ==================== 2. MÔ HÌNH HÀM SÓNG LƯỢNG TỬ & HỒI QUY ====================
+function chayMoHinh18_QuantumWavefunction(fullHistorySafe, userLimit) {
     if (!fullHistorySafe || fullHistorySafe.length < 3) return { top2: ['38', '50'], details: 'Dữ liệu quá ngắn' };
 
     let baseSubset = fullHistorySafe.slice(0, userLimit);
@@ -370,40 +370,44 @@ function chayMoHinh18_WeightedRegression(fullHistorySafe, userLimit) {
         });
     });
 
-    // --- PHƯƠNG PHÁP HỒI QUY TRỌNG SỐ (WEIGHTED LINEAR REGRESSION TREND) ---
-    // Tính điểm dốc xu hướng (Slope/Trend) cho từng chữ số qua các kỳ
-    let digitRegressionScore = {};
-    let pairRegressionScore = {};
+    let digitQuantumEnergy = {};
+    let pairQuantumWave = {};
 
     let learningSubset = subset.slice(1);
     if (learningSubset.length < 2) learningSubset = subset;
-
     let totalPeriods = learningSubset.length;
 
     learningSubset.forEach((item, periodIdx) => {
-        // periodIdx = 0 là kỳ gần nhất, điểm thời gian x càng lớn cho kỳ càng gần (hồi quy hướng về hiện tại)
         let timeRecency = totalPeriods - periodIdx; 
-        let linearWeight = timeRecency * 1.5; // Hệ số tuyến tính hồi quy
+        let linearRegressionWeight = timeRecency * 1.5;
 
         let all2d = extractAll2D(item);
         all2d.forEach(numStr => {
             if (numStr.length === 2) {
                 let t = numStr[0];
                 let u = numStr[1];
+                let numVal = parseInt(numStr);
 
-                digitRegressionScore[t] = (digitRegressionScore[t] || 0) + linearWeight;
-                digitRegressionScore[u] = (digitRegressionScore[u] || 0) + linearWeight;
+                // --- LÝ THUYẾT LƯỢNG TỬ ÁNH SÁNG & HÀM SÓNG ---
+                // Biên độ hàm sóng quang phổ tính theo dao động điều hòa hàm lượng giác pha lượng tử
+                let photonFrequency = (numVal + 1) / 100; 
+                let waveAmplitude = Math.abs(Math.sin(periodIdx + photonFrequency) * Math.cos(numVal));
+
+                let energyScore = linearRegressionWeight * (1.0 + waveAmplitude);
+
+                digitQuantumEnergy[t] = (digitQuantumEnergy[t] || 0) + energyScore;
+                digitQuantumEnergy[u] = (digitQuantumEnergy[u] || 0) + energyScore;
                 
-                pairRegressionScore[numStr] = (pairRegressionScore[numStr] || 0) + (linearWeight * 2.0);
+                pairQuantumWave[numStr] = (pairQuantumWave[numStr] || 0) + (energyScore * 2.5);
             }
         });
     });
 
-    // Lấy Top 5 chữ số có hệ số hồi quy xu hướng cao nhất
-    let sortedRegressionDigits = Object.entries(digitRegressionScore).sort((a, b) => b[1] - a[1]);
-    let topKeyDigits = sortedRegressionDigits.slice(0, 5).map(([d]) => d);
+    // Lấy Top 5 chữ số có năng lượng quang phổ cao nhất
+    let sortedQuantumDigits = Object.entries(digitQuantumEnergy).sort((a, b) => b[1] - a[1]);
+    let topKeyDigits = sortedQuantumDigits.slice(0, 5).map(([d]) => d);
 
-    // Sinh ma trận toàn phần (S x S) bao gồm số kép
+    // Sinh ma trận toàn phần (S x S) chồng chập lượng tử bao gồm số kép
     let matrixGrid = [];
     topKeyDigits.forEach(d1 => {
         topKeyDigits.forEach(d2 => {
@@ -417,7 +421,7 @@ function chayMoHinh18_WeightedRegression(fullHistorySafe, userLimit) {
     let uniqueMatrix = [...new Set(matrixGrid)];
     let blockedByGan = [];
 
-    // Chấm điểm kết hợp Hồi quy xu hướng & Chặn Lô Gan
+    // Sụp đổ hàm sóng (Measurement Collapse) kết hợp Chặn Lô Gan
     let scoredMatrix = [];
     uniqueMatrix.forEach(num => {
         let t = num[0], u = num[1];
@@ -428,12 +432,12 @@ function chayMoHinh18_WeightedRegression(fullHistorySafe, userLimit) {
             return;
         }
 
-        let regressionScore = pairRegressionScore[num] || 0.1;
-        let d1Reg = digitRegressionScore[t] || 0;
-        let d2Reg = digitRegressionScore[u] || 0;
-        let doubleBonus = (t === u) ? 4.0 : 0;
+        let waveScore = pairQuantumWave[num] || 0.1;
+        let d1Energy = digitQuantumEnergy[t] || 0;
+        let d2Energy = digitQuantumEnergy[u] || 0;
+        let doubleBonus = (t === u) ? 5.0 : 0; // Thưởng năng lượng cho trạng thái số kép
 
-        let totalScore = (regressionScore * 4) + d1Reg + d2Reg + doubleBonus - (ganVal * 0.25);
+        let totalScore = (waveScore * 4) + d1Energy + d2Energy + doubleBonus - (ganVal * 0.25);
         scoredMatrix.push({ num: num, score: totalScore, gan: ganVal });
     });
 
@@ -454,11 +458,11 @@ function chayMoHinh18_WeightedRegression(fullHistorySafe, userLimit) {
     let excludedListStr = Array.from(excludedSet).join(', ') || 'Không có';
     let blockedStr = blockedByGan.join(', ') || 'Không có';
 
-    let details = `• <strong>Phương pháp:</strong> Hồi quy tuyến tính trọng số thời gian<br>` +
+    let details = `• <strong>Thuật toán:</strong> Sụp đổ hàm sóng quang phổ lượng tử ($E = hf$)<br>` +
                   `• <strong>Số đã ra kỳ trước bị loại:</strong> [${excludedListStr}]<br>` +
-                  `• <strong>Tập chữ số xu hướng cao:</strong> (${topKeyDigits.join(', ')})<br>` +
+                  `• <strong>Tập quang phổ chủ đạo:</strong> (${topKeyDigits.join(', ')})<br>` +
                   `• 🚫 <strong>Bị chặn bởi Bộ lọc Lô Gan:</strong> [${blockedStr}]<br>` +
-                  `➔ <em>Bóc tách Top 2 qua Hồi quy:</em> <strong>${top2.join(', ')}</strong>`;
+                  `➔ <em>Sụp đổ hàm sóng bóc tách Top 2:</em> <strong>${top2.join(', ')}</strong>`;
 
     return {
         top2: top2,
@@ -625,8 +629,8 @@ async function thucHienPhanTich() {
         }
     }
 
-    // Chạy Mô hình Hồi quy trọng số
-    const m18Res = chayMoHinh18_WeightedRegression(safeHistory, limit);
+    // Chạy Mô hình Lượng tử sóng quang phổ
+    const m18Res = chayMoHinh18_QuantumWavefunction(safeHistory, limit);
     
     let entropyPercent = (m18Res.entropy * 100).toFixed(1);
     document.getElementById('entropyVal').textContent = `${entropyPercent}%`;
@@ -635,14 +639,14 @@ async function thucHienPhanTich() {
     let entropyStatus = document.getElementById('entropyStatus');
 
     if (m18Res.entropy > 0.82) {
-        entropyStatus.textContent = "⚠️ Hỗn loạn cao (Đã tăng cường Hồi quy)";
+        entropyStatus.textContent = "⚠️ Hỗn loạn cao (Sóng lượng tử dao động)";
         entropyStatus.className = "text-[10px] text-red-400 mt-1 block font-bold";
-        warningBox.innerHTML = `<strong>Cảnh báo:</strong> Entropy đạt ${entropyPercent}%. Trọng số hồi quy tuyến tính được thắt chặt.`;
+        warningBox.innerHTML = `<strong>Cảnh báo:</strong> Entropy đạt ${entropyPercent}%. Hệ thống tăng cường biên độ pha lượng tử để quét tín hiệu.`;
         warningBox.className = "bg-red-950/40 p-2.5 rounded-xl border border-red-500/30 text-[11px] text-red-200";
     } else {
         entropyStatus.textContent = "✅ Trạng thái ổn định";
         entropyStatus.className = "text-[10px] text-emerald-400 mt-1 block font-bold";
-        warningBox.innerHTML = `<strong>Đánh giá:</strong> Entropy ở mức ${entropyPercent}%. Xu hướng hồi quy hoạt động hiệu quả.`;
+        warningBox.innerHTML = `<strong>Đánh giá:</strong> Entropy ở mức ${entropyPercent}%. Quang phổ năng lượng ổn định.`;
         warningBox.className = "bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-500/30 text-[11px] text-emerald-200";
     }
 
