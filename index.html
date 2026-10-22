@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Pro - Bóc Tách Top 2 Ma Trận Cấu Trúc (Tens & Units)</title>
+    <title>Analysis Pro - Mô Hình 18 Pro Độc Lập (Tens & Units Matrix)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -16,9 +16,9 @@
     <!-- Header -->
     <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
-            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Bóc Tách Top 2 Ma Trận Cấu Trúc</h1>
+            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Mô Hình 18 Pro Độc Lập (Tens & Units)</h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Mô hình 18 Pro (Sinh ma trận & Chấm điểm đối chiếu 15 mô hình lấy Top 2) · Chống rò rỉ (Anti-Leakage)
+                Thuật toán phân rã và chấm điểm độc lập từ ma trận nhân chéo · Chống rò rỉ tuyệt đối (Anti-Leakage)
             </p>
         </div>
         <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2 transition-all">
@@ -121,20 +121,20 @@
             <div id="compareSysA" class="text-[10px] text-slate-300 mt-3 pt-2 border-t border-white/10">Chưa chạy Backtest</div>
         </div>
 
-        <!-- 3. MÔ HÌNH 18 PRO: BÓC TÁCH TOP 2 TỪ MA TRẬN -->
+        <!-- 3. MÔ HÌNH 18 PRO: THUẬT TOÁN ĐỘC LẬP TỪ MA TRẬN -->
         <div class="bg-gradient-to-br from-amber-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-amber-500/40 flex flex-col justify-between">
             <div>
                 <h3 class="text-xs font-bold uppercase tracking-widest text-amber-300 mb-2 text-center">
-                    🔥 Mô Hình 18 Pro: Bóc Tách Top 2 Tinh Hoa
+                    🔥 Mô Hình 18 Pro (Thuật Toán Độc Lập)
                 </h3>
                 <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
-                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Top 2 Con Số Sáng Giá Nhất Từ Ma Trận</p>
+                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Top 2 Con Số Tinh Hoa Từ Ma Trận</p>
                     <div id="model18Top2" class="flex justify-center gap-2 mt-2 min-h-[35px]">
                         <span class="text-xs text-amber-200 italic">Đang bóc tách...</span>
                     </div>
                 </div>
                 <div class="bg-black/20 p-2.5 rounded-xl border border-white/10">
-                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Chi tiết lọc ma trận & 15 mô hình:</p>
+                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Chi tiết chấm điểm độc lập:</p>
                     <div id="model18Details" class="text-[11px] text-slate-200 space-y-1">Chưa có dữ liệu...</div>
                 </div>
             </div>
@@ -329,15 +329,16 @@ function calculateEntropy(subset) {
     return Math.min(Math.max(entropy / 6.64, 0), 1);
 }
 
-// ==================== 2. MÔ HÌNH 18 PRO: LỌC MA TRẬN & BÓC TÁCH TOP 2 ====================
-function chayMoHinh18_MatrixTop2(subset, voteMap) {
+// ==================== 2. MÔ HÌNH 18 PRO: THUẬT TOÁN ĐỘC LẬP TỪ MA TRẬN ====================
+function chayMoHinh18_IndependentMatrix(subset) {
     if (!subset || subset.length < 3) return { top2: ['38', '50'], details: 'Dữ liệu quá ngắn' };
 
     let tensFreq = {};  
     let unitsFreq = {}; 
+    let exactPairFreq = {}; // Thống kê tần suất xuất hiện thực tế của từng cặp 2 chữ số trong lịch sử subset
 
     subset.forEach((item, periodIdx) => {
-        let timeWeight = Math.pow(0.88, periodIdx);
+        let timeWeight = Math.pow(0.88, periodIdx); // Trọng số thời gian
         let all2d = extractAll2D(item);
 
         all2d.forEach(numStr => {
@@ -347,6 +348,7 @@ function chayMoHinh18_MatrixTop2(subset, voteMap) {
 
                 tensFreq[tDigit] = (tensFreq[tDigit] || 0) + timeWeight;
                 unitsFreq[uDigit] = (unitsFreq[uDigit] || 0) + timeWeight;
+                exactPairFreq[numStr] = (exactPairFreq[numStr] || 0) + (1.5 * timeWeight);
             }
         });
     });
@@ -366,23 +368,25 @@ function chayMoHinh18_MatrixTop2(subset, voteMap) {
         });
     });
 
-    // Tầng lọc thứ 2: Chấm điểm từng số trong ma trận dựa trên điểm số đồng thuận từ 15 mô hình cơ sở (voteMap)
+    // Thuật toán chấm điểm độc lập hoàn toàn cho từng số trong ma trận
     let scoredGrid = matrixGrid.map(num => {
-        let consensusVotes = voteMap[num] || 0; // Số mô hình cơ sở ủng hộ con số này
-        let isTopTens = topTens.includes(num[0]) ? 2 : 0;
-        let isTopUnits = topUnits.includes(num[1]) ? 2 : 0;
-        let totalScore = (consensusVotes * 3) + isTopTens + isTopUnits;
+        let historyFrequencyScore = exactPairFreq[num] || 0; // Tần suất thực tế từng xuất hiện trong lịch sử
+        let tensScore = (tensFreq[num[0]] || 0);             // Điểm riêng của hàng chục
+        let unitsScore = (unitsFreq[num[1]] || 0);           // Điểm riêng của hàng đơn vị
+        
+        // Tổng điểm cấu trúc nội tại độc lập
+        let totalScore = (historyFrequencyScore * 4) + tensScore + unitsScore;
         return { num: num, score: totalScore };
     });
 
-    // Sắp xếp giảm dần theo điểm số để bóc ra Top 2 con số sắc bén nhất
+    // Sắp xếp giảm dần theo điểm số độc lập để bóc ra Top 2 con số tinh hoa nhất
     scoredGrid.sort((a, b) => b.score - a.score);
     let top2 = scoredGrid.slice(0, 2).map(x => x.num);
 
     let details = `• <strong>Top Hàng Chục:</strong> ${topTens.join(', ')}<br>` +
                   `• <strong>Top Hàng Đơn Vị:</strong> ${topUnits.join(', ')}<br>` +
-                  `• <strong>Quét ${matrixGrid.length} cặp ma trận, chấm điểm đối chiếu 15 mô hình</strong><br>` +
-                  `➔ <em>Đã bóc tách 2 con số tinh hoa:</em> <strong>${top2.join(', ')}</strong>`;
+                  `• <strong>Thuật toán nội tại:</strong> Quét ${matrixGrid.length} cặp ma trận, chấm điểm tương quan lịch sử độc lập<br>` +
+                  `➔ <em>Đã bóc tách 2 con số độc lập:</em> <strong>${top2.join(', ')}</strong>`;
 
     return {
         top2: top2,
@@ -607,8 +611,8 @@ async function thucHienPhanTich() {
         }
     });
 
-    // 3. Chạy Mô hình 18 Pro: Bóc tách Top 2 tinh hoa
-    const m18Res = chayMoHinh18_MatrixTop2(subset, voteMap);
+    // 3. Chạy Mô hình 18 Pro với thuật toán ĐỘC LẬP HOÀN TOÀN
+    const m18Res = chayMoHinh18_IndependentMatrix(subset);
     
     // Hiển thị Top 2 lên giao diện chính
     document.getElementById('model18Top2').innerHTML = m18Res.top2.map(n => 
