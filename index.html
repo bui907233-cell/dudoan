@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Pro - Mô Hình 18 Pro Delta-Shadow (Tens & Units)</title>
+    <title>Analysis Pro - Mô Hình 18 Pro (Lọc Trừ Số Tuần Trước)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -16,9 +16,9 @@
     <!-- Header -->
     <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
-            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Mô Hình 18 Pro Delta-Shadow</h1>
+            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Lọc Loại Trừ Số Kỳ Trước</h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Tích hợp Thuật toán Bù trừ Khoảng cách & Bóng số (Delta-Shadow Correction) · Chống rò rỉ tuyệt đối
+                Mô hình 18 Pro (Loại trừ số đã ra, ghép mảnh còn lại bóc Top 2) · Chống rò rỉ tuyệt đối
             </p>
         </div>
         <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2 transition-all">
@@ -28,7 +28,7 @@
     </header>
 
     <!-- Control Panel -->
-    <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6 grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+    <div class="bg-white dark:bg-slate-900 p-5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6 grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
         <div>
             <label class="block text-xs font-medium mb-1">Chọn Đài Miền Trung</label>
             <select id="selectDai" onchange="onDaiChange()" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
@@ -69,9 +69,18 @@
             </select>
         </div>
 
+        <!-- NÚT BẬT/TẮT LOẠI TRỪ SỐ KỲ TRƯỚC -->
+        <div class="bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-700/50 p-2.5 rounded-lg flex items-center gap-3">
+            <input type="checkbox" id="chkExcludeLast" checked class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500 cursor-pointer">
+            <div>
+                <label for="chkExcludeLast" class="text-xs font-bold text-amber-700 dark:text-amber-300 cursor-pointer block">Loại Trừ Số Kỳ Trước</label>
+                <span class="text-[10px] text-slate-500 dark:text-slate-400">Bỏ số đã ra, ép ghép mảnh mới</span>
+            </div>
+        </div>
+
         <div>
             <button onclick="thucHienPhanTich()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg text-sm shadow transition-all">
-                🚀 Chạy Phân Tích Chuyên Sâu
+                🚀 Chạy Phân Tích
             </button>
         </div>
 
@@ -121,20 +130,20 @@
             <div id="compareSysA" class="text-[10px] text-slate-300 mt-3 pt-2 border-t border-white/10">Chưa chạy Backtest</div>
         </div>
 
-        <!-- 3. MÔ HÌNH 18 PRO: DELTA-SHADOW CORRECTION -->
+        <!-- 3. MÔ HÌNH 18 PRO: LỌC LOẠI TRỪ & BÓC TÁCH TOP 2 -->
         <div class="bg-gradient-to-br from-amber-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-amber-500/40 flex flex-col justify-between">
             <div>
                 <h3 class="text-xs font-bold uppercase tracking-widest text-amber-300 mb-2 text-center">
-                    🔥 Mô Hình 18 Pro (Delta-Shadow)
+                    🔥 Mô Hình 18 Pro (Lọc Loại Trừ Kỳ Trước)
                 </h3>
                 <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
-                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Top 2 Tinh Hoa (Đã Bù Trừ Sai Số)</p>
+                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Top 2 Tinh Hoa (Đã Lọc Bỏ Số Cũ)</p>
                     <div id="model18Top2" class="flex justify-center gap-2 mt-2 min-h-[35px]">
                         <span class="text-xs text-amber-200 italic">Đang bóc tách...</span>
                     </div>
                 </div>
                 <div class="bg-black/20 p-2.5 rounded-xl border border-white/10">
-                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Chi tiết ma trận bù trừ:</p>
+                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Chi tiết lọc trừ & ghép mảnh:</p>
                     <div id="model18Details" class="text-[11px] text-slate-200 space-y-1">Chưa có dữ liệu...</div>
                 </div>
             </div>
@@ -329,15 +338,28 @@ function calculateEntropy(subset) {
     return Math.min(Math.max(entropy / 6.64, 0), 1);
 }
 
-// ==================== 2. MÔ HÌNH 18 PRO: DELTA-SHADOW CORRECTION ALGORITHM ====================
-function chayMoHinh18_DeltaShadow(subset) {
+// ==================== 2. MÔ HÌNH 18 PRO: LỌC TRỪ SỐ KỲ TRƯỚC & BÓC TÁCH TOP 2 ====================
+function chayMoHinh18_ExcludeLast(subset) {
     if (!subset || subset.length < 3) return { top2: ['38', '50'], details: 'Dữ liệu quá ngắn' };
+
+    // Lấy danh sách các số đã về ở kỳ ngay trước đó (index 1 so với subset hiện tại)
+    let excludedSet = new Set();
+    let isExcludeActive = document.getElementById('chkExcludeLast').checked;
+    
+    if (isExcludeActive && subset.length > 1) {
+        let lastDrawNums = extractAll2D(subset[1]); // subset[0] là kỳ hiện tại đang xét, subset[1] là kỳ liền trước
+        lastDrawNums.forEach(n => excludedSet.add(n));
+    }
 
     let tensFreq = {};  
     let unitsFreq = {}; 
     let exactPairFreq = {}; 
 
-    subset.forEach((item, periodIdx) => {
+    // Quét dữ liệu từ kỳ thứ 2 trở về trước để học quy luật (chống rò rỉ tuyệt đối)
+    let learningSubset = subset.slice(1);
+    if (learningSubset.length < 2) learningSubset = subset;
+
+    learningSubset.forEach((item, periodIdx) => {
         let timeWeight = Math.pow(0.88, periodIdx);
         let all2d = extractAll2D(item);
 
@@ -359,13 +381,13 @@ function chayMoHinh18_DeltaShadow(subset) {
     let topTens = sortedTens.slice(0, 3).map(([d]) => d);
     let topUnits = sortedUnits.slice(0, 3).map(([d]) => d);
 
-    // Mở rộng không gian ứng viên bằng Ma trận Bóng số & Sai số Delta (+/-1 và bóng +5)
+    // Mở rộng không gian với ma trận bóng số & delta
     let expandedTens = new Set(topTens);
     topTens.forEach(t => {
         let n = parseInt(t);
         expandedTens.add(((n + 1) % 10).toString());
         expandedTens.add(((n - 1 + 10) % 10).toString());
-        expandedTens.add(((n + 5) % 10).toString()); // Bóng số
+        expandedTens.add(((n + 5) % 10).toString());
     });
 
     let expandedUnits = new Set(topUnits);
@@ -373,28 +395,26 @@ function chayMoHinh18_DeltaShadow(subset) {
         let n = parseInt(u);
         expandedUnits.add(((n + 1) % 10).toString());
         expandedUnits.add(((n - 1 + 10) % 10).toString());
-        expandedUnits.add(((n + 5) % 10).toString()); // Bóng số (bù trừ trường hợp 2 dịch thành 7)
+        expandedUnits.add(((n + 5) % 10).toString());
     });
 
-    // Sinh dàn ma trận từ không gian mở rộng
     let matrixGrid = [];
     Array.from(expandedTens).forEach(t => {
         Array.from(expandedUnits).forEach(u => {
-            matrixGrid.push(t + u);
+            let candidate = t + u;
+            // BỘ LỌC LOẠI TRỪ: Nếu bật và số nằm trong danh sách đã ra kỳ trước thì bỏ qua
+            if (!isExcludeActive || !excludedSet.has(candidate)) {
+                matrixGrid.push(candidate);
+            }
         });
     });
 
-    // Chấm điểm độc lập có trọng số bù trừ Delta-Shadow
     let scoredGrid = matrixGrid.map(num => {
         let t = num[0], u = num[1];
         let historyFreq = exactPairFreq[num] || 0;
         let baseTensScore = tensFreq[t] || 0;
         let baseUnitsScore = unitsFreq[u] || 0;
-
-        // Thưởng điểm nếu thuộc Top gốc không bị lệch pha
         let coreBonus = (topTens.includes(t) ? 5 : 0) + (topUnits.includes(u) ? 5 : 0);
-        
-        // Thưởng điểm cho bóng số (giải quyết triệt để độ lệch Delta)
         let isShadowUnit = topUnits.some(orig => parseInt(orig) === (parseInt(u) + 5) % 10);
         let shadowBonus = isShadowUnit ? 8 : 0;
 
@@ -404,7 +424,6 @@ function chayMoHinh18_DeltaShadow(subset) {
 
     scoredGrid.sort((a, b) => b.score - a.score);
     
-    // Lọc lấy 2 con số tối ưu nhất, loại bỏ trùng lặp
     let top2 = [];
     for (let item of scoredGrid) {
         if (!top2.includes(item.num)) {
@@ -413,10 +432,11 @@ function chayMoHinh18_DeltaShadow(subset) {
         if (top2.length >= 2) break;
     }
 
-    let details = `• <strong>Top Hàng Chục gốc:</strong> ${topTens.join(', ')}<br>` +
-                  `• <strong>Top Hàng Đơn Vị gốc:</strong> ${topUnits.join(', ')}<br>` +
-                  `• <em>Kích hoạt ma trận bù trừ Delta & Bóng số (+5 / ±1):</em><br>` +
-                  `➔ <em>Đã bóc tách Top 2 chuẩn hóa:</em> <strong>${top2.join(', ')}</strong>`;
+    let excludedListStr = Array.from(excludedSet).join(', ') || 'Không có';
+    let details = `• <strong>Trạng thái lọc loại trừ:</strong> ${isExcludeActive ? '✅ Đang BẬT' : '❌ Đang TẮT'}<br>` +
+                  `• <strong>Số đã ra kỳ trước bị loại:</strong> [${excludedListStr}]<br>` +
+                  `• <strong>Top Hàng Chục / Đơn Vị học từ lịch sử:</strong> Chục(${topTens.join(',')}) - Đơn vị(${topUnits.join(',')})<br>` +
+                  `➔ <em>Đã bóc tách Top 2 sau khi lọc:</em> <strong>${top2.join(', ')}</strong>`;
 
     return {
         top2: top2,
@@ -638,8 +658,8 @@ async function thucHienPhanTich() {
         }
     });
 
-    // Chạy Mô hình 18 Pro với Delta-Shadow Correction
-    const m18Res = chayMoHinh18_DeltaShadow(subset);
+    // Chạy Mô hình 18 Pro với cơ chế Lọc loại trừ số kỳ trước
+    const m18Res = chayMoHinh18_ExcludeLast(subset);
     
     document.getElementById('model18Top2').innerHTML = m18Res.top2.map(n => 
         `<span class="bg-amber-500 text-slate-950 px-3 py-1 rounded text-lg font-black shadow-lg ring-2 ring-amber-300">${n}</span>`
