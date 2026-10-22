@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Pro - Mô Hình 18 Pro Chuẩn Gốc 100%</title>
+    <title>Analysis Pro - Ma Trận Khép Kín & Bóc Tách Top 2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -16,9 +16,9 @@
     <!-- Header -->
     <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
-            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Mô Hình 18 Pro Chuẩn Gốc 100%</h1>
+            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Ma Trận Khép Kín & Bóc Tách Top 2</h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Ghép chéo khép kín từ mảnh gốc (Ép cứng phạm vi) · Chống rò rỉ tuyệt đối (Anti-Leakage)
+                Sinh dàn ma trận từ tập gốc · So chiếu lịch sử bóc tách 2 con số tinh hoa · Chống rò rỉ tuyệt đối
             </p>
         </div>
         <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2 transition-all">
@@ -130,20 +130,20 @@
             <div id="compareSysA" class="text-[10px] text-slate-300 mt-3 pt-2 border-t border-white/10">Chưa chạy Backtest</div>
         </div>
 
-        <!-- 3. MÔ HÌNH 18 PRO: CHUẨN GỐC 100% -->
+        <!-- 3. MÔ HÌNH 18 PRO: MA TRẬN KHÉP KÍN & BÓC TÁCH TOP 2 -->
         <div class="bg-gradient-to-br from-amber-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-amber-500/40 flex flex-col justify-between">
             <div>
                 <h3 class="text-xs font-bold uppercase tracking-widest text-amber-300 mb-2 text-center">
-                    🔥 Mô Hình 18 Pro (Chuẩn Gốc 100%)
+                    🔥 Ma Trận Khép Kín & Bóc Tách Top 2
                 </h3>
                 <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
-                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Top 2 Tinh Hoa (Ép Cứng Mảnh Gốc)</p>
+                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Top 2 Con Số Tinh Hoa Nhất</p>
                     <div id="model18Top2" class="flex justify-center gap-2 mt-2 min-h-[35px]">
                         <span class="text-xs text-amber-200 italic">Đang bóc tách...</span>
                     </div>
                 </div>
                 <div class="bg-black/20 p-2.5 rounded-xl border border-white/10">
-                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Chi tiết ghép chéo thuần túy:</p>
+                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Chi tiết ma trận & So chiếu:</p>
                     <div id="model18Details" class="text-[11px] text-slate-200 space-y-1">Chưa có dữ liệu...</div>
                 </div>
             </div>
@@ -338,8 +338,8 @@ function calculateEntropy(subset) {
     return Math.min(Math.max(entropy / 6.64, 0), 1);
 }
 
-// ==================== 2. MÔ HÌNH 18 PRO: ÉP CỨNG GỐC 100% (KHÔNG LỆCH PHA) ====================
-function chayMoHinh18_PureMatrix(subset) {
+// ==================== 2. MÔ HÌNH MA TRẬN KHÉP KÍN & SO CHIẾU LỊCH SỬ BÓC TÁCH TOP 2 ====================
+function chayMoHinh18_MatrixConsensus(subset) {
     if (!subset || subset.length < 3) return { top2: ['38', '50'], details: 'Dữ liệu quá ngắn' };
 
     let excludedSet = new Set();
@@ -352,7 +352,7 @@ function chayMoHinh18_PureMatrix(subset) {
 
     let tensFreq = {};  
     let unitsFreq = {}; 
-    let exactPairFreq = {}; 
+    let historyFrequencyMap = {}; // Thống kê lịch sử xuất hiện từng cặp số trong quá khứ
 
     let learningSubset = subset.slice(1);
     if (learningSubset.length < 2) learningSubset = subset;
@@ -368,44 +368,53 @@ function chayMoHinh18_PureMatrix(subset) {
 
                 tensFreq[tDigit] = (tensFreq[tDigit] || 0) + timeWeight;
                 unitsFreq[uDigit] = (unitsFreq[uDigit] || 0) + timeWeight;
-                exactPairFreq[numStr] = (exactPairFreq[numStr] || 0) + (1.5 * timeWeight);
+                
+                // Lưu lại trọng số tần suất xuất hiện thực tế của số này trong lịch sử
+                historyFrequencyMap[numStr] = (historyFrequencyMap[numStr] || 0) + (2.0 * timeWeight);
             }
         });
     });
 
-    // Lấy chuẩn Top 3 Hàng Chục và Top 3 Hàng Đơn Vị GỐC
+    // Lấy Top 3 Hàng Chục và Top 3 Hàng Đơn Vị gốc
     let sortedTens = Object.entries(tensFreq).sort((a, b) => b[1] - a[1]);
     let sortedUnits = Object.entries(unitsFreq).sort((a, b) => b[1] - a[1]);
 
     let topTens = sortedTens.slice(0, 3).map(([d]) => d);
     let topUnits = sortedUnits.slice(0, 3).map(([d]) => d);
 
-    // ÉP CỨNG TUYỆT ĐỐI: Chỉ cho phép ghép các số nằm trong đúng topTens và topUnits
+    // BƯỚC 1: SINH TOÀN BỘ MA TRẬN KHÉP KÍN (Ví dụ: 9x9 hoặc 3x3 cặp số chéo)
     let matrixGrid = [];
     topTens.forEach(t => {
         topUnits.forEach(u => {
             let candidate = t + u;
+            // Nếu bật lọc loại trừ, bỏ qua các số đã về ở kỳ trước
             if (!isExcludeActive || !excludedSet.has(candidate)) {
                 matrixGrid.push(candidate);
             }
         });
     });
 
-    // Chấm điểm và sắp xếp
-    let scoredGrid = matrixGrid.map(num => {
+    // BƯỚC 2: THUẬT TOÁN SO CHIẾU DỮ LIỆU LỊCH SỬ ĐỂ CHẤM ĐIỂM DÀN MA TRẬN
+    let scoredMatrix = matrixGrid.map(num => {
         let t = num[0], u = num[1];
-        let historyFreq = exactPairFreq[num] || 0;
-        let baseTensScore = (tensFreq[t] || 0);
-        let baseUnitsScore = (unitsFreq[u] || 0);
+        
+        // Điểm lịch sử xuất hiện trực tiếp của cặp số
+        let historyScore = historyFrequencyMap[num] || 0.1;
+        
+        // Điểm đánh giá tiềm năng từ cá thể hàng chục và hàng đơn vị
+        let tensScore = tensFreq[t] || 0;
+        let unitsScore = unitsFreq[u] || 0;
 
-        let totalScore = (historyFreq * 4) + baseTensScore + baseUnitsScore;
+        // Tổng điểm tích lũy thuật toán
+        let totalScore = (historyScore * 5) + tensScore + unitsScore;
         return { num: num, score: totalScore };
     });
 
-    scoredGrid.sort((a, b) => b.score - a.score);
-    
+    // Sắp xếp giảm dần theo điểm số để bóc tách Top 2 sáng giá nhất
+    scoredMatrix.sort((a, b) => b.score - a.score);
+
     let top2 = [];
-    for (let item of scoredGrid) {
+    for (let item of scoredMatrix) {
         if (!top2.includes(item.num)) {
             top2.push(item.num);
         }
@@ -413,11 +422,13 @@ function chayMoHinh18_PureMatrix(subset) {
     }
 
     let excludedListStr = Array.from(excludedSet).join(', ') || 'Không có';
+    let generatedMatrixStr = matrixGrid.join(', ');
+
     let details = `• <strong>Trạng thái lọc loại trừ:</strong> ${isExcludeActive ? '✅ Đang BẬT' : '❌ Đang TẮT'}<br>` +
                   `• <strong>Số đã ra kỳ trước bị loại:</strong> [${excludedListStr}]<br>` +
-                  `• <strong>Top Hàng Chục gốc (Ép cứng):</strong> (${topTens.join(', ')})<br>` +
-                  `• <strong>Top Hàng Đơn Vị gốc (Ép cứng):</strong> (${topUnits.join(', ')})<br>` +
-                  `➔ <em>Đã bóc tách Top 2 chuẩn 100% từ mảnh gốc:</em> <strong>${top2.join(', ')}</strong>`;
+                  `• <strong>Top Hàng Chục / Đơn Vị gốc:</strong> Chục(${topTens.join(', ')}) - Đơn vị(${topUnits.join(', ')})<br>` +
+                  `• <strong>Dàn ma trận sinh ra:</strong> [${generatedMatrixStr}]<br>` +
+                  `➔ <em>Thuật toán so chiếu lịch sử bóc tách Top 2:</em> <strong>${top2.join(', ')}</strong>`;
 
     return {
         top2: top2,
@@ -639,8 +650,8 @@ async function thucHienPhanTich() {
         }
     });
 
-    // Chạy Mô hình 18 Pro chuẩn gốc 100%
-    const m18Res = chayMoHinh18_PureMatrix(subset);
+    // Chạy Mô hình Ma trận Khép Kín & Bóc Tách Top 2
+    const m18Res = chayMoHinh18_MatrixConsensus(subset);
     
     document.getElementById('model18Top2').innerHTML = m18Res.top2.map(n => 
         `<span class="bg-amber-500 text-slate-950 px-3 py-1 rounded text-lg font-black shadow-lg ring-2 ring-amber-300">${n}</span>`
