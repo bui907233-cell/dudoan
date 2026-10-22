@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Pro - Mô Hình 18 Pro (Lọc Trừ Số Tuần Trước)</title>
+    <title>Analysis Pro - Mô Hình 18 Pro Chuẩn Gốc (Tens & Units)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -16,9 +16,9 @@
     <!-- Header -->
     <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
-            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Lọc Loại Trừ Số Kỳ Trước</h1>
+            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Mô Hình 18 Pro Chuẩn Gốc</h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Mô hình 18 Pro (Loại trừ số đã ra, ghép mảnh còn lại bóc Top 2) · Chống rò rỉ tuyệt đối
+                Ghép chéo 100% từ tập chữ số gốc (Không mở rộng bóng số) · Chống rò rỉ tuyệt đối
             </p>
         </div>
         <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2 transition-all">
@@ -74,7 +74,7 @@
             <input type="checkbox" id="chkExcludeLast" checked class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500 cursor-pointer">
             <div>
                 <label for="chkExcludeLast" class="text-xs font-bold text-amber-700 dark:text-amber-300 cursor-pointer block">Loại Trừ Số Kỳ Trước</label>
-                <span class="text-[10px] text-slate-500 dark:text-slate-400">Bỏ số đã ra, ép ghép mảnh mới</span>
+                <span class="text-[10px] text-slate-500 dark:text-slate-400">Bỏ số đã ra, ghép mảnh mới</span>
             </div>
         </div>
 
@@ -130,20 +130,20 @@
             <div id="compareSysA" class="text-[10px] text-slate-300 mt-3 pt-2 border-t border-white/10">Chưa chạy Backtest</div>
         </div>
 
-        <!-- 3. MÔ HÌNH 18 PRO: LỌC LOẠI TRỪ & BÓC TÁCH TOP 2 -->
+        <!-- 3. MÔ HÌNH 18 PRO: CHUẨN GỐC (KHÔNG LỆCH PHA) -->
         <div class="bg-gradient-to-br from-amber-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-amber-500/40 flex flex-col justify-between">
             <div>
                 <h3 class="text-xs font-bold uppercase tracking-widest text-amber-300 mb-2 text-center">
-                    🔥 Mô Hình 18 Pro (Lọc Loại Trừ Kỳ Trước)
+                    🔥 Mô Hình 18 Pro (Chuẩn Gốc 100%)
                 </h3>
                 <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
-                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Top 2 Tinh Hoa (Đã Lọc Bỏ Số Cũ)</p>
+                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Top 2 Tinh Hoa (Ghép từ Mảnh Gốc)</p>
                     <div id="model18Top2" class="flex justify-center gap-2 mt-2 min-h-[35px]">
                         <span class="text-xs text-amber-200 italic">Đang bóc tách...</span>
                     </div>
                 </div>
                 <div class="bg-black/20 p-2.5 rounded-xl border border-white/10">
-                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Chi tiết lọc trừ & ghép mảnh:</p>
+                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Chi tiết ghép chéo thuần túy:</p>
                     <div id="model18Details" class="text-[11px] text-slate-200 space-y-1">Chưa có dữ liệu...</div>
                 </div>
             </div>
@@ -338,16 +338,15 @@ function calculateEntropy(subset) {
     return Math.min(Math.max(entropy / 6.64, 0), 1);
 }
 
-// ==================== 2. MÔ HÌNH 18 PRO: LỌC TRỪ SỐ KỲ TRƯỚC & BÓC TÁCH TOP 2 ====================
-function chayMoHinh18_ExcludeLast(subset) {
+// ==================== 2. MÔ HÌNH 18 PRO: GHÉP CHÉO CHUẨN GỐC 100% ====================
+function chayMoHinh18_PureMatrix(subset) {
     if (!subset || subset.length < 3) return { top2: ['38', '50'], details: 'Dữ liệu quá ngắn' };
 
-    // Lấy danh sách các số đã về ở kỳ ngay trước đó (index 1 so với subset hiện tại)
     let excludedSet = new Set();
     let isExcludeActive = document.getElementById('chkExcludeLast').checked;
     
     if (isExcludeActive && subset.length > 1) {
-        let lastDrawNums = extractAll2D(subset[1]); // subset[0] là kỳ hiện tại đang xét, subset[1] là kỳ liền trước
+        let lastDrawNums = extractAll2D(subset[1]);
         lastDrawNums.forEach(n => excludedSet.add(n));
     }
 
@@ -355,7 +354,6 @@ function chayMoHinh18_ExcludeLast(subset) {
     let unitsFreq = {}; 
     let exactPairFreq = {}; 
 
-    // Quét dữ liệu từ kỳ thứ 2 trở về trước để học quy luật (chống rò rỉ tuyệt đối)
     let learningSubset = subset.slice(1);
     if (learningSubset.length < 2) learningSubset = subset;
 
@@ -375,50 +373,32 @@ function chayMoHinh18_ExcludeLast(subset) {
         });
     });
 
+    // Lấy Top 3 Hàng Chục và Top 3 Hàng Đơn Vị GỐC (Lấy số lượng Top 3 để ghép ma trận 3x3 = 9 cặp)
     let sortedTens = Object.entries(tensFreq).sort((a, b) => b[1] - a[1]);
     let sortedUnits = Object.entries(unitsFreq).sort((a, b) => b[1] - a[1]);
 
     let topTens = sortedTens.slice(0, 3).map(([d]) => d);
     let topUnits = sortedUnits.slice(0, 3).map(([d]) => d);
 
-    // Mở rộng không gian với ma trận bóng số & delta
-    let expandedTens = new Set(topTens);
-    topTens.forEach(t => {
-        let n = parseInt(t);
-        expandedTens.add(((n + 1) % 10).toString());
-        expandedTens.add(((n - 1 + 10) % 10).toString());
-        expandedTens.add(((n + 5) % 10).toString());
-    });
-
-    let expandedUnits = new Set(topUnits);
-    topUnits.forEach(u => {
-        let n = parseInt(u);
-        expandedUnits.add(((n + 1) % 10).toString());
-        expandedUnits.add(((n - 1 + 10) % 10).toString());
-        expandedUnits.add(((n + 5) % 10).toString());
-    });
-
+    // Nhân chéo thuần túy 100% từ tập gốc topTens x topUnits
     let matrixGrid = [];
-    Array.from(expandedTens).forEach(t => {
-        Array.from(expandedUnits).forEach(u => {
+    topTens.forEach(t => {
+        topUnits.forEach(u => {
             let candidate = t + u;
-            // BỘ LỌC LOẠI TRỪ: Nếu bật và số nằm trong danh sách đã ra kỳ trước thì bỏ qua
             if (!isExcludeActive || !excludedSet.has(candidate)) {
                 matrixGrid.push(candidate);
             }
         });
     });
 
+    // Chấm điểm độc lập cho các cặp trong ma trận gốc
     let scoredGrid = matrixGrid.map(num => {
         let t = num[0], u = num[1];
         let historyFreq = exactPairFreq[num] || 0;
-        let baseTensScore = tensFreq[t] || 0;
-        let baseUnitsScore = unitsFreq[u] || 0;
-        let coreBonus = (topTens.includes(t) ? 5 : 0) + (topUnits.includes(u) ? 5 : 0);
-        let isShadowUnit = topUnits.some(orig => parseInt(orig) === (parseInt(u) + 5) % 10);
-        let shadowBonus = isShadowUnit ? 8 : 0;
+        let baseTensScore = (tensFreq[t] || 0);
+        let baseUnitsScore = (unitsFreq[u] || 0);
 
-        let totalScore = (historyFreq * 3) + baseTensScore + baseUnitsScore + coreBonus + shadowBonus;
+        let totalScore = (historyFreq * 4) + baseTensScore + baseUnitsScore;
         return { num: num, score: totalScore };
     });
 
@@ -435,8 +415,9 @@ function chayMoHinh18_ExcludeLast(subset) {
     let excludedListStr = Array.from(excludedSet).join(', ') || 'Không có';
     let details = `• <strong>Trạng thái lọc loại trừ:</strong> ${isExcludeActive ? '✅ Đang BẬT' : '❌ Đang TẮT'}<br>` +
                   `• <strong>Số đã ra kỳ trước bị loại:</strong> [${excludedListStr}]<br>` +
-                  `• <strong>Top Hàng Chục / Đơn Vị học từ lịch sử:</strong> Chục(${topTens.join(',')}) - Đơn vị(${topUnits.join(',')})<br>` +
-                  `➔ <em>Đã bóc tách Top 2 sau khi lọc:</em> <strong>${top2.join(', ')}</strong>`;
+                  `• <strong>Top Hàng Chục gốc:</strong> (${topTens.join(', ')})<br>` +
+                  `• <strong>Top Hàng Đơn Vị gốc:</strong> (${topUnits.join(', ')})<br>` +
+                  `➔ <em>Đã bóc tách Top 2 chuẩn gốc:</em> <strong>${top2.join(', ')}</strong>`;
 
     return {
         top2: top2,
@@ -658,8 +639,8 @@ async function thucHienPhanTich() {
         }
     });
 
-    // Chạy Mô hình 18 Pro với cơ chế Lọc loại trừ số kỳ trước
-    const m18Res = chayMoHinh18_ExcludeLast(subset);
+    // Chạy Mô hình 18 Pro chuẩn gốc 100%
+    const m18Res = chayMoHinh18_PureMatrix(subset);
     
     document.getElementById('model18Top2').innerHTML = m18Res.top2.map(n => 
         `<span class="bg-amber-500 text-slate-950 px-3 py-1 rounded text-lg font-black shadow-lg ring-2 ring-amber-300">${n}</span>`
