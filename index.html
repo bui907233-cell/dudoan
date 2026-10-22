@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Pro - Ma Trận Khép Kín Toàn Phần & Số Kép</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Analysis Pro - Ma Trận Toàn Phần (Tích Hợp Chặn Lô Gan & Adaptive Window)</title>
+    <script src="https://cdn.jsdelivr.net/npm/tailwindcss-cdn@3.4.10/tailwindcss.js"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
     </script>
@@ -16,9 +16,9 @@
     <!-- Header -->
     <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
-            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Ma Trận Toàn Phần (Bao Gồm Số Kép)</h1>
+            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Tầng Lọc Chặn Lô Gan & Adaptive Window</h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Tập chữ số chủ đạo nhân chéo khép kín · Sinh đầy đủ số kép (66, 22, 99...) · Bóc tách Top 2 chuẩn xác
+                Tự động thích ứng biên độ · Chặn lô gan cực hạn · Sinh số kép & Bóc tách Top 2 tinh hoa
             </p>
         </div>
         <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2 transition-all">
@@ -60,7 +60,7 @@
         </div>
 
         <div>
-            <label class="block text-xs font-medium mb-1">Biên độ phân tích</label>
+            <label class="block text-xs font-medium mb-1">Biên độ phân tích cơ sở</label>
             <select id="selectLimit" class="w-full border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
                 <option value="15" selected>15 kỳ gần nhất</option>
                 <option value="25">25 kỳ gần nhất</option>
@@ -93,11 +93,11 @@
 
     <!-- KHU VỰC CÁC HỆ THỐNG PHÂN TÍCH CHÍNH -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <!-- 1. KIỂM ĐỊNH ENTROPY -->
+        <!-- 1. KIỂM ĐỊNH ENTROPY & ADAPTIVE WINDOW -->
         <div class="bg-gradient-to-br from-slate-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-slate-700 flex flex-col justify-between">
             <div>
                 <h3 class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-2 text-center">
-                    📊 Kiểm Định Entropy (Độ Hỗn Loạn)
+                    📊 Kiểm Định Entropy & Adaptive Window
                 </h3>
                 <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
                     <p class="text-[10px] text-slate-300 uppercase font-semibold">Chỉ số Entropy hiện tại</p>
@@ -105,10 +105,10 @@
                     <span id="entropyStatus" class="text-[10px] text-yellow-300 mt-1 block font-medium">Đang chờ phân tích...</span>
                 </div>
                 <div id="entropyWarningBox" class="bg-black/30 p-2.5 rounded-xl border border-white/10 text-[11px] text-slate-300">
-                    Đánh giá trạng thái ngẫu nhiên độc lập của dữ liệu.
+                    Đánh giá trạng thái ngẫu nhiên độc lập & tự động co giãn biên độ.
                 </div>
             </div>
-            <div class="text-[10px] text-slate-400 mt-3 pt-2 border-t border-white/10">Anti-Leakage Active</div>
+            <div class="text-[10px] text-slate-400 mt-3 pt-2 border-t border-white/10">Adaptive Window Active</div>
         </div>
 
         <!-- 2. ĐỒNG THUẬN 15 MÔ HÌNH -->
@@ -130,11 +130,11 @@
             <div id="compareSysA" class="text-[10px] text-slate-300 mt-3 pt-2 border-t border-white/10">Chưa chạy Backtest</div>
         </div>
 
-        <!-- 3. MÔ HÌNH MA TRẬN TOÀN PHẦN (CÓ SỐ KÉP) -->
+        <!-- 3. MÔ HÌNH NÂNG CAO: CHẶN LÔ GAN & BÓC TÁCH TOP 2 -->
         <div class="bg-gradient-to-br from-amber-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-amber-500/40 flex flex-col justify-between">
             <div>
                 <h3 class="text-xs font-bold uppercase tracking-widest text-amber-300 mb-2 text-center">
-                    🔥 Ma Trận Toàn Phần (Bao Gồm Số Kép)
+                    🔥 Chặn Lô Gan & Bóc Tách Top 2
                 </h3>
                 <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
                     <p class="text-[10px] text-amber-200 uppercase font-semibold">Top 2 Con Số Tinh Hoa Nhất</p>
@@ -143,7 +143,7 @@
                     </div>
                 </div>
                 <div class="bg-black/20 p-2.5 rounded-xl border border-white/10">
-                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Chi tiết ma trận toàn phần & So chiếu:</p>
+                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Chi tiết bộ lọc chặn gan & số kép:</p>
                     <div id="model18Details" class="text-[11px] text-slate-200 space-y-1">Chưa có dữ liệu...</div>
                 </div>
             </div>
@@ -218,7 +218,7 @@ function resetUI() {
     document.getElementById('consensusRate').textContent = 'Đang chờ phân tích...';
     document.getElementById('entropyVal').textContent = '--';
     document.getElementById('entropyStatus').textContent = 'Đang chờ phân tích...';
-    document.getElementById('entropyWarningBox').textContent = 'Đánh giá trạng thái ngẫu nhiên độc lập của dữ liệu.';
+    document.getElementById('entropyWarningBox').textContent = 'Đánh giá trạng thái ngẫu nhiên độc lập & tự động co giãn biên độ.';
     document.getElementById('model18Top2').innerHTML = '<span class="text-xs text-amber-200 italic">Đang bóc tách...</span>';
     document.getElementById('model18Details').textContent = 'Chưa có dữ liệu...';
     document.getElementById('compareSysA').textContent = 'Chưa chạy Backtest';
@@ -338,10 +338,26 @@ function calculateEntropy(subset) {
     return Math.min(Math.max(entropy / 6.64, 0), 1);
 }
 
-// ==================== 2. MÔ HÌNH MA TRẬN TOÀN PHẦN (BAO GỒM SỐ KÉP) ====================
-function chayMoHinh18_FullMatrix(subset) {
-    if (!subset || subset.length < 3) return { top2: ['38', '50'], details: 'Dữ liệu quá ngắn' };
+// ==================== 2. MÔ HÌNH NÂNG CAO: ADAPTIVE WINDOW + CHẶN LÔ GAN + SỐ KÉP ====================
+function chayMoHinh18_AdvancedFilter(fullHistorySafe, userLimit) {
+    if (!fullHistorySafe || fullHistorySafe.length < 3) return { top2: ['38', '50'], details: 'Dữ liệu quá ngắn' };
 
+    // TẦNG 1: Tính Entropy tổng thể để tự động thích ứng biên độ (Adaptive Window)
+    let baseSubset = fullHistorySafe.slice(0, userLimit);
+    let entropy = calculateEntropy(baseSubset);
+    let adaptiveLimit = userLimit;
+    let adaptiveMsg = "Cơ sở chuẩn";
+
+    if (entropy > 0.78) {
+        adaptiveLimit = Math.min(fullHistorySafe.length, userLimit + 15); // Mở rộng biên độ nếu thị trường hỗn loạn
+        adaptiveMsg = `⚡ Entropy cao (${(entropy*100).toFixed(1)}%) ➔ Tự động mở rộng biên độ lên ${adaptiveLimit} kỳ`;
+    } else {
+        adaptiveMsg = `✅ Entropy ổn định (${(entropy*100).toFixed(1)}%) ➔ Dùng biên độ ${userLimit} kỳ`;
+    }
+
+    let subset = fullHistorySafe.slice(0, adaptiveLimit);
+
+    // Lọc loại trừ số kỳ trước
     let excludedSet = new Set();
     let isExcludeActive = document.getElementById('chkExcludeLast').checked;
     
@@ -349,6 +365,17 @@ function chayMoHinh18_FullMatrix(subset) {
         let lastDrawNums = extractAll2D(subset[1]);
         lastDrawNums.forEach(n => excludedSet.add(n));
     }
+
+    // TẦNG 2: Tính độ gan (latency) thực tế của từng cặp số trong lịch sử gần
+    let currentGan = {};
+    subset.forEach((item, periodIdx) => {
+        let all2d = extractAll2D(item);
+        all2d.forEach(n => {
+            if (currentGan[n] === undefined) {
+                currentGan[n] = periodIdx; // số kỳ tính từ lần xuất hiện gần nhất
+            }
+        });
+    });
 
     let digitFreq = {};
     let historyFrequencyMap = {};
@@ -373,11 +400,11 @@ function chayMoHinh18_FullMatrix(subset) {
         });
     });
 
-    // Lấy Top 5 chữ số chủ đạo sáng giá nhất từ toàn bộ dữ liệu quét
+    // Lấy Top 5 chữ số chủ đạo
     let sortedDigits = Object.entries(digitFreq).sort((a, b) => b[1] - a[1]);
     let topKeyDigits = sortedDigits.slice(0, 5).map(([d]) => d);
 
-    // BƯỚC 1: NHÂN CHÉO TOÀN PHẦN S x S (Bao gồm cả số kép: 66, 22, 99, 33...)
+    // Sinh ma trận toàn phần (S x S) bao gồm số kép
     let matrixGrid = [];
     topKeyDigits.forEach(d1 => {
         topKeyDigits.forEach(d2 => {
@@ -388,15 +415,30 @@ function chayMoHinh18_FullMatrix(subset) {
         });
     });
 
-    // BƯỚC 2: SO CHIẾU LỊCH SỬ ĐỂ CHẤM ĐIỂM DÀN MA TRẬN VÀ BÓC TÁCH TOP 2
-    let scoredMatrix = matrixGrid.map(num => {
+    let uniqueMatrix = [...new Set(matrixGrid)];
+    let blockedByGan = [];
+
+    // TẦNG 3: BỘ LỌC CHẶN LÔ GAN CỰC HẠN & CHẤM ĐIỂM
+    let scoredMatrix = [];
+    uniqueMatrix.forEach(num => {
         let t = num[0], u = num[1];
+        let ganVal = currentGan[num] !== undefined ? currentGan[num] : 99; // Nếu chưa từng thấy thì gan rất cao
+
+        // BỘ LỌC CHẶN: Nếu số gan quá sâu (ví dụ: vắng mặt trên 22 kỳ liên tiếp trong biên độ học) hoặc chưa đủ nhịp, phạt nặng hoặc loại bỏ
+        if (ganVal > 22) {
+            blockedByGan.push(`${num}(gan ${ganVal})`);
+            return; // Chặn đứng, không đưa vào xét Top 2
+        }
+
         let historyScore = historyFrequencyMap[num] || 0.1;
         let d1Score = digitFreq[t] || 0;
         let d2Score = digitFreq[u] || 0;
+        
+        // Điểm ưu tiên cho số kép nếu xuất hiện trong vùng nhịp ấm
+        let doubleBonus = (t === u) ? 3.5 : 0;
 
-        let totalScore = (historyScore * 5) + d1Score + d2Score;
-        return { num: num, score: totalScore };
+        let totalScore = (historyScore * 5) + d1Score + d2Score + doubleBonus - (ganVal * 0.2);
+        scoredMatrix.push({ num: num, score: totalScore, gan: ganVal });
     });
 
     scoredMatrix.sort((a, b) => b.score - a.score);
@@ -409,18 +451,24 @@ function chayMoHinh18_FullMatrix(subset) {
         if (top2.length >= 2) break;
     }
 
-    let excludedListStr = Array.from(excludedSet).join(', ') || 'Không có';
-    let uniqueMatrix = [...new Set(matrixGrid)];
+    // Fallback an toàn nếu bộ lọc chặn gan quá khắt khe làm trống mảng
+    if (top2.length < 2 && uniqueMatrix.length > 0) {
+        top2 = uniqueMatrix.slice(0, 2);
+    }
 
-    let details = `• <strong>Trạng thái lọc loại trừ:</strong> ${isExcludeActive ? '✅ Đang BẬT' : '❌ Đang TẮT'}<br>` +
+    let excludedListStr = Array.from(excludedSet).join(', ') || 'Không có';
+    let blockedStr = blockedByGan.join(', ') || 'Không có';
+
+    let details = `• <strong>Trạng thái Adaptive Window:</strong> ${adaptiveMsg}<br>` +
                   `• <strong>Số đã ra kỳ trước bị loại:</strong> [${excludedListStr}]<br>` +
                   `• <strong>Tập chữ số chủ đạo:</strong> (${topKeyDigits.join(', ')})<br>` +
-                  `• <strong>Dàn ma trận toàn phần (Đã gồm số kép):</strong> [${uniqueMatrix.join(', ')}]<br>` +
-                  `➔ <em>Thuật toán so chiếu bóc tách Top 2:</em> <strong>${top2.join(', ')}</strong>`;
+                  `• 🚫 <strong>Bị chặn bởi Bộ lọc Lô Gan:</strong> [${blockedStr}]<br>` +
+                  `➔ <em>Bóc tách Top 2 sau khi chặn gan:</em> <strong>${top2.join(', ')}</strong>`;
 
     return {
         top2: top2,
-        details: details
+        details: details,
+        entropy: entropy
     };
 }
 
@@ -582,28 +630,29 @@ async function thucHienPhanTich() {
         }
     }
 
-    const subset = safeHistory.slice(0, limit);
-
-    let entropy = calculateEntropy(subset);
-    let entropyPercent = (entropy * 100).toFixed(1);
+    // Chạy Mô hình nâng cao Chặn Lô Gan & Adaptive Window
+    const m18Res = chayMoHinh18_AdvancedFilter(safeHistory, limit);
+    
+    let entropyPercent = (m18Res.entropy * 100).toFixed(1);
     document.getElementById('entropyVal').textContent = `${entropyPercent}%`;
 
     let warningBox = document.getElementById('entropyWarningBox');
     let entropyStatus = document.getElementById('entropyStatus');
 
-    if (entropy > 0.82) {
-        entropyStatus.textContent = "⚠️ Hỗn loạn cao (Ngẫu nhiên độc lập)";
+    if (m18Res.entropy > 0.82) {
+        entropyStatus.textContent = "⚠️ Hỗn loạn cao (Adaptive Window kích hoạt)";
         entropyStatus.className = "text-[10px] text-red-400 mt-1 block font-bold";
-        warningBox.innerHTML = `<strong>Cảnh báo:</strong> Entropy đạt ${entropyPercent}%. Hệ thống ngẫu nhiên thuần túy, độ tin cậy dự báo giảm!`;
+        warningBox.innerHTML = `<strong>Cảnh báo:</strong> Entropy đạt ${entropyPercent}%. Hệ thống đã tự động giãn biên độ để lọc nhiễu.`;
         warningBox.className = "bg-red-950/40 p-2.5 rounded-xl border border-red-500/30 text-[11px] text-red-200";
     } else {
-        entropyStatus.textContent = "✅ Trạng thái ổn định (Có co cụm)";
+        entropyStatus.textContent = "✅ Trạng thái ổn định";
         entropyStatus.className = "text-[10px] text-emerald-400 mt-1 block font-bold";
-        warningBox.innerHTML = `<strong>Đánh giá:</strong> Entropy ở mức ${entropyPercent}%. Dữ liệu có hiện tượng co cụm tạm thời, kích hoạt mô hình.`;
+        warningBox.innerHTML = `<strong>Đánh giá:</strong> Entropy ở mức ${entropyPercent}%. Dữ liệu co cụm tốt, bộ lọc chặn gan hoạt động tối ưu.`;
         warningBox.className = "bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-500/30 text-[11px] text-emerald-200";
     }
 
-    const results15 = chay15MoHinh(subset, safeHistory);
+    const subsetFor15 = safeHistory.slice(0, limit);
+    const results15 = chay15MoHinh(subsetFor15, safeHistory);
     let voteMap = {};
     let totalModels = Object.keys(results15).length;
     Object.keys(results15).forEach(mName => {
@@ -638,9 +687,6 @@ async function thucHienPhanTich() {
         }
     });
 
-    // Chạy Mô hình Ma trận Toàn Phần (Bao gồm số kép)
-    const m18Res = chayMoHinh18_FullMatrix(subset);
-    
     document.getElementById('model18Top2').innerHTML = m18Res.top2.map(n => 
         `<span class="bg-amber-500 text-slate-950 px-3 py-1 rounded text-lg font-black shadow-lg ring-2 ring-amber-300">${n}</span>`
     ).join(' ');
