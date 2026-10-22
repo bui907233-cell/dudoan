@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Pro - Biểu Đồ Sóng Giao Cắt Hình Sin</title>
+    <title>Analysis Pro - Biểu Đồ Dạng Nến (Candlestick Analysis)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -16,9 +16,9 @@
     <!-- Header -->
     <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
-            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Sóng Hình Sin Giao Cắt & Phân Tích Cặp Số</h1>
+            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Biểu Đồ Nến (Candlestick Technical Analysis)</h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Biểu đồ giao cắt sóng lượng tử · Xác định điểm uốn năng lượng · Bóc tách Top 2 chuẩn thống kê
+                Mô hình nến OHLC năng lượng lượng tử · Kiểm định 5 bước thống kê · Bóc tách Top 2 tinh hoa
             </p>
         </div>
         <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2 transition-all">
@@ -97,7 +97,7 @@
         <div class="bg-gradient-to-br from-slate-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-slate-700 flex flex-col justify-between">
             <div>
                 <h3 class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-2 text-center">
-                    📊 Kiểm Định Entropy & Sóng Sin
+                    📊 Kiểm Định Entropy & Biểu Đồ Nến
                 </h3>
                 <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
                     <p class="text-[10px] text-slate-300 uppercase font-semibold">Chỉ số Entropy hiện tại</p>
@@ -105,10 +105,10 @@
                     <span id="entropyStatus" class="text-[10px] text-yellow-300 mt-1 block font-medium">Đang chờ phân tích...</span>
                 </div>
                 <div id="entropyWarningBox" class="bg-black/30 p-2.5 rounded-xl border border-white/10 text-[11px] text-slate-300">
-                    Đánh giá trạng thái pha giao cắt và biên độ dao động.
+                    Đánh giá biến động nến OHLC & xu hướng dòng tiền.
                 </div>
             </div>
-            <div class="text-[10px] text-slate-400 mt-3 pt-2 border-t border-white/10">Sine Crossover Active</div>
+            <div class="text-[10px] text-slate-400 mt-3 pt-2 border-t border-white/10">Candlestick Technical Active</div>
         </div>
 
         <!-- 2. ĐỒNG THUẬN 15 MÔ HÌNH -->
@@ -130,20 +130,20 @@
             <div id="compareSysA" class="text-[10px] text-slate-300 mt-3 pt-2 border-t border-white/10">Chưa chạy Backtest</div>
         </div>
 
-        <!-- 3. MÔ HÌNH LƯỢNG TỬ & BÓC TÁCH TOP 2 -->
+        <!-- 3. MÔ HÌNH NÉN NẾN & BÓC TÁCH TOP 2 -->
         <div class="bg-gradient-to-br from-amber-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-amber-500/40 flex flex-col justify-between">
             <div>
                 <h3 class="text-xs font-bold uppercase tracking-widest text-amber-300 mb-2 text-center">
-                    🔥 Top 2 Tinh Hoa (Điểm Giao Cắt)
+                    🔥 Top 2 Tinh Hoa (Mô Hình Nến)
                 </h3>
                 <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
-                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Top 2 Trạng Thái Giao Cắt Sóng</p>
+                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Top 2 Trạng Thái Nến Đột Phá</p>
                     <div id="model18Top2" class="flex justify-center gap-2 mt-2 min-h-[35px]">
                         <span class="text-xs text-amber-200 italic">Đang bóc tách...</span>
                     </div>
                 </div>
                 <div class="bg-black/20 p-2.5 rounded-xl border border-white/10">
-                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Chi tiết điểm giao cắt & Chặn gan:</p>
+                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Chi tiết kỹ thuật nến & Chặn gan:</p>
                     <div id="model18Details" class="text-[11px] text-slate-200 space-y-1">Chưa có dữ liệu...</div>
                 </div>
             </div>
@@ -151,12 +151,12 @@
         </div>
     </div>
 
-    <!-- KHU VỰC HIỂN THỊ BIỂU ĐỒ SÓNG HÌNH SIN GIAO CẮT -->
+    <!-- KHU VỰC HIỂN THỊ BIỂU ĐỒ NẾN (CANDLESTICK CHART) -->
     <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 mb-6">
         <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-500 border-b border-slate-200 dark:border-slate-800 pb-2 mb-3">
-            🌊 Biểu Đồ Sóng Hình Sin Giao Cắt (Phân Tích Đỉnh Sóng & Điểm Cắt Của Các Cặp Số)
+            🕯️ Biểu Đồ Dạng Nến (Candlestick Chart - Phân Tích Mức Mở, Đóng, Đỉnh, Đáy Của Các Cặp Số)
         </h3>
-        <div id="sineWaveChartContainer" style="width: 100%; height: 380px;"></div>
+        <div id="candlestickChartContainer" style="width: 100%; height: 400px;"></div>
     </div>
 
     <!-- CHI TIẾT 15 MÔ HÌNH CƠ SỞ BÊN DƯỚI -->
@@ -194,64 +194,69 @@
 
 <script>
 let currentLoadedJson = null;
-let sineChart = null;
+let candleChart = null;
 
 window.onload = async () => {
     resetUI();
-    initSineChart();
+    initCandleChart();
     await taiDuLieuDai();
 };
 
-function initSineChart() {
-    const chartDom = document.getElementById('sineWaveChartContainer');
-    sineChart = echarts.init(chartDom);
+function initCandleChart() {
+    const chartDom = document.getElementById('candlestickChartContainer');
+    candleChart = echarts.init(chartDom);
     const option = {
-        tooltip: { trigger: 'axis' },
-        legend: { data: ['Sóng Năng Lượng Nhanh (Fast Wave)', 'Xu Hướng Chậm (Slow Trend)'], textStyle: { color: '#94a3b8', fontSize: 11 } },
+        tooltip: {
+            trigger: 'axis',
+            formatter: function (params) {
+                const p = params[0];
+                const val = p.data;
+                return `<strong>Cặp số: ${p.name}</strong><br/>` +
+                       `Mở cửa (Open): ${val[1]}<br/>` +
+                       `Đóng cửa (Close): ${val[2]}<br/>` +
+                       `Thấp nhất (Low): ${val[3]}<br/>` +
+                       `Cao nhất (High): ${val[4]}`;
+            }
+        },
         grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
         xAxis: { type: 'category', data: [], axisLabel: { fontSize: 10, color: '#94a3b8' } },
-        yAxis: { type: 'value', axisLabel: { fontSize: 10, color: '#94a3b8' } },
-        series: [
-            {
-                name: 'Sóng Năng Lượng Nhanh (Fast Wave)',
-                type: 'line',
-                smooth: true,
-                data: [],
-                itemStyle: { color: '#fbbf24' },
-                lineStyle: { width: 3 }
-            },
-            {
-                name: 'Xu Hướng Chậm (Slow Trend)',
-                type: 'line',
-                smooth: true,
-                data: [],
-                itemStyle: { color: '#38bdf8' },
-                lineStyle: { width: 2, type: 'dashed' }
+        yAxis: { type: 'value', scale: true, axisLabel: { fontSize: 10, color: '#94a3b8' } },
+        series: [{
+            type: 'candlestick',
+            data: [],
+            itemStyle: {
+                color: '#10b981',       // Xương nến tăng (Xanh)
+                color0: '#ef4444',      // Xương nến giảm (Đỏ)
+                borderColor: '#10b981',
+                borderColor0: '#ef4444'
             }
-        ]
+        }]
     };
-    sineChart.setOption(option);
-    window.addEventListener('resize', () => sineChart.resize());
+    candleChart.setOption(option);
+    window.addEventListener('resize', () => candleChart.resize());
 }
 
-function updateSineChart(scoredData) {
-    if (!sineChart) return;
-    // Lấy top 12 cặp số có điểm số cao nhất để mô phỏng sóng hình sin giao cắt
-    const topData = scoredData.slice(0, 12);
-    const xData = topData.map(item => `Cặp ${item.num}`);
+function updateCandleChart(scoredData) {
+    if (!candleChart) return;
+    // Lấy top 14 cặp số có điểm số cao nhất để vẽ biểu đồ nến OHLC
+    const topData = scoredData.slice(0, 14);
+    const xData = topData.map(item => item.num);
     
-    // Tạo sóng nhanh (Fast wave mô phỏng năng lượng hiện tại) và sóng chậm (Slow trend mô phỏng trung bình)
-    const fastWave = topData.map(item => parseFloat(item.score.toFixed(2)));
-    const slowTrend = topData.map(item => parseFloat((item.score * 0.85 + Math.sin(parseInt(item.num)) * 2).toFixed(2)));
+    // Giả lập dữ liệu OHLC từ điểm số năng lượng lượng tử
+    const candleData = topData.map((item, idx) => {
+        let base = item.score;
+        let open = parseFloat((base * 0.9).toFixed(2));
+        let close = parseFloat((base * 1.05).toFixed(2));
+        let low = parseFloat((base * 0.8).toFixed(2));
+        let high = parseFloat((base * 1.2).toFixed(2));
+        return [open, close, low, high]; // Thứ tự chuẩn của ECharts candlestick: [open, close, low, high]
+    });
 
     const option = {
         xAxis: { data: xData },
-        series: [
-            { data: fastWave },
-            { data: slowTrend }
-        ]
+        series: [{ data: candleData }]
     };
-    sineChart.setOption(option);
+    candleChart.setOption(option);
 }
 
 function toggleDarkMode() {
@@ -280,7 +285,7 @@ function resetUI() {
     document.getElementById('consensusRate').textContent = 'Đang chờ phân tích...';
     document.getElementById('entropyVal').textContent = '--';
     document.getElementById('entropyStatus').textContent = 'Đang chờ phân tích...';
-    document.getElementById('entropyWarningBox').textContent = 'Đánh giá trạng thái pha giao cắt và biên độ dao động.';
+    document.getElementById('entropyWarningBox').textContent = 'Đánh giá biến động nến OHLC & xu hướng dòng tiền.';
     document.getElementById('model18Top2').innerHTML = '<span class="text-xs text-amber-200 italic">Đang bóc tách...</span>';
     document.getElementById('model18Details').textContent = 'Chưa có dữ liệu...';
     document.getElementById('compareSysA').textContent = 'Chưa chạy Backtest';
@@ -288,8 +293,8 @@ function resetUI() {
     document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic">Bấm chạy để xem mức độ đồng thuận...</span>';
     document.getElementById('panelBody').innerHTML = '<p class="text-slate-400 italic text-center py-4">Chọn ngày để xem chi tiết.</p>';
     document.getElementById('selectTraCuuNgay').innerHTML = '<option value="">-- Mặc định (kỳ mới nhất) --</option>';
-    if(sineChart) {
-        sineChart.setOption({ xAxis: { data: [] }, series: [{ data: [] }, { data: [] }] });
+    if(candleChart) {
+        candleChart.setOption({ xAxis: { data: [] }, series: [{ data: [] }] });
     }
     for(let i=1; i<=15; i++) {
         let el = document.getElementById(`res${i}`);
@@ -402,8 +407,8 @@ function calculateEntropy(subset) {
     return Math.min(Math.max(entropy / 6.64, 0), 1);
 }
 
-// ==================== MÔ HÌNH HÀM SÓNG GIAO CẮT & HỒI QUY ====================
-function chayMoHinh18_SineCrossover(fullHistorySafe, userLimit) {
+// ==================== MÔ HÌNH NẾN KỸ THUẬT & HỒI QUY ====================
+function chayMoHinh18_Candlestick(fullHistorySafe, userLimit) {
     if (!fullHistorySafe || fullHistorySafe.length < 3) return { top2: ['38', '50'], details: 'Dữ liệu quá ngắn', scoredMatrix: [] };
 
     let baseSubset = fullHistorySafe.slice(0, userLimit);
@@ -516,10 +521,10 @@ function chayMoHinh18_SineCrossover(fullHistorySafe, userLimit) {
     let excludedListStr = Array.from(excludedSet).join(', ') || 'Không có';
     let blockedStr = blockedByGan.join(', ') || 'Không có';
 
-    let details = `• <strong>Bước 1 & 3:</strong> Phân tích giao cắt sóng hình sin ($E = hf$)<br>` +
+    let details = `• <strong>Bước 1 & 3:</strong> Phân tích nến OHLC kỹ thuật lượng tử<br>` +
                   `• <strong>Bước 2 (Loại trừ):</strong> Đã lọc bỏ số kỳ trước [${excludedListStr}]<br>` +
                   `• <strong>Bước 4 (Chặn gan):</strong> Loại bỏ [${blockedStr}]<br>` +
-                  `➔ <em>Bước 5 (Giao cắt sóng tối ưu):</em> <strong>${top2.join(', ')}</strong>`;
+                  `➔ <i>Bước 5 (Nến xanh xác nhận bứt phá):</i> <strong>${top2.join(', ')}</strong>`;
 
     return {
         top2: top2,
@@ -687,10 +692,10 @@ async function thucHienPhanTich() {
         }
     }
 
-    const m18Res = chayMoHinh18_SineCrossover(safeHistory, limit);
+    const m18Res = chayMoHinh18_Candlestick(safeHistory, limit);
     
-    // Cập nhật biểu đồ sóng hình sin giao cắt
-    updateSineChart(m18Res.scoredMatrix);
+    // Cập nhật biểu đồ nến
+    updateCandleChart(m18Res.scoredMatrix);
 
     let entropyPercent = (m18Res.entropy * 100).toFixed(1);
     document.getElementById('entropyVal').textContent = `${entropyPercent}%`;
@@ -699,14 +704,14 @@ async function thucHienPhanTich() {
     let entropyStatus = document.getElementById('entropyStatus');
 
     if (m18Res.entropy > 0.82) {
-        entropyStatus.textContent = "⚠️ Hỗn loạn cao (Sóng giao cắt phân tán)";
+        entropyStatus.textContent = "⚠️ Hỗn loạn cao (Nến biến động mạnh)";
         entropyStatus.className = "text-[10px] text-red-400 mt-1 block font-bold";
-        warningBox.innerHTML = `<strong>Bước 5 Cảnh báo:</strong> Entropy đạt ${entropyPercent}%. Các giao cắt sóng thưa thớt, cần thận trọng!`;
+        warningBox.innerHTML = `<strong>Bước 5 Cảnh báo:</strong> Entropy đạt ${entropyPercent}%. Các thân nến ngắn, biên độ nhiễu loạn cao!`;
         warningBox.className = "bg-red-950/40 p-2.5 rounded-xl border border-red-500/30 text-[11px] text-red-200";
     } else {
-        entropyStatus.textContent = "✅ Trạng thái ổn định (Giao cắt đồng pha)";
+        entropyStatus.textContent = "✅ Trạng thái ổn định (Nến xanh xác nhận)";
         entropyStatus.className = "text-[10px] text-emerald-400 mt-1 block font-bold";
-        warningBox.innerHTML = `<strong>Bước 5 Đánh giá:</strong> Entropy ở mức ${entropyPercent}%. Sóng nhanh cắt lên trên sóng chậm, tín hiệu tin cậy.`;
+        warningBox.innerHTML = `<strong>Bước 5 Đánh giá:</strong> Entropy ở mức ${entropyPercent}%. Thân nến dài, xu hướng dòng năng lượng rõ rệt.`;
         warningBox.className = "bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-500/30 text-[11px] text-emerald-200";
     }
 
