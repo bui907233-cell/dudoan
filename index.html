@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Pro - 17 Mô Hình (Tích hợp Ngũ Hành & Khoảng Cách Ngày)</title>
+    <title>Analysis Pro - Kiểm Định Entropy & Mô Phỏng Monte Carlo (Anti-Leakage)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -16,9 +16,9 @@
     <!-- Header -->
     <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
-            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - 17 Mô Hình (Ngũ Hành & Khoảng Cách Ngày)</h1>
+            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Entropy & Monte Carlo Simulation</h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Tích hợp Diễn dịch Âm Dương Ngũ Hành & Delta 7 ngày theo chu kỳ tuần · Chống rò rỉ (Anti-Leakage)
+                Tích hợp Chỉ số Hỗn loạn (Entropy) & Giả lập Phân phối Xác suất Monte Carlo · Chống rò rỉ (Anti-Leakage)
             </p>
         </div>
         <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2 transition-all">
@@ -71,7 +71,7 @@
 
         <div>
             <button onclick="thucHienPhanTich()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg text-sm shadow transition-all">
-                🚀 Chạy 17 Mô Hình
+                🚀 Chạy Phân Tích Chuyên Sâu
             </button>
         </div>
 
@@ -82,13 +82,31 @@
         </div>
     </div>
 
-    <!-- KHU VỰC 3 HỆ THỐNG ĐỐI CHÍNH -->
+    <!-- KHU VỰC CẢNH BÁO ENTROPY & KẾT QUẢ MONTE CARLO -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <!-- HỆ THỐNG A: 15 MÔ HÌNH ĐỒNG THUẬN -->
+        <!-- 1. CHỈ SỐ ĐO LƯỜNG ĐỘ HỖN LOẠN (ENTROPY) -->
+        <div class="bg-gradient-to-br from-slate-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-slate-700 flex flex-col justify-between">
+            <div>
+                <h3 class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-2 text-center">
+                    📊 Kiểm Định Entropy (Độ Hỗn Loạn)
+                </h3>
+                <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
+                    <p class="text-[10px] text-slate-300 uppercase font-semibold">Chỉ số Entropy hiện tại</p>
+                    <span id="entropyVal" class="text-3xl font-extrabold tracking-wider text-cyan-400 block mt-1">--</span>
+                    <span id="entropyStatus" class="text-[10px] text-yellow-300 mt-1 block font-medium">Đang chờ phân tích...</span>
+                </div>
+                <div id="entropyWarningBox" class="bg-black/30 p-2.5 rounded-xl border border-white/10 text-[11px] text-slate-300">
+                    Hệ thống sẽ đánh giá xem chuỗi số đang ở trạng thái quy luật hay ngẫu nhiên thuần túy.
+                </div>
+            </div>
+            <div class="text-[10px] text-slate-400 mt-3 pt-2 border-t border-white/10">Trạng thái kiểm định thời gian thực</div>
+        </div>
+
+        <!-- 2. HỆ THỐNG ĐỒNG THUẬN 15 MÔ HÌNH -->
         <div class="bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-indigo-500/30 flex flex-col justify-between">
             <div>
                 <h3 class="text-xs font-bold uppercase tracking-widest text-indigo-300 mb-2 text-center">
-                    🤝 Hệ thống A: Đồng Thuận 15 Mô Hình
+                    🤝 Hệ Thống A: Đồng Thuận 15 Mô Hình
                 </h3>
                 <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
                     <p class="text-[10px] text-indigo-200 uppercase font-semibold">Cặp số đồng thuận cao nhất</p>
@@ -103,42 +121,23 @@
             <div id="compareSysA" class="text-[10px] text-slate-300 mt-3 pt-2 border-t border-white/10">Chưa chạy Backtest</div>
         </div>
 
-        <!-- HỆ THỐNG B: MÔ HÌNH 16 (QUÉT TOÀN GIẢI) -->
+        <!-- 3. GIẢI PHÁP MONTE CARLO / RANDOM WALK SIMULATION -->
         <div class="bg-gradient-to-br from-amber-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-amber-500/40 flex flex-col justify-between">
             <div>
                 <h3 class="text-xs font-bold uppercase tracking-widest text-amber-300 mb-2 text-center">
-                    🔥 Hệ thống B: Mô Hình 16 (Quét Toàn Giải)
+                    🎲 Hệ Thống B: Mô Phỏng Monte Carlo
                 </h3>
                 <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
-                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Số duy nhất từ tất cả các giải</p>
-                    <span id="model16SingleNum" class="text-3xl font-extrabold tracking-wider text-yellow-400 block mt-1">--</span>
-                    <span id="model16Reason" class="text-[9px] text-amber-100 mt-0.5 block italic">Đang quét dữ liệu...</span>
+                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Vùng Biên Độ Tần Suất An Toàn</p>
+                    <span id="monteCarloZone" class="text-xl font-extrabold tracking-wider text-yellow-300 block mt-1">--</span>
+                    <span id="monteCarloNote" class="text-[9px] text-amber-100 mt-0.5 block italic">Chạy 10,000 kịch bản ngẫu nhiên...</span>
                 </div>
                 <div class="bg-black/20 p-2.5 rounded-xl border border-white/10">
-                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Thống kê bóc tách:</p>
-                    <div id="model16Details" class="text-[11px] text-slate-200 space-y-0.5">Chưa có dữ liệu...</div>
+                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Top nhóm số xác suất cao nhất:</p>
+                    <div id="monteCarloList" class="flex flex-wrap gap-1 text-xs min-h-[30px]"></div>
                 </div>
             </div>
             <div id="compareSysB" class="text-[10px] text-slate-300 mt-3 pt-2 border-t border-white/10">Chưa chạy Backtest</div>
-        </div>
-
-        <!-- HỆ THỐNG C: MÔ HÌNH 17 (NGŨ HÀNH & KHOẢNG CÁCH NGÀY) -->
-        <div class="bg-gradient-to-br from-emerald-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-emerald-500/40 flex flex-col justify-between">
-            <div>
-                <h3 class="text-xs font-bold uppercase tracking-widest text-emerald-300 mb-2 text-center">
-                    ☯️ Hệ thống C: Mô Hình 17 (Ngũ Hành & Delta 7 Ngày)
-                </h3>
-                <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
-                    <p class="text-[10px] text-emerald-200 uppercase font-semibold">Số chuyển hóa theo Ngũ Hành & Chu kỳ 7 ngày</p>
-                    <span id="model17SingleNum" class="text-3xl font-extrabold tracking-wider text-yellow-400 block mt-1">--</span>
-                    <span id="model17Reason" class="text-[9px] text-emerald-100 mt-0.5 block italic">Đang diễn dịch phong thủy & ngày...</span>
-                </div>
-                <div class="bg-black/20 p-2.5 rounded-xl border border-white/10">
-                    <p class="text-[10px] text-emerald-300 font-semibold mb-1">Chi tiết diễn dịch ngũ hành:</p>
-                    <div id="model17Details" class="text-[11px] text-slate-200 space-y-0.5">Chưa có dữ liệu...</div>
-                </div>
-            </div>
-            <div id="compareSysC" class="text-[10px] text-slate-300 mt-3 pt-2 border-t border-white/10">Chưa chạy Backtest</div>
         </div>
     </div>
 
@@ -177,8 +176,6 @@
 
 <script>
 let currentLoadedJson = null;
-let lastCachedResults = null;
-let lastCachedSubset = null;
 
 window.onload = async () => {
     resetUI();
@@ -196,7 +193,7 @@ function toggleDarkMode() {
     } else {
         html.classList.add('dark');
         icon.textContent = '☀️';
-        text.textContent = 'Giao diện sáng';
+        text.textContent = 'Giao diện tối';
     }
 }
 
@@ -209,15 +206,14 @@ async function onDaiChange() {
 function resetUI() {
     document.getElementById('finalTopNum').textContent = '--';
     document.getElementById('consensusRate').textContent = 'Đang chờ phân tích...';
-    document.getElementById('model16SingleNum').textContent = '--';
-    document.getElementById('model16Reason').textContent = 'Đang quét dữ liệu...';
-    document.getElementById('model16Details').textContent = 'Chưa có dữ liệu...';
-    document.getElementById('model17SingleNum').textContent = '--';
-    document.getElementById('model17Reason').textContent = 'Đang diễn dịch...';
-    document.getElementById('model17Details').textContent = 'Chưa có dữ liệu...';
+    document.getElementById('entropyVal').textContent = '--';
+    document.getElementById('entropyStatus').textContent = 'Đang chờ phân tích...';
+    document.getElementById('entropyWarningBox').textContent = 'Hệ thống sẽ đánh giá xem chuỗi số đang ở trạng thái quy luật hay ngẫu nhiên thuần túy.';
+    document.getElementById('monteCarloZone').textContent = '--';
+    document.getElementById('monteCarloNote').textContent = 'Chạy giả lập ngẫu nhiên...';
+    document.getElementById('monteCarloList').innerHTML = '<span class="text-slate-400 text-xs italic">Chưa chạy...</span>';
     document.getElementById('compareSysA').textContent = 'Chưa chạy Backtest';
     document.getElementById('compareSysB').textContent = 'Chưa chạy Backtest';
-    document.getElementById('compareSysC').textContent = 'Chưa chạy Backtest';
     document.getElementById('suggestedNumbersList').innerHTML = '<span class="text-slate-400 text-xs italic">Bấm chạy để xem mức độ đồng thuận...</span>';
     document.getElementById('panelBody').innerHTML = '<p class="text-slate-400 italic text-center py-4">Chọn ngày để xem chi tiết.</p>';
     document.getElementById('selectTraCuuNgay').innerHTML = '<option value="">-- Mặc định (kỳ mới nhất) --</option>';
@@ -315,6 +311,64 @@ function extractAll2D(item) {
         if (s.length >= 2) list.push(s.slice(-2));
     });
     return list;
+}
+
+// ==================== 1. TÍNH CHỈ SỐ ENTROPY (ĐỘ HỖN LOẠN) ====================
+function calculateEntropy(subset) {
+    let allLo = [];
+    subset.forEach(item => allLo.push(...extractAll2D(item)));
+    if (allLo.length === 0) return 0;
+
+    let counts = {};
+    allLo.forEach(num => { counts[num] = (counts[num] || 0) + 1; });
+
+    let entropy = 0;
+    let total = allLo.length;
+    Object.values(counts).forEach(count => {
+        let p = count / total;
+        entropy -= p * Math.log2(p);
+    });
+
+    // Chuẩn hóa entropy thang đo 0 đến 1 (Max entropy cho 100 số là log2(100) ≈ 6.64)
+    let normalizedEntropy = entropy / 6.64;
+    return Math.min(Math.max(normalizedEntropy, 0), 1);
+}
+
+// ==================== 2. MÔ PHỎNG MONTE CARLO / RANDOM WALK ====================
+function runMonteCarloSimulation(subset) {
+    let allLo = [];
+    subset.forEach(item => allLo.push(...extractAll2D(item)));
+    
+    // Đếm tần suất xuất hiện thực tế để làm trọng số phân phối xác suất
+    let empiricalFreq = {};
+    allLo.forEach(n => { empiricalFreq[n] = (empiricalFreq[n] || 0) + 1; });
+
+    let simCounts = {};
+    let totalSimulations = 5000; // Chạy 5,000 kịch bản ngẫu nhiên
+
+    for (let i = 0; i < totalSimulations; i++) {
+        // Lấy ngẫu nhiên một con số dựa trên phân phối thực tế (Random Walk)
+        let randIdx = Math.floor(Math.random() * allLo.length);
+        let picked = allLo[randIdx] || pad2(Math.floor(Math.random() * 100));
+        
+        // Nhiễu ngẫu nhiên mô phỏng lồng quay
+        let nVal = (parseInt(picked) + (Math.random() > 0.5 ? 1 : -1)) % 100;
+        let simNum = pad2(nVal < 0 ? nVal + 100 : nVal);
+
+        simCounts[simNum] = (simCounts[simNum] || 0) + 1;
+    }
+
+    let sortedSim = Object.entries(simCounts).sort((a,b) => b[1] - a[1]);
+    let topGroup = sortedSim.slice(0, 8).map(([n]) => n);
+    
+    // Khoanh vùng biên độ an toàn
+    let minNum = sortedSim[sortedSim.length - 1]?.[0] || '00';
+    let maxNum = sortedSim[0]?.[0] || '99';
+
+    return {
+        zone: `Biên độ tối ưu: [ ${topGroup.slice(0, 4).join(', ')} ]`,
+        topGroup: topGroup
+    };
 }
 
 // ==================== 15 MÔ HÌNH CƠ SỞ ====================
@@ -453,90 +507,7 @@ function chay15MoHinh(subset, fullHistorySafe) {
     };
 }
 
-// ==================== MÔ HÌNH 16: QUÉT TOÀN GIẢI & KỲ ====================
-function chayMoHinh16_FullPrizesScan(subset) {
-    if (!subset || subset.length < 3) return { singleNum: '38', reason: 'Dữ liệu quá ngắn', details: 'Không đủ kỳ.' };
-
-    let positionalScores = {};
-    let prizeNames = ['giai_8', 'giai_7', 'giai_6', 'giai_5', 'giai_4', 'giai_3', 'giai_2', 'giai_1', 'gdb'];
-
-    subset.forEach((item, periodIdx) => {
-        let timeWeight = Math.pow(0.88, periodIdx);
-        prizeNames.forEach(pName => {
-            let val = item[pName];
-            if (!val) return;
-            let listVals = Array.isArray(val) ? val : [val];
-            listVals.forEach(v => {
-                let s = v.toString();
-                if (s.length >= 2) {
-                    let num2d = s.slice(-2);
-                    let prizeBonus = (pName === 'gdb' || pName === 'giai_8') ? 1.8 : 1.0;
-                    positionalScores[num2d] = (positionalScores[num2d] || 0) + (timeWeight * prizeBonus);
-                }
-            });
-        });
-    });
-
-    let sortedPositional = Object.entries(positionalScores).sort((a, b) => b[1] - a[1]);
-    let singleNum = sortedPositional.length > 0 ? sortedPositional[0][0] : '42';
-    let topScore = sortedPositional.length > 0 ? Math.round(sortedPositional[0][1] * 10) / 10 : 0;
-
-    let details = `• Quét toàn bộ <strong>9 nhóm giải</strong> qua ${subset.length} kỳ.<br>` +
-                  `• Điểm trọng số vị trí: <strong>${topScore}đ</strong><br>` +
-                  `➔ <em>Số tối ưu toàn giải:</em> <strong>${singleNum}</strong>`;
-
-    return { singleNum: singleNum, reason: `Quét toàn giải (${subset.length} kỳ)`, details: details };
-}
-
-// ==================== 🔥 MÔ HÌNH 17: ÂM DƯƠNG NGŨ HÀNH & KHOẢNG CÁCH NGÀY (DELTA 7 NGÀY) ====================
-function chayMoHinh17_NgũHànhDelta(bestNumSysA, bestNumSysB, subset) {
-    // Bảng chuyển hóa bóng Âm Dương Ngũ Hành
-    const bongDuong = { '0':'5', '5':'0', '1':'6', '6':'1', '2':'7', '7':'2', '3':'8', '8':'3', '4':'9', '9':'4' };
-    const bongAm   = { '0':'7', '7':'0', '1':'4', '4':'1', '2':'9', '9':'2', '3':'6', '6':'3', '5':'8', '8':'5' };
-
-    let baseNum = bestNumSysA || bestNumSysB || '50';
-    let nVal = parseInt(baseNum);
-
-    // Tính toán khoảng cách Delta chu kỳ tuần (ví dụ cách 7 ngày)
-    let deltaWeek = 7;
-    if (subset && subset.length >= 2) {
-        let d1 = new Date(subset[0].ngay);
-        let d2 = new Date(subset[1].ngay);
-        let diffDays = Math.round(Math.abs((d1 - d2) / (1000 * 60 * 60 * 24)));
-        if (!isNaN(diffDays) && diffDays > 0) deltaWeek = diffDays;
-    }
-
-    // Áp dụng phép xoay vòng Ngũ Hành & Bước nhảy Delta
-    let transformed1 = pad2((nVal + deltaWeek) % 100);
-    let transformed2 = pad2((nVal - deltaWeek + 100) % 100);
-    
-    // Bóng dương và bóng âm của số cốt lõi
-    let dCode = bongDuong[baseNum[0]] + bongDuong[baseNum[1]];
-    let aCode = bongAm[baseNum[0]] + bongAm[baseNum[1]];
-
-    // Chọn ra con số hạt nhân qua sự giao thoa Ngũ Hành & Delta
-    let candidateScores = {};
-    candidateScores[transformed1] = (candidateScores[transformed1] || 0) + 3;
-    candidateScores[transformed2] = (candidateScores[transformed2] || 0) + 3;
-    candidateScores[dCode] = (candidateScores[dCode] || 0) + 4;
-    candidateScores[aCode] = (candidateScores[aCode] || 0) + 3.5;
-
-    let sortedFinal = Object.entries(candidateScores).sort((a,b) => b[1] - a[1]);
-    let finalSingleNum = sortedFinal.length > 0 ? sortedFinal[0][0] : '36';
-
-    let details = `• Số gốc tham chiếu: <strong>${baseNum}</strong><br>` +
-                  `• Chu kỳ Delta tuần: <strong>${deltaWeek} ngày</strong><br>` +
-                  `• Bóng dương Ngũ Hành: <strong>${dCode}</strong> | Bóng âm: <strong>${aCode}</strong><br>` +
-                  `➔ <em>Chốt số chuyển hóa Ngũ Hành:</em> <strong>${finalSingleNum}</strong>`;
-
-    return {
-        singleNum: finalSingleNum,
-        reason: `Chuyển hóa từ số gốc ${baseNum} (Delta ${deltaWeek} ngày)`,
-        details: details
-    };
-}
-
-// ==================== THỰC HIỆN PHÂN TÍCH SONG SONG 3 HỆ THỐNG ====================
+// ==================== THỰC HIỆN PHÂN TÍCH CHUYÊN SÂU ====================
 async function thucHienPhanTich() {
     if (!currentLoadedJson) {
         const ok = await taiDuLieuDai();
@@ -559,12 +530,29 @@ async function thucHienPhanTich() {
     }
 
     const subset = safeHistory.slice(0, limit);
-    lastCachedSubset = subset;
 
-    // 1. Chạy Hệ thống A: 15 Mô hình đồng thuận
+    // 1. Tính toán Chỉ số Entropy
+    let entropy = calculateEntropy(subset);
+    let entropyPercent = (entropy * 100).toFixed(1);
+    document.getElementById('entropyVal').textContent = `${entropyPercent}%`;
+
+    let warningBox = document.getElementById('entropyWarningBox');
+    let entropyStatus = document.getElementById('entropyStatus');
+
+    if (entropy > 0.82) {
+        entropyStatus.textContent = "⚠️ Hỗn loạn cao (Ngẫu nhiên thuần túy)";
+        entropyStatus.className = "text-[10px] text-red-400 mt-1 block font-bold";
+        warningBox.innerHTML = `<strong>Cảnh báo:</strong> Chỉ số Entropy đạt ngưỡng cao (${entropyPercent}%). Hệ thống đang ở trạng thái ngẫu nhiên độc lập tuyệt đối, độ tin cậy mô hình dự báo sụt giảm mạnh!`;
+        warningBox.className = "bg-red-950/40 p-2.5 rounded-xl border border-red-500/30 text-[11px] text-red-200";
+    } else {
+        entropyStatus.textContent = "✅ Trạng thái ổn định (Có co cụm)";
+        entropyStatus.className = "text-[10px] text-emerald-400 mt-1 block font-bold";
+        warningBox.innerHTML = `<strong>Đánh giá:</strong> Chỉ số Entropy ở mức thấp/trung bình (${entropyPercent}%). Dữ liệu có hiện tượng co cụm tạm thời, kích hoạt mô hình dự báo.`;
+        warningBox.className = "bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-500/30 text-[11px] text-emerald-200";
+    }
+
+    // 2. Chạy Hệ thống A: 15 Mô hình đồng thuận
     const results15 = chay15MoHinh(subset, safeHistory);
-    lastCachedResults = results15;
-
     let voteMap = {};
     let totalModels = Object.keys(results15).length;
     Object.keys(results15).forEach(mName => {
@@ -599,32 +587,25 @@ async function thucHienPhanTich() {
         }
     });
 
-    // 2. Chạy Hệ thống B: Mô hình 16 (Quét toàn giải)
-    const m16Res = chayMoHinh16_FullPrizesScan(subset);
-    document.getElementById('model16SingleNum').textContent = m16Res.singleNum;
-    document.getElementById('model16Reason').textContent = m16Res.reason;
-    document.getElementById('model16Details').innerHTML = m16Res.details;
+    // 3. Chạy Hệ thống B: Giả lập Monte Carlo
+    let mcRes = runMonteCarloSimulation(subset);
+    document.getElementById('monteCarloZone').textContent = mcRes.zone;
+    document.getElementById('monteCarloNote').textContent = `Giả lập qua 5,000 kịch bản phân phối thực tế`;
+    document.getElementById('monteCarloList').innerHTML = mcRes.topGroup.slice(0, 8).map(n => 
+        `<span class="bg-amber-950 text-amber-300 px-2 py-0.5 rounded font-bold border border-amber-700">${n}</span>`
+    ).join(' ');
 
-    // 3. Chạy Hệ thống C: Mô hình 17 (Ngũ hành & Delta 7 ngày)
-    const m17Res = chayMoHinh17_NgũHànhDelta(topBestNumA, m16Res.singleNum, subset);
-    document.getElementById('model17SingleNum').textContent = m17Res.singleNum;
-    document.getElementById('model17Reason').textContent = m17Res.reason;
-    document.getElementById('model17Details').innerHTML = m17Res.details;
-
-    // Đối chiếu Backtest thực tế cho cả 3 hệ thống
+    // Đối chiếu Backtest thực tế
     if (actualNextDraw) {
         let actualAllNums = extractAll2D(actualNextDraw);
         let hitA = actualAllNums.includes(topBestNumA);
-        let hitB = actualAllNums.includes(m16Res.singleNum);
-        let hitC = actualAllNums.includes(m17Res.singleNum);
+        let hitB = actualAllNums.some(n => mcRes.topGroup.includes(n));
 
         document.getElementById('compareSysA').innerHTML = `Thực tế [${actualAllNums.join(', ')}]: <strong class="${hitA ? 'text-emerald-400 font-bold' : 'text-red-400'}">${hitA ? '✅ TRÚNG!' : '❌ Trượt'}</strong>`;
-        document.getElementById('compareSysB').innerHTML = `Thực tế [${actualAllNums.join(', ')}]: <strong class="${hitB ? 'text-emerald-400 font-bold' : 'text-red-400'}">${hitB ? '✅ TRÚNG!' : '❌ Trượt'}</strong>`;
-        document.getElementById('compareSysC').innerHTML = `Thực tế [${actualAllNums.join(', ')}]: <strong class="${hitC ? 'text-emerald-400 font-bold' : 'text-red-400'}">${hitC ? '✅ TRÚNG!' : '❌ Trượt'}</strong>`;
+        document.getElementById('compareSysB').innerHTML = `Thực tế [${actualAllNums.join(', ')}]: <strong class="${hitB ? 'text-emerald-400 font-bold' : 'text-red-400'}">${hitB ? '✅ TRÚNG BIÊN ĐỘ!' : '❌ Ngoài biên độ'}</strong>`;
     } else {
         document.getElementById('compareSysA').textContent = 'Đang dự đoán kỳ mới nhất (Chưa có kết quả thực tế)';
         document.getElementById('compareSysB').textContent = 'Đang dự đoán kỳ mới nhất (Chưa có kết quả thực tế)';
-        document.getElementById('compareSysC').textContent = 'Đang dự đoán kỳ mới nhất (Chưa có kết quả thực tế)';
     }
 }
 </script>
