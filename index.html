@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Pro - Phân Rã Cấu Trúc Chữ Số & Anti-Leakage</title>
+    <title>Analysis Pro - Phân Rã Cấu Trúc Chữ Số Nâng Cấp (Tens & Units)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -16,9 +16,9 @@
     <!-- Header -->
     <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
-            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Phân Rã Cấu Trúc Chữ Số (Tens & Units)</h1>
+            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">⚡ Analysis Pro - Phân Rã Cấu Trúc Chữ Số (Tens & Units Pro)</h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Tích hợp Mô hình 18 (Học lịch sử lặp lại hàng chục & đơn vị) · Chống rò rỉ tuyệt đối (Anti-Leakage)
+                Mô hình 18 nâng cấp (Phân tích độc lập xác suất Hàng Chục & Hàng Đơn Vị) · Chống rò rỉ tuyệt đối (Anti-Leakage)
             </p>
         </div>
         <button onclick="toggleDarkMode()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2 transition-all">
@@ -121,20 +121,20 @@
             <div id="compareSysA" class="text-[10px] text-slate-300 mt-3 pt-2 border-t border-white/10">Chưa chạy Backtest</div>
         </div>
 
-        <!-- 3. MÔ HÌNH 18: PHÂN RÃ CẤU TRÚC CHỮ SỐ (TENS & UNITS) -->
+        <!-- 3. MÔ HÌNH 18 NÂNG CẤP: PHÂN RÃ HÀNG CHỤC & ĐƠN VỊ -->
         <div class="bg-gradient-to-br from-amber-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl border border-amber-500/40 flex flex-col justify-between">
             <div>
                 <h3 class="text-xs font-bold uppercase tracking-widest text-amber-300 mb-2 text-center">
-                    🔥 Mô Hình 18: Phân Rã Chữ Số (Tens & Units)
+                    🔥 Mô Hình 18 Pro: Phân Rã Tens & Units
                 </h3>
                 <div class="text-center bg-white/5 backdrop-blur p-3 rounded-xl border border-white/10 mb-3">
-                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Số chuẩn ghép từ Hàng Chục & Đơn Vị</p>
+                    <p class="text-[10px] text-amber-200 uppercase font-semibold">Cặp số tối ưu giao thoa Hàng Chục & Đơn Vị</p>
                     <span id="model18SingleNum" class="text-3xl font-extrabold tracking-wider text-yellow-400 block mt-1">--</span>
-                    <span id="model18Reason" class="text-[9px] text-amber-100 mt-0.5 block italic">Học lịch sử lặp lại cấu trúc...</span>
+                    <span id="model18Reason" class="text-[9px] text-amber-100 mt-0.5 block italic">Phân tích xác suất độc lập...</span>
                 </div>
                 <div class="bg-black/20 p-2.5 rounded-xl border border-white/10">
-                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Chi tiết phân rã cấu trúc:</p>
-                    <div id="model18Details" class="text-[11px] text-slate-200 space-y-0.5">Chưa có dữ liệu...</div>
+                    <p class="text-[10px] text-amber-300 font-semibold mb-1">Xác suất từng hàng:</p>
+                    <div id="model18Details" class="text-[11px] text-slate-200 space-y-1">Chưa có dữ liệu...</div>
                 </div>
             </div>
             <div id="compareSysB" class="text-[10px] text-slate-300 mt-3 pt-2 border-t border-white/10">Chưa chạy Backtest</div>
@@ -210,7 +210,7 @@ function resetUI() {
     document.getElementById('entropyStatus').textContent = 'Đang chờ phân tích...';
     document.getElementById('entropyWarningBox').textContent = 'Đánh giá trạng thái ngẫu nhiên độc lập của dữ liệu.';
     document.getElementById('model18SingleNum').textContent = '--';
-    document.getElementById('model18Reason').textContent = 'Học lịch sử lặp lại cấu trúc...';
+    document.getElementById('model18Reason').textContent = 'Phân tích xác suất độc lập...';
     document.getElementById('model18Details').textContent = 'Chưa có dữ liệu...';
     document.getElementById('compareSysA').textContent = 'Chưa chạy Backtest';
     document.getElementById('compareSysB').textContent = 'Chưa chạy Backtest';
@@ -329,15 +329,15 @@ function calculateEntropy(subset) {
     return Math.min(Math.max(entropy / 6.64, 0), 1);
 }
 
-// ==================== 2. MÔ HÌNH 18: PHÂN RÃ CẤU TRÚC CHỮ SỐ (TENS & UNITS) ====================
-function chayMoHinh18_StructuralDecomposition(subset) {
+// ==================== 2. MÔ HÌNH 18 PRO: PHÂN RÃ CẤU TRÚC CHỮ SỐ (TENS & UNITS MATRIX) ====================
+function chayMoHinh18_StructuralDecompositionPro(subset) {
     if (!subset || subset.length < 3) return { singleNum: '38', details: 'Dữ liệu quá ngắn' };
 
-    let tensFreq = {}; // Hàng chục (0-9)
+    let tensFreq = {};  // Hàng chục (0-9)
     let unitsFreq = {}; // Hàng đơn vị (0-9)
 
     subset.forEach((item, periodIdx) => {
-        let timeWeight = Math.pow(0.9, periodIdx); // Kỳ gần nhất trọng số cao hơn
+        let timeWeight = Math.pow(0.88, periodIdx); // Trọng số thời gian (càng gần hiện tại càng quan trọng)
         let all2d = extractAll2D(item);
 
         all2d.forEach(numStr => {
@@ -351,18 +351,20 @@ function chayMoHinh18_StructuralDecomposition(subset) {
         });
     });
 
-    // Lọc ra chữ số hàng chục và hàng đơn vị có điểm số hội tụ cao nhất từ lịch sử lặp lại
+    // Lấy Top 3 chữ số hàng chục và hàng đơn vị có xác suất cao nhất
     let sortedTens = Object.entries(tensFreq).sort((a, b) => b[1] - a[1]);
     let sortedUnits = Object.entries(unitsFreq).sort((a, b) => b[1] - a[1]);
 
-    let bestTens = sortedTens.length > 0 ? sortedTens[0][0] : '5';
-    let bestUnits = sortedUnits.length > 0 ? sortedUnits[0][0] : '0';
+    let topTens = sortedTens.slice(0, 3).map(([d]) => d);
+    let topUnits = sortedUnits.slice(0, 3).map(([d]) => d);
 
+    let bestTens = topTens[0] || '5';
+    let bestUnits = topUnits[0] || '0';
     let singleNum = bestTens + bestUnits;
 
-    let details = `• Hàng chục tối ưu học từ lịch sử: <strong>${bestTens}</strong> (${(sortedTens[0]?.[1]||0).toFixed(1)}đ)<br>` +
-                  `• Hàng đơn vị tối ưu học từ lịch sử: <strong>${bestUnits}</strong> (${(sortedUnits[0]?.[1]||0).toFixed(1)}đ)<br>` +
-                  `➔ <em>Ghép cấu trúc chuẩn duy nhất:</em> <strong>${singleNum}</strong>`;
+    let details = `• <strong>Top Hàng Chục:</strong> ${topTens.join(', ')}<br>` +
+                  `• <strong>Top Hàng Đơn Vị:</strong> ${topUnits.join(', ')}<br>` +
+                  `➔ <em>Ghép cặp xác suất cao nhất:</em> <strong>${singleNum}</strong>`;
 
     return {
         singleNum: singleNum,
@@ -520,7 +522,7 @@ async function thucHienPhanTich() {
     let safeHistory = rawLichSu;
     let actualNextDraw = null;
 
-    // Cơ chế chống gian lận / Anti-Leakage (cắt đứt dữ liệu tương lai)
+    // Cơ chế chống gian lận / Anti-Leakage
     if (targetDate) {
         const idx = rawLichSu.findIndex(i => i.ngay === targetDate);
         if (idx !== -1) {
@@ -542,7 +544,7 @@ async function thucHienPhanTich() {
     if (entropy > 0.82) {
         entropyStatus.textContent = "⚠️ Hỗn loạn cao (Ngẫu nhiên độc lập)";
         entropyStatus.className = "text-[10px] text-red-400 mt-1 block font-bold";
-        warningBox.innerHTML = `<strong>Cảnh báo:</strong> Entropy đạt ${entropyPercent}%. Hệ thống đang ở trạng thái ngẫu nhiên độc lập cao, độ tin cậy dự báo giảm!`;
+        warningBox.innerHTML = `<strong>Cảnh báo:</strong> Entropy đạt ${entropyPercent}%. Hệ thống ngẫu nhiên thuần túy, độ tin cậy dự báo giảm!`;
         warningBox.className = "bg-red-950/40 p-2.5 rounded-xl border border-red-500/30 text-[11px] text-red-200";
     } else {
         entropyStatus.textContent = "✅ Trạng thái ổn định (Có co cụm)";
@@ -587,12 +589,12 @@ async function thucHienPhanTich() {
         }
     });
 
-    // 3. Chạy Mô hình 18: Phân rã cấu trúc chữ số (Tens & Units)
-    const m18Res = chayMoHinh18_StructuralDecomposition(subset);
+    // 3. Chạy Mô hình 18 Pro: Phân rã Tens & Units
+    const m18Res = chayMoHinh18_StructuralDecompositionPro(subset);
     document.getElementById('model18SingleNum').textContent = m18Res.singleNum;
     document.getElementById('model18Details').innerHTML = m18Res.details;
 
-    // Đối chiếu Backtest thực tế (Đảm bảo chống rò rỉ 100%)
+    // Đối chiếu Backtest thực tế (Bảo toàn chống rò rỉ tuyệt đối)
     if (actualNextDraw) {
         let actualAllNums = extractAll2D(actualNextDraw);
         let hitA = actualAllNums.includes(topBestNumA);
